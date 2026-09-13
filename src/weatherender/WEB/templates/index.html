@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="{{ bg_class }}">
+<html
+    lang="en"
+    class="{{ bg_class }}"
+    data-condition="{{ weather.current.condition.text|lower if weather else 'default' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,19 +12,31 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-<body class="{{ bg_class }}">
+<body class="{{ bg_class }}" data-condition="{{ weather.current.condition.text|lower if weather else 'default' }}">
+<div class="weather-scene" aria-hidden="true">
+    <div class="sun-glow"></div>
+    <div class="cloud cloud-one"></div>
+    <div class="cloud cloud-two"></div>
+    <div class="rain rain-one"></div>
+    <div class="rain rain-two"></div>
+    <div class="rain rain-three"></div>
+    <div class="lightning"></div>
+    <div class="stars"></div>
+    <div class="particles"></div>
+</div>
 <div class="card" id="main-card">
-
-    <!-- BLOCK 1: TITLE, SEARCH, AND CURRENT WEATHER -->
     <div class="block block-current">
         <div class="title-row">
-            <h1>🌤 Weatherender forecast</h1>
-            <button type="button" id="unit-toggle" class="unit-toggle">°C/°F | kmh/mph</button>
+            <div>
+                <p class="eyebrow">Weather dashboard</p>
+                <h1>🌤 Weatherender forecast</h1>
+            </div>
+            <button type="button" id="unit-toggle" class="unit-toggle" aria-label="Toggle weather units">°C / °F | km/h / mph</button>
         </div>
         <div class="time">Data for: {{ now }}</div>
 
         <form class="search-form" method="POST">
-            <input type="text" name="city" placeholder="Enter city (e.g., Paris)..." required>
+            <input type="text" name="city" placeholder="Enter city (e.g., Paris)" required>
             <button type="submit">Get Info</button>
         </form>
 
@@ -30,14 +45,41 @@
         {% endif %}
 
         {% if weather %}
+            <div class="weather-hero">
+                <div class="weather-badge">Live conditions</div>
+                <div class="hero-main">
+                    <div class="hero-copy">
+                        <div class="city-meta">{{ weather.location.region }}, {{ weather.location.country }}</div>
+                        <div class="condition-pill" id="current-cond">{{ weather.current.condition.text }}</div>
+                    </div>
+                    <div class="hero-temp">
+                        <span class="temp-value" data-c="{{ weather.current.temp_c }}">{{ weather.current.temp_c }}°C</span>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-pill">
+                        <span class="label">UV</span>
+                        <strong>{{ weather.current.uv }}</strong>
+                    </div>
+                    <div class="stat-pill">
+                        <span class="label">Humidity</span>
+                        <strong>{{ weather.current.humidity }}%</strong>
+                    </div>
+                    <div class="stat-pill">
+                        <span class="label">Pressure</span>
+                        <strong>{{ (weather.current.pressure_mb * 0.750062)|round|int }} mmHg</strong>
+                    </div>
+                </div>
+            </div>
+
             <div class="weather-info">
-                <h2>{{ weather.location.region }}, {{ weather.location.country }}</h2>
-                <p><strong>🌡 Current Temperature:</strong>
+                <div class="info-heading">Current details</div>
+                <p><strong>🌡 Temperature:</strong>
                     <span class="temp-value" data-c="{{ weather.current.temp_c }}">{{ weather.current.temp_c }}°C</span>
                 </p>
-                <p><strong>📝 Condition:</strong> <span id="current-cond">{{ weather.current.condition.text }}</span></p>
-                <p><strong>☀️ Current UV Index:</strong> {{ weather.current.uv }}</p>
-                <p><strong>⏲ Current Pressure:</strong> {{ (weather.current.pressure_mb * 0.750062)|round|int }} mmHg</p>
+                <p><strong>📝 Condition:</strong> <span id="current-cond-alt">{{ weather.current.condition.text }}</span></p>
+                <p><strong>☀️ UV Index:</strong> {{ weather.current.uv }}</p>
+                <p><strong>⏲ Pressure:</strong> {{ (weather.current.pressure_mb * 0.750062)|round|int }} mmHg</p>
                 <p><strong>💧 Humidity:</strong> {{ weather.current.humidity }}%</p>
                 <p>
                     <strong>⛷️ Snow Condition:</strong>
