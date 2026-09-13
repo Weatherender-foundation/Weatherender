@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="{{ bg_class }}">
+<html
+    lang="en"
+    class="{{ bg_class }}"
+    data-condition="{{ weather.current.condition.text|lower if weather else 'default' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +12,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-<body class="{{ bg_class }}">
+<body class="{{ bg_class }}" data-condition="{{ weather.current.condition.text|lower if weather else 'default' }}">
 <div class="weather-scene" aria-hidden="true">
     <div class="sun-glow"></div>
     <div class="cloud cloud-one"></div>

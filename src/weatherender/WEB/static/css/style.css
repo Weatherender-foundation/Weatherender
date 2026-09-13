@@ -110,6 +110,28 @@ html.rainy, body.rainy { background: linear-gradient(135deg, #0f2027, #203a43 35
 html.cloudy, body.cloudy { background: linear-gradient(135deg, #4b5d7d, #b5c7db 52%, #edf2ff); }
 html.thunder, body.thunder { background: linear-gradient(135deg, #0a1220, #1e2a39 32%, #2c3e50); }
 
+html[data-condition*="clear"], html[data-condition*="sunny"],
+body[data-condition*="clear"], body[data-condition*="sunny"] {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+html[data-condition*="rain"], html[data-condition*="drizzle"], html[data-condition*="shower"],
+body[data-condition*="rain"], body[data-condition*="drizzle"], body[data-condition*="shower"] {
+    background: linear-gradient(135deg, #0f2027, #203a43 35%, #2c5364);
+}
+
+html[data-condition*="cloud"], html[data-condition*="overcast"], html[data-condition*="fog"],
+html[data-condition*="mist"], html[data-condition*="haze"], html[data-condition*="snow"],
+body[data-condition*="cloud"], body[data-condition*="overcast"], body[data-condition*="fog"],
+body[data-condition*="mist"], body[data-condition*="haze"], body[data-condition*="snow"] {
+    background: linear-gradient(135deg, #4b5d7d, #b5c7db 52%, #edf2ff);
+}
+
+html[data-condition*="storm"], html[data-condition*="thunder"], html[data-condition*="lightning"],
+body[data-condition*="storm"], body[data-condition*="thunder"], body[data-condition*="lightning"] {
+    background: linear-gradient(135deg, #0a1220, #1e2a39 32%, #2c3e50);
+}
+
 body.sunny::before { background: rgba(255, 212, 87, 0.38); }
 body.sunny::after { background: rgba(142, 224, 255, 0.44); }
 body.rainy::before { background: rgba(95, 176, 255, 0.35); }
@@ -118,6 +140,38 @@ body.cloudy::before { background: rgba(255, 255, 255, 0.45); }
 body.cloudy::after { background: rgba(164, 181, 217, 0.38); }
 body.thunder::before { background: rgba(117, 130, 255, 0.28); }
 body.thunder::after { background: rgba(140, 168, 255, 0.2); }
+
+body[data-condition*="clear"]::before,
+body[data-condition*="sunny"]::before { background: rgba(255, 212, 87, 0.38); }
+body[data-condition*="clear"]::after,
+body[data-condition*="sunny"]::after { background: rgba(142, 224, 255, 0.44); }
+
+body[data-condition*="rain"]::before,
+body[data-condition*="drizzle"]::before,
+body[data-condition*="shower"]::before { background: rgba(95, 176, 255, 0.35); }
+body[data-condition*="rain"]::after,
+body[data-condition*="drizzle"]::after,
+body[data-condition*="shower"]::after { background: rgba(169, 223, 255, 0.3); }
+
+body[data-condition*="cloud"]::before,
+body[data-condition*="overcast"]::before,
+body[data-condition*="fog"]::before,
+body[data-condition*="mist"]::before,
+body[data-condition*="haze"]::before,
+body[data-condition*="snow"]::before { background: rgba(255, 255, 255, 0.45); }
+body[data-condition*="cloud"]::after,
+body[data-condition*="overcast"]::after,
+body[data-condition*="fog"]::after,
+body[data-condition*="mist"]::after,
+body[data-condition*="haze"]::after,
+body[data-condition*="snow"]::after { background: rgba(164, 181, 217, 0.38); }
+
+body[data-condition*="storm"]::before,
+body[data-condition*="thunder"]::before,
+body[data-condition*="lightning"]::before { background: rgba(117, 130, 255, 0.28); }
+body[data-condition*="storm"]::after,
+body[data-condition*="thunder"]::after,
+body[data-condition*="lightning"]::after { background: rgba(140, 168, 255, 0.2); }
 
 @keyframes drift {
     0% { transform: translate3d(0, 0, 0) scale(1); }
