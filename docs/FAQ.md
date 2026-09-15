@@ -1,4 +1,4 @@
-# Frequently Asked Questions (`docs/FAQ.md`)
+# Frequently Asked Questions
 
 ## General
 
