@@ -54,14 +54,12 @@ Weatherender/
 │   │   ├── logging_config.py         # structured JSON logging
 │   │   └── Dockerfile                # local Flask-only container (port 5001)
 │   ├── API/                          # FastAPI v2 + mounted Flask — sole Render / GHCR image
-
 │   │   ├── main.py                   # ASGI entry; mounts WEB.app via WSGIMiddleware
 │   │   ├── async_services.py         # httpx.AsyncClient mirror of WeatherService
 │   │   ├── async_cache.py            # redis.asyncio singleton cache
 │   │   ├── async_db.py               # create_async_engine / AsyncSessionLocal (asyncpg)
 │   │   ├── pydantic_schemas.py       # Pydantic v2 query + response models
 │   │   └── Dockerfile                # GHCR + Render image (port 8001: Flask + FastAPI)
-
 │   ├── CLI/
 │   │   ├── main.py                   # console script: weatherender
 │   │   └── Dockerfile
