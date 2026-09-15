@@ -24,7 +24,7 @@ Status legend:
   Render + Supabase (PostgreSQL) + Upstash (Redis) + UptimeRobot keep-alive.
 
 - [x] **Full test & CI suite**
-  150+ pytest tests, Ruff, Mypy, Codecov, k6 load testing, automated PyPI publishing via Trusted Publishing.
+  Pytest coverage, Ruff, Mypy, Codecov, k6 load testing, and automated PyPI publishing via Trusted Publishing.
 
 ---
 

@@ -7,9 +7,9 @@ Load testing is done with [k6](https://k6.io/). Scripts live in `load_tests/`.
 Two environments are used, on purpose:
 
 - **Smoke & load tests** run against the **live Render deployment** (`weather-7icc.onrender.com`), with a conservative number of virtual users (VUs). This gives real-world numbers — actual network latency, free-tier CPU limits, cold-start behavior — without risking the free-tier infrastructure. Note that `/api/v2/weather` enforces a rate limit of **25 requests/min per IP** via `slowapi`, so live load tests are tuned to run below this threshold to avoid false-positive HTTP 429 errors.
-- **Stress & spike tests** run only **locally** against `docker compose` (`localhost:5001` for sync `web`, `localhost:8001` for async `api`), where nothing is rate-limited or resource-capped by a third party. This is where the application is deliberately pushed past its limits — including past the rate limiter itself (see "Rate-Limiting-Aware Re-run" below).
+- **Stress & spike tests** run only **locally** against `docker compose` (`localhost:5001` for sync `web`, `localhost:8001` for async `api`), without third-party resource caps. The application rate limiters remain active, so these tests deliberately exercise both normal responses and `429` responses (see "Rate-Limiting-Aware Re-run" below).
 
-> **CI Test note**: add load_tests/ci_smoke.js for step in .github/workflows/ci.yml, duration for 5 sec and target 1 request per 0.5 sec
+> **CI test:** `load_tests/ci_smoke.js` is run by `.github/workflows/ci.yml` as a short smoke check.
 
 | Script            | Target                  | VUs (peak) | Purpose                                      |
 |-------------------|--------------------------|------------|-----------------------------------------------|

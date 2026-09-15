@@ -11,6 +11,7 @@
 ```bash
 docker compose up -d weather_db
 docker compose run --rm cli alembic upgrade head
+```
 
 If the test database is involved, also start `weather_test_db` (port 5433).
 
@@ -82,4 +83,3 @@ Inside Docker the report is written to `src/weatherender/CLI/weather_report.txt`
 3. Open a new issue or contact the maintainer (see SUPPORT.md)
 
 ---
-

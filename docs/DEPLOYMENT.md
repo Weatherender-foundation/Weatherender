@@ -13,7 +13,7 @@ This document describes how **Weatherender** is deployed to production, and how 
 | **Database** | [Supabase](https://supabase.com/) | Managed PostgreSQL, Session pooler connection mode |
 | **Cache** | [Upstash](https://upstash.com/) | Managed Redis, Frankfurt region, TLS-only (`rediss://`) |
 | **Uptime Monitor** | [UptimeRobot](https://uptimerobot.com/) | Pings `/api/ping` every 10 minutes to avoid free-tier spin-down |
-| **Python package** | [PyPI](https://pypi.org/project/weatherender/) | `pip install weatherender` (`2.0.0`) |
+| **Python package** | [PyPI](https://pypi.org/project/weatherender/) | `pip install weatherender` (`2.0.1`) |
 
 Live URL: **[weather-7icc.onrender.com](https://weather-7icc.onrender.com)**
 

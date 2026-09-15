@@ -34,6 +34,6 @@ We take the security of **Weatherender** seriously. If you discover a security v
 
 This project enforces several production-level security safeguards:
 * **Header Hardening**: HTTP response headers managed via `flask-talisman` (CSP, HSTS, X-Frame-Options).
-* **Rate Limiting**: Protected against brute-force and abuse via `Flask-Limiter` (currently applied to the `/` web route).
+* **Rate Limiting**: Protected against abuse via `Flask-Limiter` on the web route, `/api/weather`, and `/api/apispec.json`, plus `SlowAPI` on `/api/v2/weather`.
 * **Input Validation**: Request payloads sanitized and validated with `Marshmallow` schemas.
 * **Automated CI Scanning**: Code quality and security linter checks (`Ruff`, `Mypy`) enforced via GitHub Actions.

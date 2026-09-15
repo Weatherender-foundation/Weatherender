@@ -34,7 +34,7 @@ The installable Python package lives under `src/weatherender/` (`pip install wea
 | **Security & Rate Limiting** | `flask-talisman` (headers), `Flask-Limiter` (v1), `SlowAPI` (v2) |
 | **Observability** | `prometheus-flask-exporter`, structured JSON logging |
 | **DevOps & Hosting** | Docker, Docker Compose, GitHub Actions, GHCR, Render, UptimeRobot |
-| **Packaging** | `pyproject.toml` (`weatherender==2.0.0` on PyPI) |
+| **Packaging** | `pyproject.toml` (`weatherender==2.0.1` on PyPI) |
 | **Testing & Performance** | Pytest, `unittest.mock`, Codecov, k6 (load testing) |
 | **Async Stack** | FastAPI, Uvicorn, httpx (async), Pydantic v2, `redis.asyncio`, `asyncpg` |
 
@@ -51,8 +51,8 @@ Weatherender/
 │   │   ├── extensions.py             # flask-limiter instance (avoids circular imports)
 │   │   ├── scheduler.py              # APScheduler DB cleanup with lock-file leader election
 │   │   ├── swagger_config.py         # OpenAPI 3.0 + Swagger UI
-│   │   ├── logging_config.py         # structured JSON logging
 │   │   └── Dockerfile                # local Flask-only container (port 5001)
+│   ├── logging_config.py             # structured JSON logging
 │   ├── API/                          # FastAPI v2 + mounted Flask — sole Render / GHCR image
 │   │   ├── main.py                   # ASGI entry; mounts WEB.app via WSGIMiddleware
 │   │   ├── async_services.py         # httpx.AsyncClient mirror of WeatherService
@@ -80,7 +80,8 @@ Weatherender/
 │   ├── ARCHITECTURE.md
 │   └── architecture.svg
 ├── alembic/
-├── scripts/
+├── src/weatherender/scripts/
+│   └── check_limit.sh
 ├── pyproject.toml
 ├── docker-compose.yml
 └── .github/workflows/

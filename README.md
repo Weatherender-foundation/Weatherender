@@ -64,12 +64,12 @@ For the full local stack (web + api + postgres + redis) use Docker Compose below
 - 🧹 Automated DB cleanup: background storage rotation powered by `APScheduler` (running weekly with a file-lock mechanism to prevent duplicate worker triggers) to safely stay within DB limits
 - ✅ Input validation with Marshmallow (sync) and Pydantic v2 (async)
 - 🛡️ Resilience & retries (`tenacity`): exponential backoff wrapper for upstream WeatherAPI calls (synchronous for v1 Flask `requests`, asynchronous non-blocking for v2 FastAPI `httpx`)
-- 🚦 Rate limiting & protection: granular per-worker rate limiting (`flask-limiter` for v1, `slowapi` for v2), confirmed experimentally via `scripts/check_limit.sh` (400 sequential requests, graceful `429 Too Many Requests` degradation beyond the quota)
+- 🚦 Rate limiting & protection: granular per-worker rate limiting (`flask-limiter` for v1, `slowapi` for v2), confirmed experimentally via `src/weatherender/scripts/check_limit.sh` (400 sequential requests, graceful `429 Too Many Requests` degradation beyond the quota)
 - 🐳 Fully containerized with Docker Compose
 - 🐬 Docker image on GHCR: [`ghcr.io/weatherender-foundation/weatherender-api`](https://github.com/Weatherender-foundation/Weatherender/pkgs/container/weatherender-api)
 - 🐍 Published on PyPI: [`pip install weatherender`](https://pypi.org/project/weatherender/)
 - 🔄 CI/CD via GitHub Actions (build, migrate, health check, image publish)
-- 🧪 158+ automated tests (pytest): unit, mocked service, Flask & FastAPIroute, and real PostgreSQL integration tests
+- 🧪 Automated pytest coverage: unit, mocked service, Flask and FastAPI route, and real PostgreSQL integration tests
 - 🔌 JSON REST API (`/api/weather` and `/api/v2/weather`) with interactive Swagger/OpenAPI docs
 - ⚡️ Redis caching for WeatherAPI responses (TTL-based, graceful fallback on Redis unavailability)
 - 📊 Prometheus metrics endpoint (`/metrics`) for observability
