@@ -1,0 +1,13 @@
+# Default owners for everything in the repo
+*       @LyapinAlexey
+
+# Documentation
+/docs/  @LyapinAlexey
+*.md    @LyapinAlexey
+
+# Core application code
+/src/   @LyapinAlexey
+
+# CI & infrastructure
+/.github/ @LyapinAlexey
+/docker-compose.yml @LyapinAlexey

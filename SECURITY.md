@@ -6,7 +6,8 @@ We actively issue security updates and patches for the following versions of **W
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.x.x   | :white_check_mark: |
+| 2.x.x   | :white_check_mark: |
+| 1.x.x   | :white_check_mark: (security fixes only) |
 | < 1.0.0 | :x:                |
 
 ---

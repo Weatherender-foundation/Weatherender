@@ -211,13 +211,31 @@ docker compose up -d
 k6 run load_tests/spike.js
 ```
 
-## Further Documentation
+## Documentation
 
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — component responsibilities, request/data flow, infrastructure
-- [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) — how the production deployment (Render + Supabase + Upstash) is set up and reproduced
-- [`docs/API.md`](docs/API.md) — full API reference (endpoints, params, error formats, rate limiting)
-- [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md) — load-testing methodology and results
-- [`docs/CHANGELOG.md`](docs/CHANGELOG.md) — project history by date/theme
+| Document | Description |
+|---|---|
+| [Architecture](docs/ARCHITECTURE.md) | Component responsibilities, request/data flow, i... |
+| [API Reference](docs/API.md) | Full API reference (endpoints, params, errors, rate limi... |
+| [Deployment](docs/DEPLOYMENT.md) | Production setup on Render + Supabase + Upstash |
+| [Performance](docs/PERFORMANCE.md) | k6 load-testing methodology and results |
+| [SSCI](docs/SSCI.md) | Snow Surface Condition Index algorithm |
+| [FAQ](docs/FAQ.md) | Frequently asked questions |
+| [Troubleshooting](docs/TROUBLESHOOTING.md) | Common problems and solutions |
+| [Roadmap](docs/ROADMAP.md) | Planned and completed features |
+| [Releasing](docs/RELEASING.md) | How to cut a new release |
+| [Changelog](docs/CHANGELOG.md) | Project history |
+
+### Community & Governance
+
+| Document | Description |
+|---|---|
+| [Contributing](CONTRIBUTING.md) | How to contribute |
+| [Code of Conduct](CODE_OF_CONDUCT.md) | Community standards |
+| [Security Policy](SECURITY.md) | How to report vulnerabilities |
+| [Maintainers](MAINTAINERS.md) | Current maintainers |
+| [Support](SUPPORT.md) | How to get help |
+| [Governance](GOVERNANCE.md) | Decision-making process |
 
 ## Running Tests
 
@@ -255,6 +273,8 @@ The next major architectural evolution of **Weatherender** is fully planned:
 - [x] **Asynchronous API v2 (FastAPI Integration):** High-performance `api/v2` microservice using **FastAPI** (`asyncio`, `asyncpg`, `httpx`, `Pydantic v2`) mounted alongside Flask via `WSGIMiddleware`
 - [x] **Python package & GHCR image:** Installable `weatherender` on PyPI and published API image on GitHub Container Registry
 - [ ] **User Authentication & Custom Alerts:** Implement secure JWT or session-based user authentication via Supabase Auth, allowing skiers to save favorite resorts and customize automated notification limits
+
+See full roadmap [here](docs/ROADMAP.md)
 
 ## Project Structure & Architecture
 
