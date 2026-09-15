@@ -274,6 +274,8 @@ The next major architectural evolution of **Weatherender** is fully planned:
 - [x] **Python package & GHCR image:** Installable `weatherender` on PyPI and published API image on GitHub Container Registry
 - [ ] **User Authentication & Custom Alerts:** Implement secure JWT or session-based user authentication via Supabase Auth, allowing skiers to save favorite resorts and customize automated notification limits
 
+See full roadmap [here](docs/ROADMAP.md)
+
 ## Project Structure & Architecture
 
 The installable package lives under `src/weatherender/`:
