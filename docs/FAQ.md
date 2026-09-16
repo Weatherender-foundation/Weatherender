@@ -6,7 +6,8 @@
 A production-grade weather application with a web UI, CLI, and dual REST API (Flask v1 + FastAPI v2).
 
 **Is it free?**
-Yes for non-commercial use. See the [SSCI Custom License](../LICENSE). Commercial use requires a license.
+Yes. Weatherender is available under the [Apache License 2.0](../LICENSE),
+including for commercial use under its terms.
 
 **Who maintains the project?**
 Alexey Lyapin ([@LyapinAlexey](https://github.com/LyapinAlexey)). See [MAINTAINERS.md](../MAINTAINERS.md).
@@ -65,4 +66,3 @@ Both return SSCI data. Production serves both from the same process.
 
 **Why do I sometimes get 429?**
 Rate limiting is intentional (25 req/min on the main weather endpoints).
-

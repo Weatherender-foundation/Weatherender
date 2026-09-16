@@ -5,6 +5,7 @@
 Production-grade weather application with a Flask web interface, a CLI tool, and a high-performance async FastAPI v2 API, built as a portfolio project demonstrating real-world engineering practices, has been developed by Alexey Lyapin.
 
 [![CI](https://github.com/Weatherender-foundation/Weatherender/actions/workflows/ci.yml/badge.svg)](https://github.com/Weatherender-foundation/Weatherender/actions)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14676/badge)](https://www.bestpractices.dev/projects/14676)
 [![Release](https://img.shields.io/github/v/release/Weatherender-foundation/Weatherender)](https://github.com/Weatherender-foundation/Weatherender/releases/latest)
 [![PyPI](https://img.shields.io/pypi/v/weatherender)](https://pypi.org/project/weatherender/)
 [![GHCR](https://img.shields.io/badge/GHCR-weatherender--api-blue)](https://github.com/Weatherender-foundation/Weatherender/pkgs/container/weatherender-api)
@@ -13,7 +14,7 @@ Production-grade weather application with a Flask web interface, a CLI tool, and
 ![Python](https://img.shields.io/badge/python-3.13-blue?logo=python&logoColor=306998)
 ![Flask](https://img.shields.io/badge/Flask-Framework-000000?logo=flask&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white)
-![License](https://img.shields.io/badge/SSCI-Custom_License-green)
+![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 
 ## Live Demo
 
@@ -29,6 +30,25 @@ Production-grade weather application with a Flask web interface, a CLI tool, and
 - **Database Pauses:** The production storage operates on a free Supabase instance. If the database receives absolutely no client traffic for 7+ consecutive days, Supabase will automatically pause the project. If this occurs, feel free to open an issue to request a manual wake-up.
 
 Stack in production: Render (app) + Supabase (PostgreSQL) + Upstash (Redis).
+
+## Table of Contents
+- [Live Demo](#live-demo)
+- [Table of Contents](#table-of-contents)
+- [Install](#install)
+- [Features](#features)
+- [Quick Start (Docker)](#quick-start-docker)
+- [Running the CLI](#running-the-cli)
+- [API](#api)
+- [Performance \& Caching Strategy](#performance--caching-strategy)
+- [Performance Testing](#performance-testing)
+- [Documentation](#documentation)
+- [Running Tests](#running-tests)
+- [Engineering Standards \& Git Flow](#engineering-standards--git-flow)
+- [Roadmap \& Future Enhancements](#roadmap--future-enhancements)
+- [Project Structure \& Architecture](#project-structure--architecture)
+- [Engineering Challenges \& Bug Investigations](#engineering-challenges--bug-investigations)
+- [About the Author](#about-the-author)
+- [License](#license)
 
 ## Install
 
@@ -234,8 +254,14 @@ k6 run load_tests/spike.js
 | [Code of Conduct](CODE_OF_CONDUCT.md) | Community standards |
 | [Security Policy](SECURITY.md) | How to report vulnerabilities |
 | [Maintainers](MAINTAINERS.md) | Current maintainers |
+| [Authors](AUTHORS.md) | Project authors and attribution |
 | [Support](SUPPORT.md) | How to get help |
 | [Governance](GOVERNANCE.md) | Decision-making process |
+| [Antitrust Policy](antitrust.md) | Rules for competition-sensitive discussions |
+| [Third-Party Notices](third-party.md) | Direct dependencies and external services |
+| [Adopters](adopters.md) | Public adoption and integration listings |
+| [Trademark Policy](TRADEMARKS.md) | Rules for project names and branding |
+| [Citation](CITATION.cff) | How to cite Weatherender |
 
 ## Running Tests
 
@@ -340,15 +366,14 @@ I also write about the engineering side of this project on my [Habr profile](htt
 
 ## License
 
-This project is licensed under the **SSCI Custom License v1.2**.
+This project is licensed under the **Apache License 2.0**.
 
-> 🛡️ **License:** Non-Commercial Use Only
-> You may download and use this package for **personal, educational, or non-commercial purposes**.
-> **Commercial use (selling, SaaS, monetization) is strictly prohibited** without written permission.
-Full license text:
-[SSCI Custom License v1.2](./LICENSE)
+You may use, modify, distribute, and use this project commercially under the
+terms of [LICENSE](./LICENSE). Please preserve the copyright, license, and
+attribution notices. Project names and branding are covered separately by
+[TRADEMARKS.md](./TRADEMARKS.md).
 
-For commercial licensing inquiries, contact:
+For licensing, attribution, or trademark questions, contact the maintainer:
 
 <p align="center">
   <a href="mailto:lehacomp16@gmail.com" style="display: inline-block; margin-bottom: 8px;">

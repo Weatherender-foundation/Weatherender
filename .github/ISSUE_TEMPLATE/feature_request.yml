@@ -1,0 +1,43 @@
+name: Feature request
+description: "Suggest an improvement or a new capability"
+title: "[feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Weatherender. Please describe the user problem before the implementation details.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What problem would this feature solve, and who is affected?
+      placeholder: "As a skier or API user, I need..."
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed solution
+      description: Describe the behavior or outcome you would like to see.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What workarounds or alternative approaches have you tried?
+  - type: textarea
+    id: scope
+    attributes:
+      label: Additional context
+      description: Add API examples, screenshots, links, constraints, or related issues.
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution readiness
+      options:
+        - label: I have searched existing issues and discussions for duplicates.
+          required: true
+        - label: I understand that this request is subject to the project's governance and license.
+          required: true
