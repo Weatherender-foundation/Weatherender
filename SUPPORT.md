@@ -22,7 +22,6 @@ Need help with **Weatherender**?
 
 ## What is **not** supported
 
-- Commercial usage without a commercial license (see [LICENSE](LICENSE))
 - Private support for production systems unless you have an explicit agreement
 - Urgent production incidents on the free-tier demo instance (`weather-7icc.onrender.com`)
 

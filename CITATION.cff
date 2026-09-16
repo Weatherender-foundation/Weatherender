@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use Weatherender in your work, please cite this project."
+type: software
+title: "Weatherender"
+abstract: >-
+  Production-grade weather intelligence for skiers with a Flask web interface,
+  CLI tool, asynchronous FastAPI API, weather data integration, and the Snow
+  Surface Condition Index (SSCI).
+version: "2.0.1"
+date-released: "2026-09-16"
+repository-code: "https://github.com/Weatherender-foundation/Weatherender"
+url: "https://weather-7icc.onrender.com/"
+license: "Apache-2.0"
+license-url: "https://www.apache.org/licenses/LICENSE-2.0"
+keywords:
+  - weather
+  - skiing
+  - snow
+  - snow conditions
+  - FastAPI
+  - Flask
+  - Python
+authors:
+  - family-names: "Lyapin"
+    given-names: "Alexey"
+    email: "lehacomp16@gmail.com"
+    affiliation: "Weatherender Foundation"
