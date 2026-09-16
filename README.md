@@ -30,6 +30,25 @@ Production-grade weather application with a Flask web interface, a CLI tool, and
 
 Stack in production: Render (app) + Supabase (PostgreSQL) + Upstash (Redis).
 
+## Table of Contents
+- [Live Demo](#live-demo)
+- [Table of Contents](#table-of-contents)
+- [Install](#install)
+- [Features](#features)
+- [Quick Start (Docker)](#quick-start-docker)
+- [Running the CLI](#running-the-cli)
+- [API](#api)
+- [Performance \& Caching Strategy](#performance--caching-strategy)
+- [Performance Testing](#performance-testing)
+- [Documentation](#documentation)
+- [Running Tests](#running-tests)
+- [Engineering Standards \& Git Flow](#engineering-standards--git-flow)
+- [Roadmap \& Future Enhancements](#roadmap--future-enhancements)
+- [Project Structure \& Architecture](#project-structure--architecture)
+- [Engineering Challenges \& Bug Investigations](#engineering-challenges--bug-investigations)
+- [About the Author](#about-the-author)
+- [License](#license)
+
 ## Install
 
 ### Python package (CLI)
