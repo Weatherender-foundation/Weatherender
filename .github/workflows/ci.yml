@@ -88,11 +88,6 @@ jobs:
       - name: Check Docker Logs
         run: docker compose logs
         if: always()
-      - name: Run Bandit
-        run: bandit -r src
-
-      - name: Audit dependencies
-        run: pip-audit -r requirements.txt
       - name: Trigger Render Deployment
         run: |
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"

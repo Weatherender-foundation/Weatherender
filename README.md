@@ -6,7 +6,6 @@ Production-grade weather application with a Flask web interface, a CLI tool, and
 
 [![CI](https://github.com/Weatherender-foundation/Weatherender/actions/workflows/ci.yml/badge.svg)](https://github.com/Weatherender-foundation/Weatherender/actions)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14676/badge)](https://www.bestpractices.dev/projects/14676)
-[![Release](https://img.shields.io/github/v/release/Weatherender-foundation/Weatherender)](https://github.com/Weatherender-foundation/Weatherender/releases/latest)
 [![PyPI](https://img.shields.io/pypi/v/weatherender)](https://pypi.org/project/weatherender/)
 [![GHCR](https://img.shields.io/badge/GHCR-weatherender--api-blue)](https://github.com/Weatherender-foundation/Weatherender/pkgs/container/weatherender-api)
 [![Codecov](https://codecov.io/github/Weatherender-foundation/Weatherender/graph/badge.svg?token=VIAZVWQ81B)](https://codecov.io/github/Weatherender-foundation/Weatherender)
