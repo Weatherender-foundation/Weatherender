@@ -10,6 +10,8 @@ dist/
 build/
 *.egg-info/
 coverage.xml
+coverage/
+weatherender.egg-info
 
 # Python compilier
 __pycache__/
@@ -26,3 +28,5 @@ __pycache__/
 Thumbs.db
 CLI/weather_report.txt
 .vscode/
+.clineignore
+.clinerules
