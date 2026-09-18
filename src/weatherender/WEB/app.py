@@ -4,7 +4,7 @@ patch_psycopg()
 
 import logging
 import os
-from datetime import datetime
+from datetime import UTC, datetime
 
 from flask import Flask, Response, g, render_template, request, session
 from flask_swagger_ui import get_swaggerui_blueprint
@@ -125,7 +125,7 @@ def index() -> str:
                     "index.html",
                     error=error,
                     bg_class="sunny",
-                    now=datetime.now().strftime("%Y-%m-%d %H:%M"),
+                    now=datetime.now(UTC).strftime("%Y-%m-%d %H:%M"),
                     needs_key=not config_api_key and not session.get("api_key"),
                     show_key_input=not config_api_key,
                     elevation=0.0,
@@ -138,7 +138,7 @@ def index() -> str:
                 "index.html",
                 error="API key is missing. Please enter your WeatherAPI key below.",
                 bg_class="sunny",
-                now=datetime.now().strftime("%Y-%m-%d %H:%M"),
+                now=datetime.now(UTC).strftime("%Y-%m-%d %H:%M"),
                 needs_key=True,
                 show_key_input=True,
                 elevation=0.0,
@@ -161,7 +161,7 @@ def index() -> str:
                     weather=robot_data,
                     city=city,
                     bg_class="sunny",
-                    now=datetime.now().strftime("%Y-%m-%d %H:%M"),
+                    now=datetime.now(UTC).strftime("%Y-%m-%d %H:%M"),
                     needs_key=False,
                     show_key_input=False,
                     elevation=0.0,
@@ -196,7 +196,7 @@ def index() -> str:
                     "message", "Invalid API Key or City not found."
                 ),
                 bg_class="sunny",
-                now=datetime.now().strftime("%Y-%m-%d %H:%M"),
+                now=datetime.now(UTC).strftime("%Y-%m-%d %H:%M"),
                 needs_key=not config_api_key,
                 show_key_input=not config_api_key,
                 elevation=0.0,
@@ -253,7 +253,9 @@ def index() -> str:
         current_hour_str = ""
 
         if raw_localtime:
-            api_localtime = datetime.strptime(raw_localtime, "%Y-%m-%d %H:%M")
+            api_localtime = datetime.strptime(raw_localtime, "%Y-%m-%d %H:%M").replace(
+                tzinfo=UTC
+            )
             current_hour_str = api_localtime.strftime("%Y-%m-%d %H:00")
 
         all_hours = [hour for day in forecast_days for hour in day.get("hour", [])]
@@ -288,7 +290,7 @@ def index() -> str:
             raw_date = day.get("date")
             if not raw_date:
                 continue
-            d_obj = datetime.strptime(raw_date, "%Y-%m-%d")
+            d_obj = datetime.strptime(raw_date, "%Y-%m-%d").replace(tzinfo=UTC)
             day_info = day.get("day", {})
             chance_precip = max(
                 day_info.get("daily_chance_of_rain", 0),
@@ -342,13 +344,13 @@ def index() -> str:
             daily=daily_forecast,
             snow_info=snow_info,
             bg_class=bg_class,
-            now=datetime.now().strftime("%Y-%m-%d %H:%M"),
+            now=datetime.now(UTC).strftime("%Y-%m-%d %H:%M"),
             show_key_input=not config_api_key,
             elevation=elevation,
             city=query_param,
         )
     except Exception as e:
-        logger.exception("CRITICAL EXCEPTION in index route: %s", e)
+        logger.exception("CRITICAL EXCEPTION in index route")
         return f"Internal Server Error: {e!s}", 500  # type: ignore[return-value]
 
 
@@ -368,5 +370,5 @@ def health_check() -> tuple[dict[str, str], int]:
 
 
 if __name__ == "__main__":
-    port = int(os.getenv("FLASK_PORT", 5001))
+    port = int(os.getenv("FLASK_PORT") or "5001")
     app.run(host="0.0.0.0", port=port)
