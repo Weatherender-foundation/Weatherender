@@ -17,7 +17,10 @@ Production-grade weather application with a Flask web interface, a CLI tool, and
 
 ## Live Demo
 
+> This project follows the OpenSSF Best Practices passing baseline.
+
 > The application is currently in a fully stable, containerized, and production-grade state. It will remain active and autonomously maintained in the cloud.
+
 
 **[weather-7icc.onrender.com](https://weather-7icc.onrender.com)**
 
