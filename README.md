@@ -1,4 +1,4 @@
-<img src="https://avatars.githubusercontent.com/u/323290598?s=100&v=4" align="left" width="43" style="margin-right: 15px;">
+<img src="https://avatars.githubusercontent.com/u/323290598?s=100&v=4" align="left" width="70" style="margin-right: 15px;">
 
 # Weatherender
 
