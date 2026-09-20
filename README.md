@@ -1,18 +1,20 @@
-<img src="https://avatars.githubusercontent.com/u/323290598?s=100&v=4" align="left" width="70" style="margin-right: 15px;">
+<img src="https://avatars.githubusercontent.com/u/323290598?s=100&v=4" align="left" width="43" style="margin-right: 15px;">
 
 # Weatherender
 
 Production-grade weather application with a Flask web interface, a CLI tool, and a high-performance async FastAPI v2 API, built as a portfolio project demonstrating real-world engineering practices, has been developed by Alexey Lyapin.
 
 [![CI](https://github.com/Weatherender-foundation/Weatherender/actions/workflows/ci.yml/badge.svg)](https://github.com/Weatherender-foundation/Weatherender/actions)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14676/badge)](https://www.bestpractices.dev/projects/14676)
+[![OpenSSF-Best-Practices](https://www.bestpractices.dev/projects/14676/badge)](https://www.bestpractices.dev/projects/14676)
 [![PyPI](https://img.shields.io/pypi/v/weatherender)](https://pypi.org/project/weatherender/)
 [![GHCR](https://img.shields.io/badge/GHCR-weatherender--api-blue)](https://github.com/Weatherender-foundation/Weatherender/pkgs/container/weatherender-api)
 [![Codecov](https://codecov.io/github/Weatherender-foundation/Weatherender/graph/badge.svg?token=VIAZVWQ81B)](https://codecov.io/github/Weatherender-foundation/Weatherender)
 <br/>
 ![Python](https://img.shields.io/badge/python-3.13-blue?logo=python&logoColor=306998)
-![Flask](https://img.shields.io/badge/Flask-Framework-000000?logo=flask&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?logo=flask&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![GitHub-Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 
 ## Live Demo
