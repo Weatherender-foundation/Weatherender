@@ -5,7 +5,7 @@
 Production-grade weather application with a Flask web interface, a CLI tool, and a high-performance async FastAPI v2 API, built as a portfolio project demonstrating real-world engineering practices, has been developed by Alexey Lyapin.
 
 [![CI](https://github.com/Weatherender-foundation/Weatherender/actions/workflows/ci.yml/badge.svg)](https://github.com/Weatherender-foundation/Weatherender/actions)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14676/badge)](https://www.bestpractices.dev/projects/14676)
+[![OpenSSF-Best-Practices](https://www.bestpractices.dev/projects/14676/badge)](https://www.bestpractices.dev/projects/14676)
 [![PyPI](https://img.shields.io/pypi/v/weatherender)](https://pypi.org/project/weatherender/)
 [![GHCR](https://img.shields.io/badge/GHCR-weatherender--api-blue)](https://github.com/Weatherender-foundation/Weatherender/pkgs/container/weatherender-api)
 [![Codecov](https://codecov.io/github/Weatherender-foundation/Weatherender/graph/badge.svg?token=VIAZVWQ81B)](https://codecov.io/github/Weatherender-foundation/Weatherender)
