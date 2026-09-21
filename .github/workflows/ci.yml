@@ -87,7 +87,7 @@ jobs:
       - name: Run mypy
         run: docker compose run --rm cli mypy .
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Check Docker Logs
