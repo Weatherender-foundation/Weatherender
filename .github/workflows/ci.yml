@@ -94,9 +94,11 @@ jobs:
         run: docker compose logs
         if: always()
       - name: Trigger Render Deployment
+        if: github.event_name == 'push'
         run: |
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
       - name: Create GitHub Deployment
+        if: github.event_name == 'push'
         uses: actions/github-script@v7
         with:
           script: |
