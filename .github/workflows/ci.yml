@@ -39,19 +39,25 @@ jobs:
       - name: Wait for PostgreSQL to be ready
         run: |
           echo "[?] Waiting for PostgreSQL..."
-          until docker compose exec -T weather_db pg_isready -U test_user -d test_db; do
-            echo "[+] Database is starting up, retrying in 2 seconds..."
+          for i in {1..15}; do
+            if docker compose exec -T weather_db pg_isready -U test_user -d test_db; then
+              echo "[+] PostgreSQL is ready for use!"
+              break
+            fi
+            echo "[+] Database is starting up, retrying in 2 seconds (Attempt $i/15)..."
             sleep 2
           done
-          echo "[+] PostgreSQL is ready for use!"
       - name: Wait for test PostgreSQL
         run: |
           echo "[?] Waiting for PostgreSQL..."
-          until docker compose exec -T weather_test_db pg_isready -U test_user -d test_weather_db; do
-            echo "[+] Database is starting up, retrying in 2 seconds..."
+          for i in {1..15}; do
+            if docker compose exec -T weather_test_db pg_isready -U test_user -d test_weather_db; then
+              echo "[+] PostgreSQL is ready for use!"
+              break
+            fi
+            echo "[+] Database is starting up, retrying in 2 seconds (Attempt $i/15)..."
             sleep 2
           done
-          echo "[+] PostgreSQL is ready for use!"
       - name: Alembic for test db
         run: docker compose run --rm -e DATABASE_URL="postgresql://test_user:test_password@weather_test_db:5432/test_weather_db" cli alembic upgrade head
       - name: Wait for server and test endpoint
