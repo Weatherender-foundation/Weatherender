@@ -24,7 +24,7 @@ build==1.6.1
 
 # --- Shared: database / ORM ---
 SQLAlchemy==2.0.35
-psycopg[binary]==2.9.13
+psycopg[binary]==3.2.4
 alembic==1.13.3
 SQLAlchemy==2.0.54
 psycopg2-binary==2.9.13
