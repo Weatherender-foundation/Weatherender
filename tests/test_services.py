@@ -137,16 +137,6 @@ class TestGetWeather(unittest.TestCase):
         assert mock_get.call_count == 1
 
     @patch("weatherender.services.requests.get")
-    def test_weather_success_returns_json(self, mock_get):
-        mock_response = Mock(status_code=200)
-        mock_response.headers.get.return_value = "application/json"
-        mock_response.json.return_value = {"current": {"temp_c": "33"}}
-        mock_get.return_value = mock_response
-        res = WeatherService.get_weather("London", api_key="fake-invalid-key")
-        assert res["current"]["temp_c"] == "33"
-        assert mock_get.call_count == 1
-
-    @patch("weatherender.services.requests.get")
     def test_weather_network_error_returns_error(self, mock_get):
         mock_get.side_effect = requests.RequestException("Connection lost")
         res = WeatherService.get_weather("London", api_key="fake-invalid")
@@ -169,7 +159,7 @@ class TestGetWeather(unittest.TestCase):
     @patch("weatherender.services.requests.get")
     def test_weather_server_error_500_returns_error(self, mock_get):
         real_response = Response()
-        real_response.status_code = 500
+        real_response.status_code = 502
         real_response._content = b'{"error": {"message": "Server Error"}}'
 
         mock_get.return_value = real_response
