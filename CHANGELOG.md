@@ -4,6 +4,14 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-09-30 — Weather provider retries and error responses
+
+- Fixed sync and async WeatherAPI requests to retry transient network failures and upstream `5xx` responses up to three times with exponential backoff.
+- Kept `404` for cities the provider cannot find; upstream failures now return `502 Bad Gateway` from both weather endpoints.
+- Added regression tests for retries and error-status mapping, and updated the API reference and Flask OpenAPI response documentation.
+- Updated async-service coverage to verify three retries and the final `upstream_unavailable` result for persistent HTTP `5xx` responses.
+- Updated k6 load, stress, and spike tests to treat weather-endpoint `429` responses as expected, without increasing application rate limits.
+
 ## 2026-09-12 — PyPI packaging fix, lazy DB engine init & automated releases
 
 - **Root-caused and fixed a completely broken `pip install weatherender`.** The `2.0.0` distribution published to PyPI on Sep 2 was built from a stale pre-`src`-layout snapshot — `weatherender.CLI.main:cli` entry point pointed at a function that never existed, and the `weatherender` package itself wasn't even included in the wheel/sdist (`pyproject.toml`'s `packages.find` was scoped to `where = ["."]`/`include = ["API*", "CLI*", "WEB*"]` instead of `where = ["src"]`). The repo's own `pyproject.toml` was fixed the next day (Sep 3) but the broken version was never re-published under a new number. `2.0.1` is the first PyPI release built from the actual current `src/weatherender/` layout.

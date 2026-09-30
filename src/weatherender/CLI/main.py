@@ -114,7 +114,7 @@ class WeatherReport:
             wind_kph=self.curr.get("wind_kph", 0.0),
             cloud_cover=self.curr.get("cloud", 0),
             condition_text=self.curr.get("condition", {}).get("text", ""),
-            prev_day_max_temp=curr_day.get("maxtemp_c", 0.0),
+            prev_day_max_temp=0.0,
             totalprecip_mm=curr_day.get("totalprecip_mm", 0.0),
             will_it_snow=curr_hour.get("will_it_snow", 0),
             totalsnow_cm=curr_day.get("totalsnow_cm", 0.0),
@@ -162,6 +162,7 @@ class WeatherReport:
         )
         print("-" * self.line_len)
 
+        prev_day_max_temp = 0.0
         for day in self.data["forecast"]["forecastday"]:
             date_obj = datetime.strptime(day["date"], "%Y-%m-%d").replace(tzinfo=UTC)
             formatted_date = date_obj.strftime("%d.%m")
@@ -180,11 +181,12 @@ class WeatherReport:
                 wind_kph=day["day"]["maxwind_kph"],
                 cloud_cover=50,
                 condition_text=day["day"]["condition"]["text"],
-                prev_day_max_temp=day["day"]["maxtemp_c"],
+                prev_day_max_temp=prev_day_max_temp,
                 totalprecip_mm=day["day"]["totalprecip_mm"],
                 will_it_snow=1 if day["day"].get("totalsnow_cm", 0) > 0 else 0,
                 totalsnow_cm=day["day"].get("totalsnow_cm", 0.0),
             )
+            prev_day_max_temp = day["day"]["maxtemp_c"]
             print(
                 f" {formatted_date:<5} | {temp:<8} | {pop:<11} | {maxuv:<12} | "
                 f"{gusts:<8} | {day_snow['status']:<18}"

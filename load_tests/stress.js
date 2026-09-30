@@ -21,7 +21,7 @@ export default function () {
             tags: { name: "health" },
         });
         check(res_health, {
-            "status is 200": (r) => r.status === 200 || r.status === 429,
+            "status is 200": (r) => r.status === 200,
             "response time <3000ms": (r) => r.timings.duration < 3000,
         });
         sleep(1);
@@ -32,7 +32,7 @@ export default function () {
             tags: { name: "ping" },
         });
         check(res_ping, {
-            "status is 200": (r) => r.status === 200 || r.status === 429,
+            "status is 200": (r) => r.status === 200,
             "response time <3000ms": (r) => r.timings.duration < 3000,
         });
         sleep(1);
@@ -41,9 +41,10 @@ export default function () {
     group('weather', () => {
         const res_weather = http.get(`http://localhost:5001/api/weather?city=${city}`, {
             tags: { name: "weather" },
+            responseCallback: http.expectedStatuses(200, 429),
         });
         check(res_weather, {
-            "status is 200": (r) => r.status === 200 || r.status === 429,
+            "status is expected (200 or 429)": (r) => r.status === 200 || r.status === 429,
             "response time <5000ms": (r) => r.timings.duration < 5000,
         });
         sleep(1);

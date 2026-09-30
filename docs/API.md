@@ -69,8 +69,9 @@ This will **not** work on `:5001`.
 | `200` | Success — weather payload returned asynchronously |
 | `422` | Unprocessable Entity — missing, empty, or invalid `city` parameter |
 | `404` | City not found by the upstream weather provider |
+| `502` | Weather provider unavailable or returned an invalid response |
 | `429` | Too Many Requests — rate limit exceeded (25 req/min per worker) |
-| `500` | Internal server error during upstream API processing |
+| `500` | Internal server or database error |
 
 **Caching:** Responses are cached in Redis for `REDIS_TTL` seconds (default 300) via `AsyncRedisCache`. If Redis is unavailable, the endpoint transparently falls back to a live async fetch via `httpx.AsyncClient`.
 
@@ -140,7 +141,8 @@ curl "http://localhost:8001/api/weather?city=Berlin"
 | --- | --- |
 | `200` | Success — weather payload returned |
 | `400` | Missing or invalid `city` parameter |
-| `404` | City not found by the upstream weather provider, or an upstream error occurred |
+| `404` | City not found by the upstream weather provider |
+| `502` | Weather provider unavailable or returned an invalid response |
 
 Rate limited to 25 requests/minute per IP per worker via `flask-limiter`. See [Rate Limiting](#rate-limiting) below.
 
@@ -228,7 +230,7 @@ Marshmallow validation returns a field-keyed structure:
 }
 ```
 
-### 3. Upstream / Business Errors (`404 Not Found`)
+### 3. City Not Found (`404 Not Found`)
 
 Returned when a city is not found by WeatherAPI:
 
@@ -240,7 +242,19 @@ Returned when a city is not found by WeatherAPI:
 }
 ```
 
-### 4. Rate Limit Exceeded (`429 Too Many Requests`)
+### 4. Upstream Provider Errors (`502 Bad Gateway`)
+
+Returned when WeatherAPI is unavailable, returns a server error, or provides an invalid response.
+
+```json
+{
+  "error": {
+    "message": "Weather provider unavailable"
+  }
+}
+```
+
+### 5. Rate Limit Exceeded (`429 Too Many Requests`)
 
 Returned by `slowapi` on `/api/v2/weather` when a client exceeds the per-minute request limit.
 

@@ -53,7 +53,7 @@ app.register_blueprint(api_bp)
 swaggerui_bp = get_swaggerui_blueprint(SWAGGER_URL, API_URL)
 app.register_blueprint(swaggerui_bp, url_prefix=SWAGGER_URL)
 with app.app_context():
-    spec.path(view=getattr(get_weather, "__wrapped__", get_weather), app=app)
+    spec.path(view=get_weather, app=app)
 app.config.from_object(Config)
 app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024  # 1 MB
 Config.validate()
@@ -241,7 +241,7 @@ def index() -> str:
                 wind_kph=current.get("wind_kph", 0),
                 cloud_cover=current.get("cloud", 0),
                 condition_text=current.get("condition", {}).get("text", ""),
-                prev_day_max_temp=today_day.get("maxtemp_c", current.get("temp_c", 0)),
+                prev_day_max_temp=0.0,
                 totalprecip_mm=today_day.get("totalprecip_mm", 0.0),
                 will_it_snow=today_day.get("daily_will_it_snow", 0),
                 totalsnow_cm=today_day.get("totalsnow_cm", 0.0),
@@ -303,7 +303,7 @@ def index() -> str:
                     "maxtemp_c", day_info.get("avgtemp_c", 0)
                 )
             else:
-                prev_day_max_temp = day_info.get("maxtemp_c", 0)
+                prev_day_max_temp = 0.0
 
             day_snow_state = get_snow_state(
                 temp_c=day_info.get("avgtemp_c", 0),

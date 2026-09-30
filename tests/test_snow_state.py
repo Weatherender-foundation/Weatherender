@@ -123,6 +123,38 @@ from weatherender.snow import get_snow_state
             },
             "Unstable conditions",
         ),
+        # 12. Today's high above 2 °C is not previous-day melt
+        (
+            {
+                "temp_c": 1.0,
+                "min_temp_c": 1.0,
+                "max_temp_c": 5.0,
+                "humidity": 50,
+                "cloud_cover": 80,
+                "snow_depth_cm": 2.0,
+                "snow_24h_cm": 2.0,
+                "prev_day_max_temp": 0.0,
+                "totalprecip_mm": 2.0,
+                "will_it_snow": 1,
+            },
+            "Wet snow",
+        ),
+        # 13. Previous day's thaw correctly yields ice crust
+        (
+            {
+                "temp_c": 1.0,
+                "min_temp_c": 1.0,
+                "max_temp_c": 5.0,
+                "humidity": 50,
+                "cloud_cover": 80,
+                "snow_depth_cm": 2.0,
+                "snow_24h_cm": 2.0,
+                "prev_day_max_temp": 5.0,
+                "totalprecip_mm": 2.0,
+                "will_it_snow": 1,
+            },
+            "Ice crust",
+        ),
     ],
 )
 def test_get_snow_state(params, expected_status):
