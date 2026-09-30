@@ -23,17 +23,16 @@ class AsyncWeatherService:
         else:
             city = city.strip()
         active_key = api_key or getattr(Config, "WEATHER_API_KEY", None)
-        cache_key = f"weather:{city.strip().lower()}"
-        cached_data = await cache_service.get(cache_key)
-        if cached_data:
-            return cached_data
-
         if not active_key:
             return {
                 "error": {
                     "message": "API key is missing. Please provide a valid WeatherAPI key."
                 }
             }
+        cache_key = f"weather:{city.strip().lower()}"
+        cached_data = await cache_service.get(cache_key)
+        if cached_data:
+            return cached_data
         params = {
             "key": active_key,
             "q": city,

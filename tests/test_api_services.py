@@ -29,6 +29,23 @@ class TestAsyncWeatherService:
             assert "error" in result
             assert "API key is missing" in result["error"]["message"]
 
+    @patch(
+        "weatherender.API.async_services.cache_service.get",
+        new_callable=AsyncMock,
+        return_value={"cached": True},
+    )
+    async def test_get_weather_async_missing_api_key_does_not_return_cached_data(
+        self, mock_cache_get, monkeypatch
+    ):
+        monkeypatch.setattr(Config, "WEATHER_API_KEY", None)
+        async with httpx.AsyncClient() as client:
+            result = await AsyncWeatherService.get_weather_async(
+                client, "Berlin", api_key=None
+            )
+
+        assert "API key is missing" in result["error"]["message"]
+        mock_cache_get.assert_not_awaited()
+
     @respx.mock
     @patch("weatherender.API.async_services.cache_service.get", new_callable=AsyncMock)
     async def test_get_weather_async_success_api_call(self, mock_cache_get):

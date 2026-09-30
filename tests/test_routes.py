@@ -279,6 +279,20 @@ class TestRoutes:
 
     @patch("weatherender.WEB.api_routes.SessionLocal")
     @patch("weatherender.WEB.api_routes.WeatherService.get_weather")
+    def test_api_weather_does_not_treat_today_max_as_prev_day(
+        self, mock_get_weather, mock_session_local, client, fake_weather_response
+    ):
+        mock_session_local.return_value = MagicMock()
+        mock_get_weather.return_value = fake_weather_response
+        response = client.get("/api/weather?city=Chamonix")
+        data = response.get_json()
+
+        assert response.status_code == 200
+        assert data["snow_state"]["status"] == "Wet snow"
+        assert data["snow_forecast"][0]["snow_state"]["status"] == "Wet snow"
+
+    @patch("weatherender.WEB.api_routes.SessionLocal")
+    @patch("weatherender.WEB.api_routes.WeatherService.get_weather")
     def test_api_weather_includes_snow_state(
         self, mock_get_weather, mock_session_local, client, fake_weather_response
     ):

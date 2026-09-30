@@ -105,6 +105,20 @@ class TestGetWeather(unittest.TestCase):
         assert "API key" in res["error"]["message"]
         mock_get.assert_not_called()
 
+    @patch("weatherender.services.cache_service.get", return_value={"cached": True})
+    @patch("weatherender.services.requests.get")
+    @patch("weatherender.services.Config")
+    def test_weather_missing_api_key_does_not_return_cached_data(
+        self, mock_config, mock_get, mock_cache_get
+    ):
+        mock_config.WEATHER_API_KEY = None
+
+        result = WeatherService.get_weather("London", api_key=None)
+
+        assert "API key" in result["error"]["message"]
+        mock_cache_get.assert_not_called()
+        mock_get.assert_not_called()
+
     @patch("weatherender.services.requests.get")
     def test_weather_invalid_key_returns_error(self, mock_get):
         mock_responce = Mock(status_code=401)

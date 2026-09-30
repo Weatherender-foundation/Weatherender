@@ -96,17 +96,16 @@ class WeatherService:
         else:
             city = city.strip()
         active_key = api_key or getattr(Config, "WEATHER_API_KEY", None)
-        cache_key = f"weather:{city.strip().lower()}"
-        cached_data = cache_service.get(cache_key)
-        if cached_data:
-            return cached_data  # type: ignore
-
         if not active_key:
             return {
                 "error": {
                     "message": "API key is missing. Please provide a valid WeatherAPI key."
                 }
             }
+        cache_key = f"weather:{city.strip().lower()}"
+        cached_data = cache_service.get(cache_key)
+        if cached_data:
+            return cached_data  # type: ignore
         params = {
             "key": active_key,
             "q": city,
