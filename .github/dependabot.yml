@@ -1,29 +1,38 @@
 version: 2
 updates:
-  - package-ecosystem: pip
+  - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: weekly
-      day: monday
+      interval: "weekly"
+      day: "monday"
       time: "09:00"
       timezone: "UTC"
-    open-pull-requests-limit: 1
+    open-pull-requests-limit:
     labels:
-      - dependencies
-      - python
+      - "dependencies"
+      - "python"
     groups:
-      python-dependencies:
+      major-minor-updates:
         patterns:
           - "*"
+        update-types:
+          - "major"
+          - "minor"
+      accumulated-patches:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+        min-dependency-version-updates-allowed: 10
 
-  - package-ecosystem: github-actions
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: weekly
-      day: monday
+      interval: "weekly"
+      day: "monday"
       time: "09:30"
       timezone: "UTC"
     open-pull-requests-limit: 1
     labels:
-      - dependencies
-      - github-actions
+      - "dependencies"
+      - "github-actions"

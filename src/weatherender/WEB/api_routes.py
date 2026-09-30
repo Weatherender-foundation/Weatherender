@@ -15,10 +15,10 @@ WEATHER_ROUTE_DOC = """Get weather data and snow conditions by city.
 get:
     parameters:
         - in: query
-            name: city
-            schema:
-                type: string
-            required: true
+          name: city
+          schema:
+            type: string
+          required: true
     responses:
         200:
             description: Weather data and snow conditions

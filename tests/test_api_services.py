@@ -127,19 +127,21 @@ class TestAsyncWeatherService:
 
     @respx.mock
     @patch("weatherender.API.async_services.cache_service.get", new_callable=AsyncMock)
-    async def test_get_weather_async_other_status_error(self, mock_cache_get):
+    async def test_get_weather_async_server_error_retries_then_fails(
+        self, mock_cache_get
+    ):
         mock_cache_get.return_value = None
-        respx.get(Config.WEATHER_URL).mock(
+        route = respx.get(Config.WEATHER_URL).mock(
             return_value=Response(500, headers={"Content-Type": "application/json"})
         )
         async with httpx.AsyncClient() as client:
             result = await AsyncWeatherService.get_weather_async(
                 client, "Berlin", "fake-key"
             )
-            assert "error" in result
-            assert (
-                "Weather service error. Status code: 500" in result["error"]["message"]
-            )
+
+        assert result["error"]["code"] == "upstream_unavailable"
+        assert "Network error" in result["error"]["message"]
+        assert route.call_count == 3
 
     @respx.mock
     @patch("weatherender.API.async_services.cache_service.get", new_callable=AsyncMock)

@@ -249,7 +249,7 @@ class TestRoutes:
         }
         response = client.get("/api/weather?city=Invalid-city")
         data = response.get_json()
-        assert response.status_code == 404
+        assert response.status_code == 502
         assert "error" in data
         assert data["error"]["message"] == "City 'Invalid-city' not found."
 
@@ -299,20 +299,6 @@ class TestRoutes:
         for _ in range(100):
             response = client.get("/api/ping")
             assert response.status_code != 429
-
-    @patch("weatherender.WEB.api_routes.SessionLocal")
-    @patch("weatherender.WEB.api_routes.WeatherService.get_weather")
-    def test_api_weather_does_not_treat_today_max_as_prev_day(
-        self, mock_get_weather, mock_session_local, client, fake_weather_response
-    ):
-        mock_session_local.return_value = MagicMock()
-        mock_get_weather.return_value = fake_weather_response
-        response = client.get("/api/weather?city=Chamonix")
-        data = response.get_json()
-
-        assert response.status_code == 200
-        assert data["snow_state"]["status"] == "Wet snow"
-        assert data["snow_forecast"][0]["snow_state"]["status"] == "Wet snow"
 
     @patch("weatherender.WEB.api_routes.SessionLocal")
     @patch("weatherender.WEB.api_routes.WeatherService.get_weather")

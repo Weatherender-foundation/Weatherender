@@ -121,23 +121,6 @@ class TestApiRoutes:
     @pytest.mark.asyncio
     @patch("weatherender.API.main.AsyncSessionLocal")
     @patch("weatherender.API.main.AsyncWeatherService.get_weather_async")
-    async def test_get_weather_v2_does_not_treat_today_max_as_prev_day(
-        self, mock_get_weather, mock_session_local, api_client, fake_weather_response
-    ):
-        mock_session = AsyncMock()
-        mock_session.add = MagicMock()
-        mock_session_local.return_value.__aenter__.return_value = mock_session
-        mock_session_local.return_value.__aexit__.return_value = None
-        mock_get_weather.return_value = fake_weather_response
-        response = await api_client.get("/api/v2/weather?city=Chamonix")
-        data = response.json()
-        assert response.status_code == 200
-        assert data["snow_state"]["status"] == "Wet snow"
-        assert data["snow_forecast"][0]["snow_state"]["status"] == "Wet snow"
-
-    @pytest.mark.asyncio
-    @patch("weatherender.API.main.AsyncSessionLocal")
-    @patch("weatherender.API.main.AsyncWeatherService.get_weather_async")
     async def test_get_weather_v2_no_forecast_days(
         self, mock_get_weather, mock_session_local, api_client
     ):

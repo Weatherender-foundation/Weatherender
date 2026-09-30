@@ -53,7 +53,7 @@ app.register_blueprint(api_bp)
 swaggerui_bp = get_swaggerui_blueprint(SWAGGER_URL, API_URL)
 app.register_blueprint(swaggerui_bp, url_prefix=SWAGGER_URL)
 with app.app_context():
-    spec.path(view=getattr(get_weather, "__wrapped__", get_weather), app=app)
+    spec.path(view=get_weather, app=app)
 app.config.from_object(Config)
 app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024  # 1 MB
 Config.validate()
