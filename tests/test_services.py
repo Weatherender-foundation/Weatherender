@@ -133,6 +133,7 @@ class TestGetWeather(unittest.TestCase):
         mock_get.return_value = mock_responce
         res = WeatherService.get_weather("London", api_key="fake-invalid-key")
         assert "City 'London' not found." in res["error"]["message"]
+        assert res["error"]["code"] == "city_not_found"
         assert mock_get.call_count == 1
 
     @patch("weatherender.services.requests.get")
@@ -150,7 +151,20 @@ class TestGetWeather(unittest.TestCase):
         mock_get.side_effect = requests.RequestException("Connection lost")
         res = WeatherService.get_weather("London", api_key="fake-invalid")
         assert "Network error" in res["error"]["message"]
-        assert mock_get.call_count == 1
+        assert res["error"]["code"] == "upstream_unavailable"
+        assert mock_get.call_count == 3
+
+    @patch("weatherender.services.requests.get")
+    def test_weather_retries_after_transient_network_error(self, mock_get):
+        mock_response = Mock(status_code=200)
+        mock_response.headers.get.return_value = "application/json"
+        mock_response.json.return_value = {"current": {"temp_c": 12}}
+        mock_get.side_effect = [requests.ConnectionError("temporary"), mock_response]
+
+        result = WeatherService.get_weather("London", api_key="fake-key")
+
+        assert result["current"]["temp_c"] == 12
+        assert mock_get.call_count == 2
 
     @patch("weatherender.services.requests.get")
     def test_weather_server_error_500_returns_error(self, mock_get):

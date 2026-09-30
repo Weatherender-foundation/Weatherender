@@ -196,7 +196,10 @@ class TestRoutes:
         mock_config.WEATHER_API_KEY = "fake-key"
         mock_session_local.return_value = MagicMock()
         mock_get_weather.return_value = {
-            "error": {"message": "City 'Invalid-city' not found."}
+            "error": {
+                "message": "City 'Invalid-city' not found.",
+                "code": "city_not_found",
+            }
         }
         response = client.post("/", data={"city": "Invalid-city"})
         assert response.status_code == 200
@@ -249,6 +252,26 @@ class TestRoutes:
         assert response.status_code == 404
         assert "error" in data
         assert data["error"]["message"] == "City 'Invalid-city' not found."
+
+    @patch("weatherender.WEB.api_routes.SessionLocal")
+    @patch("weatherender.WEB.api_routes.WeatherService.get_weather")
+    def test_api_weather_upstream_error_returns_502(
+        self, mock_get_weather, mock_session_local, client
+    ):
+        mock_session_local.return_value = MagicMock()
+        mock_get_weather.return_value = {
+            "error": {
+                "message": "Weather provider unavailable",
+                "code": "upstream_unavailable",
+            }
+        }
+
+        response = client.get("/api/weather?city=Berlin")
+
+        assert response.status_code == 502
+        assert response.get_json() == {
+            "error": {"message": "Weather provider unavailable"}
+        }
 
     @patch("weatherender.WEB.api_routes.SessionLocal")
     def test_api_weather_missing_city_param(self, mock_session_local, client):

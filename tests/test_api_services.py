@@ -84,6 +84,31 @@ class TestAsyncWeatherService:
                 client, "UnknownCity", "fake-key"
             )
             assert "not found" in result["error"]["message"]
+            assert result["error"]["code"] == "city_not_found"
+
+    @respx.mock
+    @patch("weatherender.API.async_services.cache_service.get", new_callable=AsyncMock)
+    async def test_get_weather_async_retries_after_transient_network_error(
+        self, mock_cache_get
+    ):
+        mock_cache_get.return_value = None
+        route = respx.get(Config.WEATHER_URL).mock(
+            side_effect=[
+                httpx.ConnectError("temporary"),
+                Response(
+                    200,
+                    json={"location": {"name": "Berlin"}},
+                    headers={"Content-Type": "application/json"},
+                ),
+            ]
+        )
+        async with httpx.AsyncClient() as client:
+            result = await AsyncWeatherService.get_weather_async(
+                client, "Berlin", "fake-key"
+            )
+
+        assert result["location"]["name"] == "Berlin"
+        assert route.call_count == 2
 
     @respx.mock
     @patch("weatherender.API.async_services.cache_service.get", new_callable=AsyncMock)

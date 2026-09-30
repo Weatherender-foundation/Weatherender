@@ -1,13 +1,11 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
-import httpx
 import pytest
 
 from weatherender.API.main import limiter
 
 
 class TestApiRoutes:
-
     @pytest.mark.asyncio
     @patch("weatherender.API.main.AsyncSessionLocal")
     async def test_health_check_v2(self, mock_session_local, api_client):
@@ -53,7 +51,10 @@ class TestApiRoutes:
         mock_session_local.return_value.__aenter__.return_value = mock_session
         mock_session_local.return_value.__aexit__.return_value = None
         mock_get_weather.return_value = {
-            "error": {"message": "City 'Invalid-city' not found."}
+            "error": {
+                "message": "City 'Invalid-city' not found.",
+                "code": "city_not_found",
+            }
         }
         response = await api_client.get("/api/v2/weather?city=Invalid-city")
         data = response.json()
@@ -61,6 +62,28 @@ class TestApiRoutes:
         assert data["detail"]["message"] == "City 'Invalid-city' not found."
         mock_session.add.assert_called_once()
         mock_session.commit.assert_awaited_once()
+
+    @pytest.mark.asyncio
+    @patch("weatherender.API.main.AsyncSessionLocal")
+    @patch("weatherender.API.main.AsyncWeatherService.get_weather_async")
+    async def test_get_weather_v2_upstream_error_returns_502(
+        self, mock_get_weather, mock_session_local, api_client
+    ):
+        mock_session = AsyncMock()
+        mock_session.add = MagicMock()
+        mock_session_local.return_value.__aenter__.return_value = mock_session
+        mock_session_local.return_value.__aexit__.return_value = None
+        mock_get_weather.return_value = {
+            "error": {
+                "message": "Weather provider unavailable",
+                "code": "upstream_unavailable",
+            }
+        }
+
+        response = await api_client.get("/api/v2/weather?city=Berlin")
+
+        assert response.status_code == 502
+        assert response.json()["detail"] == {"message": "Weather provider unavailable"}
 
     @pytest.mark.asyncio
     async def test_health_check_v2_missing_city_returns_422(self, api_client):
@@ -153,23 +176,6 @@ class TestApiRoutes:
         response = await api_client.get("/api/v2/weather?city=Berlin")
         assert response.status_code == 429
         assert "Rate limit exceeded" in response.text
-
-    @pytest.mark.asyncio
-    @patch("weatherender.API.main.AsyncSessionLocal")
-    @patch("weatherender.API.main.AsyncWeatherService.get_weather_async")
-    async def test_get_weather_v2_retries_on_transient_error(
-        self, mock_get_weather, mock_session_local, fake_weather_response, api_client
-    ):
-        mock_session = AsyncMock()
-        mock_session.add = MagicMock()
-        mock_session_local.return_value.__aenter__.return_value = mock_session
-        mock_session_local.return_value.__aexit__.return_value = None
-        mock_get_weather.side_effect = [
-            httpx.RequestError("boom", request=httpx.Request("GET", "http://test")),
-            fake_weather_response,
-        ]
-        response = await api_client.get("/api/v2/weather?city=Berlin")
-        assert response.status_code == 200
 
     @pytest.mark.asyncio
     @patch("weatherender.API.main.AsyncSessionLocal")

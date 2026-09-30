@@ -11,12 +11,6 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 from sqlalchemy import text
-from tenacity import (
-    retry,
-    retry_if_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
 
 from weatherender.logging_config import setup_logging
 from weatherender.models import WeatherRequest
@@ -61,12 +55,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 @app.get("/api/v2/weather", response_model=WeatherResponseV2)
 @limiter.limit("25/minute")
-@retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=0.2, max=2.0),
-    retry=retry_if_exception_type((httpx.RequestError, httpx.HTTPStatusError)),
-    reraise=True,
-)
 async def get_weather_v2(
     request: Request, params: Annotated[WeatherQueryParams, Query()]
 ) -> WeatherResponseV2:
@@ -84,7 +72,12 @@ async def get_weather_v2(
         async with AsyncSessionLocal() as session:
             session.add(info_err)
             await session.commit()
-        raise HTTPException(status_code=404, detail=weather_data["error"])
+        error = weather_data["error"]
+        status_code = 404 if error.get("code") == "city_not_found" else 502
+        raise HTTPException(
+            status_code=status_code,
+            detail={"message": error.get("message")},
+        )
     else:
         info_suc = WeatherRequest(
             city=city,

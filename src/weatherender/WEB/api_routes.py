@@ -1,12 +1,5 @@
-import requests
 from flask import Blueprint, g, request
 from marshmallow import ValidationError
-from tenacity import (
-    retry,
-    retry_if_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
 
 from weatherender.models import SessionLocal, WeatherRequest
 from weatherender.schemas import CityRequestSchema
@@ -17,43 +10,30 @@ from weatherender.WEB.swagger_config import spec
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
+WEATHER_ROUTE_DOC = """Get weather data and snow conditions by city.
+---
+get:
+    parameters:
+        - in: query
+            name: city
+            schema:
+                type: string
+            required: true
+    responses:
+        200:
+            description: Weather data and snow conditions
+        400:
+            description: Invalid or missing city
+        404:
+            description: City not found
+        502:
+            description: Weather provider unavailable
+"""
 
-@retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=0.2, max=2.0),
-    retry=retry_if_exception_type((requests.RequestException, requests.HTTPError)),
-    reraise=True,
-)
+
 @api_bp.route("/weather")
 @limiter.limit("25 per minute")
 def get_weather():
-    """Get weather by city name
-    ---
-    get:
-      parameters:
-        - in: query
-          name: city
-          schema:
-            type: string
-          required: true
-          description: Name of the city
-      responses:
-        200:
-          description: >
-            Successful response with weather data. In addition to the raw
-            WeatherAPI payload (location/current/forecast), the response
-            includes two derived fields:
-            - snow_state: object with a `status` string describing today's
-              snow conditions (e.g. "Powder", "Wet snow", "No snow data" if
-              no forecast data is available).
-            - snow_forecast: array of objects, one per forecast day, each
-              with `date` (string) and `snow_state` (object with `status`),
-              covering the same days as forecast.forecastday.
-        400:
-          description: Invalid or missing city parameter
-        404:
-          description: City not found
-    """
     if "db_session" not in g:
         g.db_session = SessionLocal()
     schema = CityRequestSchema()
@@ -87,7 +67,9 @@ def get_weather():
         )
         g.db_session.add(info_err)
         g.db_session.commit()
-        return {"error": weather_data["error"]}, 404
+        error = weather_data["error"]
+        status_code = 404 if error.get("code") == "city_not_found" else 502
+        return {"error": {"message": error.get("message")}}, status_code
     else:
         info_suc = WeatherRequest(
             city=city,
@@ -157,6 +139,9 @@ def get_weather():
 
     weather_data["snow_forecast"] = snow_forecast
     return weather_data, 200
+
+
+get_weather.__doc__ = WEATHER_ROUTE_DOC
 
 
 @api_bp.route("/apispec.json")
