@@ -6,7 +6,7 @@ Load testing is done with [k6](https://k6.io/). Scripts live in `load_tests/`.
 
 Two environments are used, on purpose:
 
-- **Smoke & load tests** run against the **live Render deployment** (`weather-7icc.onrender.com`), with a conservative number of virtual users (VUs). This gives real-world numbers — actual network latency, free-tier CPU limits, cold-start behavior — without risking the free-tier infrastructure. Note that `/api/v2/weather` enforces a rate limit of **25 requests/min per IP** via `slowapi`, so live load tests are tuned to run below this threshold to avoid false-positive HTTP 429 errors.
+- **Smoke & load tests** run against the **live Render deployment** (`weather-7icc.onrender.com`). Smoke tests verify normal `200` responses; load tests intentionally exceed the weather endpoint's rate limit and treat both `200` and `429` as expected outcomes. This measures the service's behavior under real network latency, free-tier CPU limits, and rate limiting without increasing the production quota.
 - **Stress & spike tests** run only **locally** against `docker compose` (`localhost:5001` for sync `web`, `localhost:8001` for async `api`), without third-party resource caps. The application rate limiters remain active, so these tests deliberately exercise both normal responses and `429` responses (see "Rate-Limiting-Aware Re-run" below).
 
 > **CI test:** `load_tests/ci_smoke.js` is run by `.github/workflows/ci.yml` as a short smoke check.
@@ -14,11 +14,11 @@ Two environments are used, on purpose:
 | Script            | Target                  | VUs (peak) | Purpose                                      |
 |-------------------|--------------------------|------------|-----------------------------------------------|
 | `smoke.js`        | Render (prod)             | 5          | Confirm the deployed sync app is alive and stable |
-| `load.js`         | Render (prod)             | 10         | Realistic sync traffic across all v1 endpoints |
+| `load.js`         | Render (prod)             | 10         | Sync traffic including expected weather rate limiting |
 | `stress.js`       | Local (docker-compose)    | 40         | Find the sync stack's breaking point, ramped gradually |
 | `spike.js`        | Local (docker-compose)    | 50         | Sudden traffic burst against the sync stack, check recovery |
 | `smoke_v2.js`     | Render (prod)             | 5          | Confirm the deployed async `/api/v2/*` stack is alive |
-| `load_v2.js`      | Render (prod)             | 10         | Realistic async traffic against `/api/v2/*` |
+| `load_v2.js`      | Render (prod)             | 10         | Async traffic including expected weather rate limiting |
 | `stress_v2.js`    | Local (docker-compose)    | 40         | Find the async stack's breaking point, ramped gradually |
 | `spike_v2.js`     | Local (docker-compose)    | 50         | Sudden traffic burst against the async stack, check recovery |
 

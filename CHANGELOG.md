@@ -9,6 +9,7 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 - Fixed sync and async WeatherAPI requests to retry transient network failures and upstream `5xx` responses up to three times with exponential backoff.
 - Kept `404` for cities the provider cannot find; upstream failures now return `502 Bad Gateway` from both weather endpoints.
 - Added regression tests for retries and error-status mapping, and updated the API reference and Flask OpenAPI response documentation.
+- Updated k6 load, stress, and spike tests to treat weather-endpoint `429` responses as expected, without increasing application rate limits.
 
 ## 2026-09-12 — PyPI packaging fix, lazy DB engine init & automated releases
 
