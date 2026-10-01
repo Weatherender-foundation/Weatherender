@@ -7,6 +7,7 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 ## 2026-10-01 — Copilot contribution instructions
 
 - Added repository-specific Copilot instructions for code quality, tests, documentation and changelog maintenance, secret handling, branch workflow, and Conventional Commits.
+- Added the `check-styles` keyword to run Ruff across the Python project.
 
 ## 2026-09-30 — Weather provider retries and error responses
 

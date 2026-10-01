@@ -1,4 +1,4 @@
-# Copilot Instructions
+  # Copilot Instructions
 
 Act as a senior full-stack engineer contributing to Weatherender. Deliver
 production-quality changes that are correct, secure, maintainable, and
@@ -55,6 +55,9 @@ consistent with the existing codebase.
 
 ## Verification
 
+- When the user writes `check-styles`, run `ruff check .` from the repository
+  root to check Python code style across the project. Do not apply automatic
+  fixes unless requested; report the command and its result.
 - Run the smallest relevant tests and checks for the change, then run the full
   applicable suite when practical. For application changes, use the project's
   documented test setup and the CI-equivalent command:
