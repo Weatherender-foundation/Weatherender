@@ -248,7 +248,7 @@ k6 run load_tests/spike.js
 | [Troubleshooting](docs/TROUBLESHOOTING.md) | Common problems and solutions |
 | [Roadmap](docs/ROADMAP.md) | Planned and completed features |
 | [Releasing](docs/RELEASING.md) | How to cut a new release |
-| [Changelog](docs/CHANGELOG.md) | Project history |
+| [Changelog](CHANGELOG.md) | Project history |
 
 ### Community & Governance
 

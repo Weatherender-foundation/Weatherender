@@ -4,6 +4,10 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-10-01 — Copilot contribution instructions
+
+- Added repository-specific Copilot instructions for code quality, tests, documentation and changelog maintenance, secret handling, branch workflow, and Conventional Commits.
+
 ## 2026-09-30 — Weather provider retries and error responses
 
 - Fixed sync and async WeatherAPI requests to retry transient network failures and upstream `5xx` responses up to three times with exponential backoff.
