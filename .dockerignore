@@ -21,8 +21,7 @@ coverage.xml
 dist/
 build/
 *.egg-info/
-.clineignore
-.clinerules
+.agents/
 
 # Git and CI/CD
 .git/

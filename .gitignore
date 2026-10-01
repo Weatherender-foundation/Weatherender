@@ -28,5 +28,4 @@ __pycache__/
 Thumbs.db
 CLI/weather_report.txt
 .vscode/
-.clineignore
-.clinerules
+.agents/
