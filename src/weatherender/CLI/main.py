@@ -7,10 +7,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from art import text2art
+from marshmallow import ValidationError
 
 from weatherender.config import Config
 from weatherender.logging_config import setup_logging
 from weatherender.models import SessionLocal, WeatherRequest
+from weatherender.schemas import CityRequestSchema
 from weatherender.services import WeatherService
 from weatherender.snow import get_snow_state
 
@@ -273,18 +275,23 @@ def print_file(path: Path) -> None:
 
 class Main:
     def run(self) -> None:
-        """Execute the CLI application workflow: resolve location, fetch weather, display, and handle print request."""
+        """Prompt for a city, fetch its weather, display the report, and handle print requests."""
         Config.validate()
+        print(text2art("Weatherender", font="slant"))
+        city_schema = CityRequestSchema()
+        while True:
+            city = input("Enter city: ").strip()
+            try:
+                city = city_schema.load({"city": city})["city"]
+                break
+            except ValidationError:
+                print(
+                    "[-] City must be between 1 and 100 characters. Please try again or press CTRL + C."
+                )
+
         db_session = SessionLocal()
         srv = WeatherService()
-        print(text2art("Weatherender", font="slant"))
-        try:
-            city = srv.get_city_by_ip()
-        except Exception as e:  # noqa: BLE001
-            logger.warning(f"Failed to resolve city by IP: {e}")
-            city = "Moscow"
-
-        logger.info(f"Location resolved: {city}")
+        logger.info(f"Location selected: {city}")
         print(f"[+] Location context: {city}")
 
         data = srv.get_weather(city)

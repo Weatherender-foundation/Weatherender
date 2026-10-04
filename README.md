@@ -158,7 +158,7 @@ Local ports (from `.env.example`):
 
 ## Running the CLI
 
-The CLI displays a stylized ASCII Weatherender banner when it starts.
+The CLI displays a stylized ASCII Weatherender banner when it starts, then prompts you to enter a city for the forecast.
 
 Via Docker Compose:
 

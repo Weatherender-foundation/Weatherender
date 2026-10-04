@@ -4,9 +4,10 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
-## 2026-10-04 — CLI startup banner
+## 2026-10-04 — CLI startup and city prompt
 
 - Added a stylized ASCII Weatherender banner to CLI startup using the `art` dependency.
+- Changed the CLI to prompt for a city instead of deriving it from the user's IP address; blank or overlong entries are rejected and prompted again.
 - Documented the banner in the README and architecture guide, and listed `art` in the third-party dependency notice.
 
 ## 2026-10-03 — License switch to AGPL 3.0
