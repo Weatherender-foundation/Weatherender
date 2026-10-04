@@ -158,6 +158,8 @@ Local ports (from `.env.example`):
 
 ## Running the CLI
 
+The CLI displays a stylized ASCII Weatherender banner when it starts.
+
 Via Docker Compose:
 
 ```bash

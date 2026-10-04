@@ -135,6 +135,7 @@ weatherender = "weatherender.CLI.main:main"
 ```
 
 Run with `weatherender` after `pip install weatherender`, or `docker compose run --rm cli weatherender`.
+At startup, the CLI prints a stylized ASCII Weatherender banner using the `art` package.
 
 ### Data & Caching Engine (`models.py`, `cache.py`, `alembic/`)
 

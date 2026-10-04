@@ -6,6 +6,8 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
+from art import text2art
+
 from weatherender.config import Config
 from weatherender.logging_config import setup_logging
 from weatherender.models import SessionLocal, WeatherRequest
@@ -275,7 +277,7 @@ class Main:
         Config.validate()
         db_session = SessionLocal()
         srv = WeatherService()
-
+        print(text2art("Weatherender", font="slant"))
         try:
             city = srv.get_city_by_ip()
         except Exception as e:  # noqa: BLE001
