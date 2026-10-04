@@ -70,16 +70,18 @@ class TestCLI:
         capsys,
     ):
         mock_service = MagicMock()
-        mock_service.get_city_by_ip.return_value = "Moscow"
         mock_service.get_weather.return_value = prepared_weather_response
         mock_service_cls.return_value = mock_service
 
-        monkeypatch.setattr("builtins.input", lambda _: "no")
+        inputs = iter(("Oslo", "no"))
+        monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
         Main().run()
 
         captured = capsys.readouterr()
-        assert "[+] Location context: Moscow" in captured.out
+        assert "[+] Location context: Oslo" in captured.out
+        mock_service.get_weather.assert_called_once_with("Oslo")
+        mock_service.get_city_by_ip.assert_not_called()
         assert mock_dependencies.add.called
         assert mock_dependencies.commit.called
 
@@ -97,11 +99,11 @@ class TestCLI:
         tmp_path,
     ):
         mock_service = MagicMock()
-        mock_service.get_city_by_ip.return_value = "Moscow"
         mock_service.get_weather.return_value = prepared_weather_response
         mock_service_cls.return_value = mock_service
 
-        monkeypatch.setattr("builtins.input", lambda _: "yes")
+        inputs = iter(("Moscow", "yes"))
+        monkeypatch.setattr("builtins.input", lambda _: next(inputs))
         report_file = tmp_path / "weather_report.txt"
         monkeypatch.setattr(
             "weatherender.CLI.main.Path",
@@ -124,16 +126,37 @@ class TestCLI:
         )
 
     @patch("weatherender.CLI.main.WeatherService")
-    def test_main_run_error_handling(self, mock_service_cls, capsys):
+    def test_main_run_error_handling(self, mock_service_cls, monkeypatch, capsys):
         mock_service = MagicMock()
-        mock_service.get_city_by_ip.side_effect = Exception("IP resolution error")
         mock_service.get_weather.return_value = {"error": {"message": "City not found"}}
         mock_service_cls.return_value = mock_service
+        monkeypatch.setattr("builtins.input", lambda _: "Narnia")
 
         Main().run()
 
         captured = capsys.readouterr()
+        assert "[+] Location context: Narnia" in captured.out
+        mock_service.get_weather.assert_called_once_with("Narnia")
+        mock_service.get_city_by_ip.assert_not_called()
         assert "[-] {'message': 'City not found'}" in captured.out
+
+    @patch("weatherender.CLI.main.WeatherService")
+    def test_main_run_reprompts_for_invalid_city(
+        self, mock_service_cls, monkeypatch, prepared_weather_response, capsys
+    ):
+        mock_service = MagicMock()
+        mock_service.get_weather.return_value = prepared_weather_response
+        mock_service_cls.return_value = mock_service
+        inputs = iter(("   ", "x" * 101, "Berlin", "no"))
+        monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+
+        Main().run()
+
+        captured = capsys.readouterr()
+        assert captured.out.count("City must be between 1 and 100 characters") == 2
+        assert "[+] Location context: Berlin" in captured.out
+        mock_service.get_weather.assert_called_once_with("Berlin")
+        mock_service.get_city_by_ip.assert_not_called()
 
     @patch("weatherender.CLI.main.platform.system", return_value="Windows")
     @patch("weatherender.CLI.main.subprocess.run")
