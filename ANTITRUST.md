@@ -1,7 +1,7 @@
 # Antitrust Policy
 
 Weatherender is developed as an independent open-source software project under
-the **Apache License 2.0**. The project must not be used to coordinate unlawful
+the **GNU Affero General Public License v3.0 (AGPL 3.0)**. The project must not be used to coordinate unlawful
 restrictions on competition or commercial conduct.
 
 This policy applies to maintainers, contributors, sponsors, service providers, and participants in project spaces, including GitHub Issues, Pull Requests, Discussions, chat, and project meetings.

@@ -6,7 +6,7 @@
 A production-grade weather application with a web UI, CLI, and dual REST API (Flask v1 + FastAPI v2).
 
 **Is it free?**
-Yes. Weatherender is available under the [Apache License 2.0](../LICENSE),
+Yes. Weatherender is available under the [GNU Affero General Public License v3.0](../LICENSE),
 including for commercial use under its terms.
 
 **Who maintains the project?**

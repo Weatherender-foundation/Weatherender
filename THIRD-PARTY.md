@@ -6,7 +6,7 @@ This notice is informational and does not replace the license or notices distrib
 
 ## Project license boundary
 
-The Weatherender source code, SSCI algorithm, documentation, and other project materials are distributed under the [Apache License 2.0](LICENSE), unless a file or component states otherwise. That license does not relicense third-party software and does not remove rights granted by a dependency's own license. The most restrictive applicable terms must be respected for each component.
+The Weatherender source code, SSCI algorithm, documentation, and other project materials are distributed under the [GNU Affero General Public License v3.0](LICENSE), unless a file or component states otherwise. That license does not relicense third-party software and does not remove rights granted by a dependency's own license. The most restrictive applicable terms must be respected for each component.
 
 ## Direct Python dependencies
 
@@ -26,6 +26,7 @@ The versions below are the direct pins currently declared in `requirements.txt`.
 | APScheduler | 3.11.3 | [PyPI](https://pypi.org/) package metadata |
 | pytest, pytest-asyncio, pytest-cov | 9.1.1, 1.4.0, 7.1.0 | [PyPI](https://pypi.org/) package metadata |
 | pre-commit, mypy, types-requests, respx, tenacity | 4.6.0, 2.3.0, 2.33.0.20260712, 0.23.1, 9.1.4 | [PyPI](https://pypi.org/) package metadata |
+| art | 6.5 | [PyPI](https://pypi.org/) package metadata |
 
 The dependency list includes both runtime and development/build tools. Some packages bring additional transitive dependencies that are not enumerated here.
 
