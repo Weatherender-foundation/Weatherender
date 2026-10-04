@@ -9,7 +9,8 @@ RUN pip install -e .
 ENV PORT=8001
 HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
   CMD curl -f http://localhost:${PORT}/api/v2/health || exit 1
-CMD uvicorn weatherender.API.main:app \
+CMD sh -c "python -c 'from weatherender.banner import print_startup_banner; print_startup_banner()' && \
+    exec uvicorn weatherender.API.main:app \
     --host 0.0.0.0 \
     --port ${PORT} \
-    --workers 4
+    --workers 4"

@@ -6,9 +6,9 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
-from art import text2art
 from marshmallow import ValidationError
 
+from weatherender.banner import print_startup_banner
 from weatherender.config import Config
 from weatherender.logging_config import setup_logging
 from weatherender.models import SessionLocal, WeatherRequest
@@ -277,7 +277,7 @@ class Main:
     def run(self) -> None:
         """Prompt for a city, fetch its weather, display the report, and handle print requests."""
         Config.validate()
-        print(text2art("Weatherender", font="slant"))
+        print_startup_banner()
         city_schema = CityRequestSchema()
         while True:
             city = input("Enter city: ").strip()

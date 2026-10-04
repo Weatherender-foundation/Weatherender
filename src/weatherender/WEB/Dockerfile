@@ -10,6 +10,7 @@ ENV PORT=5001
 HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
   CMD curl -f http://localhost:${PORT}/health || exit 1
 CMD gunicorn weatherender.WEB.app:app \
+    --config python:weatherender.WEB.gunicorn_config \
     --worker-class gevent \
     --worker-connections 50 \
     -w 4 \

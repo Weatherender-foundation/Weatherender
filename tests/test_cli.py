@@ -72,12 +72,15 @@ class TestCLI:
         mock_service = MagicMock()
         mock_service.get_weather.return_value = prepared_weather_response
         mock_service_cls.return_value = mock_service
+        print_banner = MagicMock()
+        monkeypatch.setattr("weatherender.CLI.main.print_startup_banner", print_banner)
 
         inputs = iter(("Oslo", "no"))
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
         Main().run()
 
+        print_banner.assert_called_once_with()
         captured = capsys.readouterr()
         assert "[+] Location context: Oslo" in captured.out
         mock_service.get_weather.assert_called_once_with("Oslo")
