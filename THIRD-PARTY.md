@@ -6,7 +6,7 @@ This notice is informational and does not replace the license or notices distrib
 
 ## Project license boundary
 
-The Weatherender source code, SSCI algorithm, documentation, and other project materials are distributed under the [Apache License 2.0](LICENSE), unless a file or component states otherwise. That license does not relicense third-party software and does not remove rights granted by a dependency's own license. The most restrictive applicable terms must be respected for each component.
+The Weatherender source code, SSCI algorithm, documentation, and other project materials are distributed under the [GNU Affero General Public License v3.0](LICENSE), unless a file or component states otherwise. That license does not relicense third-party software and does not remove rights granted by a dependency's own license. The most restrictive applicable terms must be respected for each component.
 
 ## Direct Python dependencies
 

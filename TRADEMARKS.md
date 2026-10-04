@@ -1,6 +1,6 @@
 # Trademarks and Project Names
 
-This document describes the permitted use of names associated with Weatherender. It does not replace the [Apache License 2.0](LICENSE), which governs copyright and other rights in the project materials.
+This document describes the permitted use of names associated with Weatherender. It does not replace the [GNU Affero General Public License v3.0](LICENSE), which governs copyright and other rights in the project materials.
 
 ## Project names
 
@@ -37,7 +37,7 @@ Without prior written permission, do not:
 - remove, hide, alter, or obscure project attribution or license notices; or
 - use project branding in advertising or marketing for a commercial product.
 
-The Apache License 2.0 does not grant permission to use project trademarks or
+The GNU Affero General Public License v3.0 does not grant permission to use project trademarks or
 branding. A factual reference is not permission to use the project as a product
 brand, and commercial use of the software does not imply project endorsement.
 

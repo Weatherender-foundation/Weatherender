@@ -21,7 +21,7 @@ A listing is optional, does not imply endorsement, and may be removed at the req
 
 ## License and support
 
-Adoption does not change the terms of the [Apache License 2.0](LICENSE).
+Adoption does not change the terms of the [GNU Affero General Public License v3.0](LICENSE).
 Public listing on this page does not provide a warranty, support agreement,
 certification, or security guarantee.
 

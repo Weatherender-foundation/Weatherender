@@ -15,4 +15,4 @@ Contributors are credited through Git history and release notes. A contributor m
 
 ## Copyright
 
-Copyright 2026 Alexey Lyapin. The project is distributed under the [Apache License 2.0](LICENSE).
+Copyright 2026 Alexey Lyapin. The project is distributed under the [GNU Affero General Public License v3.0](LICENSE).

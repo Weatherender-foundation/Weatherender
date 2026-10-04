@@ -15,7 +15,7 @@ Production-grade weather application with a Flask web interface, a CLI tool, and
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
 ![GitHub-Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
-![License](https://img.shields.io/badge/license-Apache--2.0-blue)
+![License](https://img.shields.io/badge/license-AGPL--3.0-blue)
 
 ## Live Demo
 
@@ -370,7 +370,7 @@ I also write about the engineering side of this project on my [Habr profile](htt
 
 ## License
 
-This project is licensed under the **Apache License 2.0**.
+This project is licensed under the **GNU Affero General Public License v3.0 (AGPL 3.0)**.
 
 You may use, modify, distribute, and use this project commercially under the
 terms of [LICENSE](./LICENSE). Please preserve the copyright, license, and
