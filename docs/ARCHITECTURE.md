@@ -51,6 +51,7 @@ Weatherender/
 │   │   ├── extensions.py             # flask-limiter instance (avoids circular imports)
 │   │   ├── scheduler.py              # APScheduler DB cleanup with lock-file leader election
 │   │   ├── swagger_config.py         # OpenAPI 3.0 + Swagger UI
+│   │   ├── gunicorn_config.py        # prints the startup banner once in the master process
 │   │   └── Dockerfile                # local Flask-only container (port 5001)
 │   ├── logging_config.py             # structured JSON logging
 │   ├── API/                          # FastAPI v2 + mounted Flask — sole Render / GHCR image
@@ -104,8 +105,10 @@ Weatherender/
 Local Compose command:
 
 ```text
-gunicorn weatherender.WEB.app:app --worker-class gevent --worker-connections 50 -w 4 -b 0.0.0.0:5001
+gunicorn weatherender.WEB.app:app --config python:weatherender.WEB.gunicorn_config --worker-class gevent --worker-connections 50 -w 4 -b 0.0.0.0:5001
 ```
+
+The CLI prints its ASCII banner once per invocation. The Flask/Gunicorn service prints it from the Gunicorn master startup hook, and the Uvicorn container prints it before launching workers; importing the Flask app does not print it.
 
 ### Core Domain Services (`services.py`, `schemas.py`, `snow.py`)
 
