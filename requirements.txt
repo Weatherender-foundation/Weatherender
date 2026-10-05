@@ -11,7 +11,7 @@ apispec==6.10.0
 apispec-webframeworks==1.2.0
 
 # --- API (FastAPI) ---
-fastapi==0.141.1
+fastapi==0.142.2
 uvicorn==0.54.0
 slowapi==0.1.10
 
@@ -48,7 +48,7 @@ pytest_asyncio==1.4.0
 pytest-cov==7.1.0
 pre-commit==4.6.2
 ruff==0.16.9
-mypy==2.3.1
+mypy==2.4.0
 types-requests==2.33.0.20260906
 respx==0.23.1
 tenacity==9.1.4
