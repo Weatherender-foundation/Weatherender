@@ -23,7 +23,7 @@ twine==7.0.0
 build==1.6.1
 
 # --- Shared: database / ORM ---
-SQLAlchemy==2.1.1
+SQLAlchemy==2.1.2
 psycopg[binary]==3.3.6
 psycopg2-binary==2.9.13
 alembic==1.20.0
@@ -35,7 +35,7 @@ types-redis==4.6.0.20241004
 
 # --- Shared: validation / config ---
 marshmallow==4.3.1
-python-dotenv==1.2.3
+python-dotenv==1.2.4
 python-dateutil==2.9.0.post0
 types-python-dateutil==2.9.0.20260807
 
@@ -47,7 +47,7 @@ pytest==9.1.1
 pytest_asyncio==1.4.0
 pytest-cov==7.1.0
 pre-commit==4.6.2
-ruff==0.16.9
+ruff==0.16.10
 mypy==2.4.0
 types-requests==2.33.0.20260906
 respx==0.23.1
