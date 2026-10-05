@@ -10,8 +10,8 @@ version: "2.0.1"
 date-released: "2026-09-16"
 repository-code: "https://github.com/Weatherender-foundation/Weatherender"
 url: "https://weather-7icc.onrender.com/"
-license: "Apache-2.0"
-license-url: "https://www.apache.org/licenses/LICENSE-2.0"
+license: "AGPL-3.0"
+license-url: "https://www.gnu.org/licenses/agpl-3.0.html"
 keywords:
   - weather
   - skiing

@@ -4,6 +4,12 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-10-05 — License metadata and heading fix
+
+- Corrected the citation metadata to point to the GNU Affero General Public License v3.0 URL instead of the Apache 2.0 license page.
+- Made the GNU AGPL heading the exact first line of the `LICENSE` file.
+- Restored the canonical section 0 numbering in the GNU AGPL text.
+
 ## 2026-10-04 — CLI startup and city prompt, switch to AGPL 3.0
 
 - Added a stylized ASCII Weatherender banner to CLI startup using the `art` dependency.
