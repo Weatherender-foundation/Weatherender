@@ -1,3 +1,7 @@
+from gevent import monkey
+
+monkey.patch_all(ssl=False, thread=False)
+
 from psycogreen.gevent import patch_psycopg
 
 patch_psycopg()
