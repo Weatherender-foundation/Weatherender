@@ -96,7 +96,7 @@ Weatherender/
 
 ### Web Layer (`src/weatherender/WEB/`)
 
-- **`app.py`:** Registers `flask-talisman` (secure headers), `PrometheusMetrics` (`/metrics`), and `Flask-Limiter` (rate limiting, applied to `/` and, per-route, to `/api/weather` and `/api/apispec.json`).
+- **`app.py`:** Registers `flask-talisman` (secure headers), `PrometheusMetrics` (`/metrics`), and `Flask-Limiter` (rate limiting, applied to `/` and, per-route, to `/api/weather` and `/api/apispec.json`). Gevent monkey-patching leaves the standard-library `queue` module untouched so the API's `a2wsgi` thread pool can block safely on its executor queue.
 - **`api_routes.py`:** A separate Flask Blueprint (`api_bp`) exposing the JSON REST API — `/api/weather`, `/api/ping`, `/api/apispec.json`. `/api/weather` and `/api/apispec.json` carry their own `@limiter.limit(...)` decorators (imported from `WEB/extensions.py`); `/api/ping` is intentionally left unlimited.
 - **`swagger_config.py`:** Exposes interactive API documentation at `/apidocs` and the JSON specification at `/api/apispec.json`.
 - **`logging_config.py`:** Enforces structured JSON formatted logs across the application context for machine-readable log parsing.
@@ -118,7 +118,7 @@ The CLI prints its ASCII banner once per invocation. The Flask/Gunicorn service 
 
 ### Async API Layer (`src/weatherender/API/`)
 
-- **`main.py`:** FastAPI ASGI app exposing `/api/v2/weather` and `/api/v2/health`. `city` is validated via `Annotated[WeatherQueryParams, Query()]` (`pydantic_schemas.py`) rather than a bare `Query(...)` — 1–100 characters, blank/whitespace-only rejected. Rate limiting is enforced on `GET /api/v2/weather` via `slowapi` (25 req/min per IP). Mounts the entire synchronous Flask app at `/` via `a2wsgi.WSGIMiddleware`, making this the single process Render and GHCR deploy.
+- **`main.py`:** FastAPI ASGI app exposing `/api/v2/weather` and `/api/v2/health`. `city` is validated via `Annotated[WeatherQueryParams, Query()]` (`pydantic_schemas.py`) rather than a bare `Query(...)` — 1–100 characters, blank/whitespace-only rejected. Rate limiting is enforced on `GET /api/v2/weather` via `slowapi` (25 req/min per IP). Mounts the entire synchronous Flask app at `/` via `a2wsgi.WSGIMiddleware`, making this the single process Render and GHCR deploy. The WSGI bridge uses `ThreadPoolExecutor`, so the Flask gevent patch configuration must retain the standard-library executor queue.
 - **`async_services.py` / `async_cache.py` / `async_db.py`:** async counterparts to `services.py`, `cache.py`, and the sync engine in `models.py`, built on `httpx.AsyncClient`, `redis.asyncio`, and `create_async_engine` (asyncpg) respectively — intentionally separate from the sync stack rather than shared.
 - **`pydantic_schemas.py`:** Pydantic v2 equivalent of `schemas.py`'s Marshmallow validation, scoped to `API/` only.
 
