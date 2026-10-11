@@ -27,6 +27,7 @@ consistent with the existing codebase.
 - Add or update tests for every new feature and for bug fixes. Include relevant
   edge cases and regression coverage; do not consider a feature complete
   without tests.
+- Strictly use absolute imports for all local modules. Never use relative imports with dots (e.g. from .module import ... is forbidden).
 
 ## Documentation and Changelog
 
