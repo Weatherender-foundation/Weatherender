@@ -6,7 +6,8 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 ## 2026-10-11 — Fix API worker crashes
 
-- Prevented gevent from patching the standard-library queue used by `a2wsgi`'s `ThreadPoolExecutor`, which caused idle API workers to fail with `gevent.exceptions.LoopExit`.
+- Kept gevent monkey-patching out of Flask app imports so `a2wsgi`'s `ThreadPoolExecutor` retains standard-library threading and queue behavior.
+- Moved Gunicorn's gevent patch bootstrap ahead of application imports, preventing SSL recursion and `RecursionError` in outbound index-route requests.
 - Included exception tracebacks in structured JSON logs so worker failures retain actionable diagnostics.
 - Added regression coverage and documented the WSGI/gevent queue compatibility requirement.
 

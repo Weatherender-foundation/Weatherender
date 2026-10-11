@@ -16,7 +16,7 @@ The installable Python package lives under `src/weatherender/` (`pip install wea
 
 - **Shared Core Services:** Both WEB and CLI interfaces leverage a unified business logic and data access layer.
 - **Resilience & Fallback:** Automatic IP geolocation failover chain and graceful degradation when Redis caching is offline.
-- **Production Performance:** Flask served via Gunicorn utilizing `gevent` workers, with `psycogreen` patching `psycopg2` for non-blocking PostgreSQL network I/O.
+- **Production Performance:** Flask served via Gunicorn utilizing `gevent` workers, with `psycogreen` patching `psycopg2` for non-blocking PostgreSQL network I/O. The Gunicorn bootstrap config patches SSL in the master before importing application modules; workers apply the remaining gevent patches, and the Flask app only applies the psycopg patch when running in an already-patched gevent worker. The API's WSGI executor threads remain unpatched.
 - **Data Maintenance:** Deterministic periodic DB cleanup via APScheduler, guarded by a lock-file leader-election pattern to avoid duplicate execution across Gunicorn workers.
 - **Single-Image Deployment:** Render (and GHCR) use a single `uvicorn` process from `src/weatherender/API/Dockerfile` that mounts the synchronous Flask app inside the async FastAPI app via `WSGIMiddleware`. Locally Compose still runs two containers: `web` on **5001** (Flask only) and `api` on **8001** (FastAPI + the same Flask app mounted). Production matches the `api` container, not `web`.
 
@@ -51,7 +51,7 @@ Weatherender/
 │   │   ├── extensions.py             # flask-limiter instance (avoids circular imports)
 │   │   ├── scheduler.py              # APScheduler DB cleanup with lock-file leader election
 │   │   ├── swagger_config.py         # OpenAPI 3.0 + Swagger UI
-│   │   ├── gunicorn_config.py        # prints the startup banner once in the master process
+│   │   ├── gunicorn_bootstrap.py     # patches SSL early and prints the startup banner
 │   │   └── Dockerfile                # local Flask-only container (port 5001)
 │   ├── logging_config.py             # structured JSON logging
 │   ├── API/                          # FastAPI v2 + mounted Flask — sole Render / GHCR image
@@ -96,7 +96,7 @@ Weatherender/
 
 ### Web Layer (`src/weatherender/WEB/`)
 
-- **`app.py`:** Registers `flask-talisman` (secure headers), `PrometheusMetrics` (`/metrics`), and `Flask-Limiter` (rate limiting, applied to `/` and, per-route, to `/api/weather` and `/api/apispec.json`). Gevent monkey-patching leaves the standard-library `queue` module untouched so the API's `a2wsgi` thread pool can block safely on its executor queue.
+- **`app.py`:** Registers `flask-talisman` (secure headers), `PrometheusMetrics` (`/metrics`), and `Flask-Limiter` (rate limiting, applied to `/` and, per-route, to `/api/weather` and `/api/apispec.json`). It does not monkey-patch gevent on import: Gunicorn's gevent worker owns that setup, while the API's `a2wsgi` thread pool keeps the standard-library executor queue.
 - **`api_routes.py`:** A separate Flask Blueprint (`api_bp`) exposing the JSON REST API — `/api/weather`, `/api/ping`, `/api/apispec.json`. `/api/weather` and `/api/apispec.json` carry their own `@limiter.limit(...)` decorators (imported from `WEB/extensions.py`); `/api/ping` is intentionally left unlimited.
 - **`swagger_config.py`:** Exposes interactive API documentation at `/apidocs` and the JSON specification at `/api/apispec.json`.
 - **`logging_config.py`:** Enforces structured JSON formatted logs across the application context for machine-readable log parsing.
@@ -105,8 +105,10 @@ Weatherender/
 Local Compose command:
 
 ```text
-gunicorn weatherender.WEB.app:app --config python:weatherender.WEB.gunicorn_config --worker-class gevent --worker-connections 50 -w 4 -b 0.0.0.0:5001
+gunicorn weatherender.WEB.app:app --config src/weatherender/gunicorn_bootstrap.py --worker-class gevent --worker-connections 50 -w 4 -b 0.0.0.0:5001
 ```
+
+In Docker, use the equivalent absolute path, `--config /app/src/weatherender/gunicorn_bootstrap.py`, so gevent is patched before importing the application and its HTTP/SSL dependencies.
 
 The CLI prints its ASCII banner once per invocation. The Flask/Gunicorn service prints it from the Gunicorn master startup hook, and the Uvicorn container prints it before launching workers; importing the Flask app does not print it.
 
@@ -118,7 +120,7 @@ The CLI prints its ASCII banner once per invocation. The Flask/Gunicorn service 
 
 ### Async API Layer (`src/weatherender/API/`)
 
-- **`main.py`:** FastAPI ASGI app exposing `/api/v2/weather` and `/api/v2/health`. `city` is validated via `Annotated[WeatherQueryParams, Query()]` (`pydantic_schemas.py`) rather than a bare `Query(...)` — 1–100 characters, blank/whitespace-only rejected. Rate limiting is enforced on `GET /api/v2/weather` via `slowapi` (25 req/min per IP). Mounts the entire synchronous Flask app at `/` via `a2wsgi.WSGIMiddleware`, making this the single process Render and GHCR deploy. The WSGI bridge uses `ThreadPoolExecutor`, so the Flask gevent patch configuration must retain the standard-library executor queue.
+- **`main.py`:** FastAPI ASGI app exposing `/api/v2/weather` and `/api/v2/health`. `city` is validated via `Annotated[WeatherQueryParams, Query()]` (`pydantic_schemas.py`) rather than a bare `Query(...)` — 1–100 characters, blank/whitespace-only rejected. Rate limiting is enforced on `GET /api/v2/weather` via `slowapi` (25 req/min per IP). Mounts the entire synchronous Flask app at `/` via `a2wsgi.WSGIMiddleware`, making this the single process Render and GHCR deploy. Because the app does not enable gevent patching itself, the WSGI bridge's `ThreadPoolExecutor` retains standard-library threading and queue behavior.
 - **`async_services.py` / `async_cache.py` / `async_db.py`:** async counterparts to `services.py`, `cache.py`, and the sync engine in `models.py`, built on `httpx.AsyncClient`, `redis.asyncio`, and `create_async_engine` (asyncpg) respectively — intentionally separate from the sync stack rather than shared.
 - **`pydantic_schemas.py`:** Pydantic v2 equivalent of `schemas.py`'s Marshmallow validation, scoped to `API/` only.
 

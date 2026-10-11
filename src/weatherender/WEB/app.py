@@ -1,10 +1,9 @@
 from gevent import monkey
 
-monkey.patch_all(ssl=False, thread=False, queue=False)
+if monkey.is_module_patched("socket"):
+    from psycogreen.gevent import patch_psycopg
 
-from psycogreen.gevent import patch_psycopg
-
-patch_psycopg()
+    patch_psycopg()
 
 import logging
 import os
