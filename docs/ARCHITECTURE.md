@@ -33,7 +33,7 @@ The installable Python package lives under `src/weatherender/` (`pip install wea
 | **Validation & Docs** | Marshmallow, `apispec`, `flask-swagger-ui` (OpenAPI 3.0) |
 | **Security & Rate Limiting** | `flask-talisman` (headers), `Flask-Limiter` (v1), `SlowAPI` (v2) |
 | **Observability** | `prometheus-flask-exporter`, structured JSON logging |
-| **DevOps & Hosting** | Docker, Docker Compose, GitHub Actions, GHCR, Render, UptimeRobot |
+| **DevOps & Hosting** | Docker, Docker Compose, GitHub Actions, GHCR, Render, external cron-job service |
 | **Packaging** | `pyproject.toml` (`weatherender==2.0.1` on PyPI) |
 | **Testing & Performance** | Pytest, `unittest.mock`, Codecov, k6 (load testing) |
 | **Async Stack** | FastAPI, Uvicorn, httpx (async), Pydantic v2, `redis.asyncio`, `asyncpg` |
@@ -249,7 +249,7 @@ Client (async API consumer)
 1. **Gunicorn + Gevent Stack:** In production (inside the mounted Flask app), Gunicorn uses `gevent` workers (`-w 4 --worker-class gevent --worker-connections 50`) alongside `psycogreen`, which patches `psycopg2` for non-blocking PostgreSQL I/O under gevent. This was adopted after load testing showed Gunicorn's default `sync` workers dropping connections under concurrent load — see [`PERFORMANCE.md`](PERFORMANCE.md) for the full investigation and before/after numbers.
 2. **Cold-Start & Database Connection Optimization:**
    - Hosted on Render (app) + Supabase (PostgreSQL) + Upstash (Redis). Full setup steps in [`DEPLOYMENT.md`](DEPLOYMENT.md).
-   - An external automated worker (**UptimeRobot**) sends an HTTP GET request to `/api/ping` every 10 minutes.
+   - A scheduled job on an external cron-job service sends an HTTP GET request to `/api/ping` every 10 minutes.
    - `/api/ping` bypasses the database completely, keeping the web container warm while preserving Supabase's limited free-tier connection pool.
 3. **Observability:**
    - `/metrics`: Exposes real-time application metrics formatted for **Prometheus**.

@@ -21,7 +21,7 @@ Status legend:
   Proprietary algorithm that classifies snow quality for alpine sports (see [SSCI.md](SSCI.md)).
 
 - [x] **Production deployment**
-  Render + Supabase (PostgreSQL) + Upstash (Redis) + UptimeRobot keep-alive.
+  Render + Supabase (PostgreSQL) + Upstash (Redis) + scheduled cron-job keep-alive.
 
 - [x] **Full test & CI suite**
   Pytest coverage, Ruff, Mypy, Codecov, k6 load testing, and automated PyPI publishing via Trusted Publishing.

@@ -163,7 +163,7 @@ Synchronous readiness probe used by Docker Compose (`depends_on: condition: serv
 
 ### `GET` / `HEAD` `/api/ping`
 
-A minimal liveness endpoint (defined in `src/weatherender/WEB/api_routes.py` under the `api_bp` blueprint) that does **not** open a database session. Exists specifically so external monitors (UptimeRobot) can keep the Render instance warm without consuming Supabase's limited free-tier connection pool. Accepts `HEAD` requests and bypasses `User-Agent` verification checks.
+A minimal liveness endpoint (defined in `src/weatherender/WEB/api_routes.py` under the `api_bp` blueprint) that does **not** open a database session. An external cron-job service requests it periodically to help keep the Render instance warm without consuming Supabase's limited free-tier connection pool. Accepts `HEAD` requests and bypasses `User-Agent` verification checks.
 
 | Status | Body |
 | --- | --- |

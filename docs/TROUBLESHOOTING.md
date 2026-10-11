@@ -40,7 +40,7 @@ docker compose up -d cache
 
 ## Cold starts (30–50 s)
 
-Normal on Render free tier. UptimeRobot keeps the service warmer, but occasional spin-downs still occur.
+Normal on Render free tier. A scheduled cron job requests `/api/ping` to help keep the service warm, but occasional spin-downs still occur.
 
 ## Database paused (Supabase)
 

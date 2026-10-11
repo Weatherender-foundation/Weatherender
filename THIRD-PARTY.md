@@ -43,7 +43,7 @@ Weatherender can communicate with the following third-party services, depending 
 | Redis / [Upstash](https://upstash.com/) | TTL weather-response caching | Cache availability, retention, limits, and hosted-service terms apply. |
 | [Render](https://render.com/) | Example production hosting | Hosting availability and account terms apply to the deployment operator. |
 | [Supabase](https://supabase.com/) | Example hosted PostgreSQL production storage | Hosted database terms, quotas, and privacy obligations apply to the operator. |
-| [UptimeRobot](https://uptimerobot.com/) | Example availability monitoring for `/api/ping` | Monitoring requests and account terms apply to the operator. |
+| External cron-job service | Example scheduled availability request for `/api/ping` | Scheduled requests and account terms apply to the operator. |
 | GitHub Actions, GHCR, PyPI, Codecov, and k6 | CI/CD, image/package distribution, coverage, and load testing | Their respective terms, quotas, and service policies apply when used. |
 
 Weatherender does not grant permission to use any third-party trademarks or service beyond the relevant provider's terms. Operators are responsible for API keys, privacy notices, data-protection obligations, quotas, and any required attribution.
