@@ -4,6 +4,10 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-10-12 — Refactor relative imports to absolute imports
+
+- Converted relative imports with dot syntax (`from . import ...`) to absolute imports across `API/main.py` and `WEB/app.py` in accordance with repository standards.
+
 ## 2026-10-11 — Cron-job keep-alive documentation
 
 - Replaced current UptimeRobot references with an external scheduled cron job that requests `/api/ping` every 10 minutes.
@@ -145,7 +149,7 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 ## 2026-08-22 — New async FastAPI service (`API/`)
 - Added a new, fully separate third service (`API/`) alongside `WEB/` and `CLI/`, built on FastAPI + Uvicorn, sharing root-level `models.py`/`config.py`. `WEB/services.py` (sync, `requests`) stays completely untouched; `API/async_services.py` is a new, independent async mirror using `httpx.AsyncClient`.
-- Implemented `GET /api/v2/weather`: mirrors the existing sync `/api/weather` contract exactly — `city` is a required query parameter, no IP auto-detection, no elevation lookup (deferred; not in scope for v1). Also returns `snow_state`/`snow_forecast` (added to `/api/weather` on 2026-08-21), reusing `WeatherService.get_snow_state` directly — pure function, no I/O, safe to call from async code as-is.
+- Implemented `GET /api/v2/weather`: mirrors the existing sync `/api/weather` contract practical — `city` is a required query parameter, no IP auto-detection, no elevation lookup (deferred; not in scope for v1). Also returns `snow_state`/`snow_forecast` (added to `/api/weather` on 2026-08-21), reusing `WeatherService.get_snow_state` directly — pure function, no I/O, safe to call from async code as-is.
 - `API/main.py`: FastAPI `lifespan` context manager creates a single `httpx.AsyncClient` at startup (stored in `app.state.http_client`) and closes it on shutdown, avoiding per-request client creation/TCP handshake overhead.
 - `API/async_services.py`: `AsyncWeatherService.get_weather_async` — async mirror of `WeatherService.get_weather` (same cache-aside logic, same error handling for 401/403/400/non-JSON/network errors), using the shared `httpx.AsyncClient` passed in as a parameter.
 - `API/async_cache.py`: `AsyncCacheService` — async mirror of `WEB/cache.py`'s `CacheService`, using `redis.asyncio` instead of sync `redis-py`.

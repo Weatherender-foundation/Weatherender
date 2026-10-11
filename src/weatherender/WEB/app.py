@@ -23,11 +23,10 @@ from weatherender.models import SessionLocal, WeatherRequest
 from weatherender.schemas import CityRequestSchema
 from weatherender.services import WeatherService
 from weatherender.snow import get_snow_state
-
-from .api_routes import api_bp, get_weather
-from .extensions import limiter
-from .scheduler import init_scheduler
-from .swagger_config import spec
+from weatherender.WEB.api_routes import api_bp, get_weather
+from weatherender.WEB.extensions import limiter
+from weatherender.WEB.scheduler import init_scheduler
+from weatherender.WEB.swagger_config import spec
 
 setup_logging()
 logger = logging.getLogger(__name__)
