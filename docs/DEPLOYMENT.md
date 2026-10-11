@@ -12,7 +12,7 @@ This document describes how **Weatherender** is deployed to production, and how 
 | **Container registry** | [GHCR](https://github.com/Weatherender-foundation/Weatherender/pkgs/container/weatherender-api) | `ghcr.io/weatherender-foundation/weatherender-api` |
 | **Database** | [Supabase](https://supabase.com/) | Managed PostgreSQL, Session pooler connection mode |
 | **Cache** | [Upstash](https://upstash.com/) | Managed Redis, Frankfurt region, TLS-only (`rediss://`) |
-| **Uptime Monitor** | [UptimeRobot](https://uptimerobot.com/) | Pings `/api/ping` every 10 minutes to avoid free-tier spin-down |
+| **Scheduled keep-alive** | External cron-job service | Requests `/api/ping` every 10 minutes to help avoid free-tier spin-down |
 | **Python package** | [PyPI](https://pypi.org/project/weatherender/) | `pip install weatherender` (`2.0.1`) |
 
 Live URL: **[weather-7icc.onrender.com](https://weather-7icc.onrender.com)**
@@ -120,7 +120,7 @@ The workflow logs in with `GITHUB_TOKEN` (`packages: write`). The organization m
 
 ## 6. Keeping the Free Tier Warm
 
-Render's free tier spins down the container after 15 minutes of inactivity; the first request afterward can take 30–50s (cold start). To avoid this in normal operation, an external **UptimeRobot** monitor pings the lightweight `/api/ping` endpoint every 10 minutes. This endpoint deliberately opens no SQLAlchemy session and touches no database, so it doesn't consume Supabase's limited free-tier connection pool.
+Render's free tier spins down the container after 15 minutes of inactivity; the first request afterward can take 30–50s (cold start). A scheduled job on an external cron-job service requests the lightweight `/api/ping` endpoint every 10 minutes to help keep the service warm. This endpoint deliberately opens no SQLAlchemy session and touches no database, so it doesn't consume Supabase's limited free-tier connection pool.
 
 This is a mitigation, not a guarantee — cold starts can still happen if the monitor itself has downtime, or during Render's own container recycling. See [`PERFORMANCE.md`](PERFORMANCE.md) for what load the current setup can sustain once warm.
 

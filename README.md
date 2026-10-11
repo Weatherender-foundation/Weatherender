@@ -26,7 +26,7 @@ Production-grade weather application with a Flask web interface, a CLI tool, and
 
 **[weather-7icc.onrender.com](https://weather-7icc.onrender.com)**
 
-> **Infrastructure Note:** Hosted on the Render free tier. To bypass the default 15-minute spin-down restriction, the application is kept active via a dedicated background automated worker ([UptimeRobot](https://uptimerobot.com/)) targeting the lightweight database-free `/api/ping` endpoint every 10 minutes.
+> **Infrastructure Note:** Hosted on the Render free tier. A scheduled job on an external cron-job service requests the lightweight, database-free `/api/ping` endpoint every 10 minutes to help keep the application active.
 
 ### Availability and Known Limitations
 
@@ -101,7 +101,7 @@ For the full local stack (web + api + postgres + redis) use Docker Compose below
 - 🔒 Security hardening: secure headers (Talisman), request size limits, User-Agent validation
 - 📝 Structured JSON logging
 - 🚀 Load-tested with [k6](https://k6.io/) (smoke, load, stress, spike) — see [`docs/PERFORMANCE.md`](docs/PERFORMANCE.md)
-- ☁️ Production cloud deployment: hosted on Render, integrated with Supabase (PostgreSQL) and Upstash (Redis), featuring an automated heartbeat worker ([UptimeRobot](https://uptimerobot.com/)) to maintain 24/7 web service availability
+- ☁️ Production cloud deployment: hosted on Render, integrated with Supabase (PostgreSQL) and Upstash (Redis), with a scheduled cron-job request to `/api/ping` to help maintain web service availability
 
 ### Tech Stack
 
@@ -201,7 +201,7 @@ To ensure high performance and minimize reliance on external services, the appli
 
 - **Redis Integration:** Weather data fetched from WeatherAPI is cached in an Upstash Redis instance with a 5-minute TTL (`REDIS_TTL`). Subsequent requests for the same city are served instantly from the cache, saving external API quotas.
 - **Graceful Degradation:** If the Redis instance becomes temporarily unavailable, the application automatically catches the exception and gracefully falls back to direct API fetching without disrupting the user experience.
-- **Database Efficiency:** The automated uptime monitor triggers a lightweight `/api/ping` route that does not open SQLAlchemy sessions or hit the database. This prevents creating redundant connections on the free Supabase tier, keeping the connection pool clean.
+- **Database Efficiency:** The scheduled cron job triggers a lightweight `/api/ping` route that does not open SQLAlchemy sessions or hit the database. This avoids creating redundant connections on the free Supabase tier, keeping the connection pool clean.
 
 ## Performance Testing
 

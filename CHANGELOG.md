@@ -4,6 +4,10 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-10-11 — Cron-job keep-alive documentation
+
+- Replaced current UptimeRobot references with an external scheduled cron job that requests `/api/ping` every 10 minutes.
+
 ## 2026-10-11 — Fix API worker crashes
 
 - Kept gevent monkey-patching out of Flask app imports so `a2wsgi`'s `ThreadPoolExecutor` retains standard-library threading and queue behavior.
