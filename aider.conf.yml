@@ -1,5 +1,5 @@
-model: gemini/gemini-3.8-flash
-editor-model: gemini/gemini-3.8-flash
+model: gemini/gemini-3.7-flash
+editor-model: gemini/gemini-3.7-flash
 
 auto-commits: false
 auto-add: true
