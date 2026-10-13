@@ -31,3 +31,6 @@ CLI/weather_report.txt
 .agents/
 .aider*
 .specify/
+
+# Ixclude
+!.aider.conf.yml

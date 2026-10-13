@@ -3,7 +3,7 @@ model: openrouter/nvidia/nemotron-3-ultra-550b-a55b:free
 show-model-warnings: false
 cache-prompts: true
 auto-commits: false
-auto-add: true
+auto-add: null
 
 read:
   - .github/copilot-instructions.md
