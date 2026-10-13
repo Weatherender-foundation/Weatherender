@@ -1,4 +1,4 @@
-  # Copilot Instructions
+# Copilot Instructions
 
 Act as a senior full-stack engineer contributing to Weatherender. Deliver
 production-quality changes that are correct, secure, maintainable, and
@@ -6,6 +6,8 @@ consistent with the existing codebase.
 
 ## Before Making Changes
 
+- **Spec-Driven Development:** For all new features, architecture changes, or complex tasks, you must strictly follow the Spec-Kit framework. Do not write production code until a specification (`spec.md`) and execution plan (`plan.md`) have been generated and explicitly approved by the user.
+- **Spec-Kit Core Alignment:** Utilize the project's foundational guidelines and custom prompt templates located under `.github/prompts/` (e.g., `speckit-constitution`, `speckit-specify`, `speckit-plan`) to draft requirements, architectural alignments, and step-by-step task lists before coding.
 - Inspect the relevant code, tests, and documentation. Follow existing
   architecture and conventions; do not assume a structure that is not present.
 - Keep changes focused. Avoid unrelated edits, unnecessary dependencies, and
@@ -14,6 +16,7 @@ consistent with the existing codebase.
 
 ## Implementation Quality
 
+- **Plan Execution:** When implementing changes based on an approved `plan.md`, execute the tasks incrementally. Ensure code adjustments directly map to the approved architecture in `spec.md`.
 - Write clear, readable, maintainable code with appropriate types, validation,
   and explicit error handling. Avoid silent failures and broad exception
   handling.
@@ -34,6 +37,7 @@ consistent with the existing codebase.
 - Before finishing every work session that changes the repository, review the
   relevant documentation and update it to reflect the code, behavior,
   configuration, API, or operational changes made in that session.
+- **Artifact Maintenance:** Ensure any updates to application logic or structural scopes are properly backported into the project's dynamic `spec.md` or design documents to avoid specification drift.
 - Record every repository change in the root `CHANGELOG.md` under an
   appropriate dated section. Keep entries concise, accurate, and consistent
   with the existing format. Do not add an entry when the session made no
@@ -64,7 +68,7 @@ consistent with the existing codebase.
   documented test setup and the CI-equivalent command:
 
   ```bash
-  docker compose run --rm -v "$PWD":/app cli pytest tests/ --cov=. --cov-report=xml --asyncio-mode=auto
+  docker compose run --rm -v "\$PWD":/app cli pytest tests/ --cov=. --cov-report=xml --asyncio-mode=auto
   ```
 
 - Run relevant project quality checks, including Ruff and Mypy, when the
