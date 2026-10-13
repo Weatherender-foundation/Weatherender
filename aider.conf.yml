@@ -1,5 +1,4 @@
-model: gemini/gemini-3.7-flash
-editor-model: gemini/gemini-3.7-flash
+model: openrouter/nvidia/nemotron-3-ultra-550b-a55b:free
 
 show-model-warnings: false
 cache-prompts: true
@@ -12,3 +11,4 @@ read:
   - .github/skills/speckit-specify/SKILL.md
   - .github/skills/speckit-plan/SKILL.md
   - .github/skills/speckit-tasks/SKILL.md
+  - .github/skills/speckit-implement/SKILL.md
