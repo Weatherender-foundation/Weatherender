@@ -4,7 +4,7 @@ gunicorn==26.2.0
 gevent==26.9.0
 psycogreen==1.0.2
 flask-limiter==4.1.1
-flask-swagger-ui==5.33.0
+flask-swagger-ui==5.33.1
 flask-talisman==1.1.0
 prometheus-flask-exporter==0.23.2
 apispec==6.10.0
@@ -23,7 +23,7 @@ twine==7.0.0
 build==1.6.1
 
 # --- Shared: database / ORM ---
-SQLAlchemy==2.1.2
+SQLAlchemy==2.1.4
 psycopg[binary]==3.3.6
 psycopg2-binary==2.9.13
 alembic==1.20.0
