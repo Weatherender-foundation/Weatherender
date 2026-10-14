@@ -69,9 +69,12 @@ Install and activate them locally:
 ```bash
 pip install pre-commit
 pre-commit install
+pre-commit install --hook-type commit-msg
 ```
 
-Hooks run automatically on `git commit`. You can also run them manually on all files:
+The first command installs the code-quality hooks; the second enables Conventional
+Commit message validation. You can also run the code-quality hooks manually on
+all files:
 
 ```bash
 pre-commit run --all-files
