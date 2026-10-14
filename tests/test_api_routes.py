@@ -39,6 +39,13 @@ class TestApiRoutes:
         assert isinstance(data["snow_forecast"], list)
         assert len(data["snow_forecast"]) == 2
         assert data["snow_forecast"][0]["date"] == "2026-07-16"
+        assert data["attribution"] == {
+            "copyright": "© 2026 Weatherender Foundation",
+            "author": "Alexey Lyapin",
+            "license": "GNU Affero General Public License v3.0",
+            "license_url": "https://github.com/Weatherender-foundation/Weatherender/blob/main/LICENSE",
+            "trademarks_url": "https://github.com/Weatherender-foundation/Weatherender/blob/main/TRADEMARKS.md",
+        }
 
     @pytest.mark.asyncio
     @patch("weatherender.API.main.AsyncSessionLocal")

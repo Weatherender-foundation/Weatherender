@@ -94,7 +94,14 @@ API v2 uses a hybrid Pydantic v2 response model (`WeatherResponseV2`). External 
         "status": "Packed / Hardpack"
       }
     }
-  ]
+  ],
+  "attribution": {
+    "copyright": "© 2026 Weatherender Foundation",
+    "author": "Alexey Lyapin",
+    "license": "GNU Affero General Public License v3.0",
+    "license_url": "https://github.com/Weatherender-foundation/Weatherender/blob/main/LICENSE",
+    "trademarks_url": "https://github.com/Weatherender-foundation/Weatherender/blob/main/TRADEMARKS.md"
+  }
 }
 ```
 
@@ -147,6 +154,8 @@ curl "http://localhost:8001/api/weather?city=Berlin"
 Rate limited to 25 requests/minute per IP per worker via `flask-limiter`. See [Rate Limiting](#rate-limiting) below.
 
 **Caching:** Responses are cached in Redis for `REDIS_TTL` seconds (default 300). If Redis is unavailable, it gracefully falls back to a live fetch.
+
+Successful sync and async weather responses include an `attribution` object with the copyright holder, maintainer, license, and project branding terms. Error responses are unchanged.
 
 ---
 

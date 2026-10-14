@@ -10,12 +10,21 @@ class SnowForecast(BaseModel):
     snow_state: SnowState
 
 
+class ProjectAttributionResponse(BaseModel):
+    copyright: str
+    author: str
+    license: str
+    license_url: str
+    trademarks_url: str
+
+
 class WeatherResponseV2(BaseModel):
     location: dict = Field(default_factory=dict)
     current: dict = Field(default_factory=dict)
     forecast: dict = Field(default_factory=dict)
     snow_state: SnowState
     snow_forecast: list[SnowForecast]
+    attribution: ProjectAttributionResponse
 
 
 class WeatherQueryParams(BaseModel):
