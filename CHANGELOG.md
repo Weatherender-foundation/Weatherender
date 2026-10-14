@@ -8,6 +8,11 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 - Documented installing the `commit-msg` pre-commit hook so Conventional Commit validation runs on local commits.
 
+## 2026-10-13 — Aider and specialized agent configuration
+
+- Added an Aider configuration with the model and repository guidance files to load.
+- Added specialized agent configurations to support the project's Spec-Kit workflows.
+
 ## 2026-10-12 — Refactor relative imports to absolute imports
 
 - Converted relative imports with dot syntax (`from . import ...`) to absolute imports across `API/main.py` and `WEB/app.py` in accordance with repository standards.
