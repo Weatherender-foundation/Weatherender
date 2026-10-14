@@ -29,3 +29,9 @@ repos:
           - alembic
           - types-redis
           - types-requests
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.6.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [feat, fix, chore, refactor, test, docs, style, build, ci, perf, revert, merge]

@@ -4,6 +4,15 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-10-14 — Commit message hook setup documentation
+
+- Documented installing the `commit-msg` pre-commit hook so Conventional Commit validation runs on local commits.
+
+## 2026-10-13 — Aider and specialized agent configuration
+
+- Added an Aider configuration with the model and repository guidance files to load.
+- Added specialized agent configurations to support the project's Spec-Kit workflows.
+
 ## 2026-10-12 — Refactor relative imports to absolute imports
 
 - Converted relative imports with dot syntax (`from . import ...`) to absolute imports across `API/main.py` and `WEB/app.py` in accordance with repository standards.
