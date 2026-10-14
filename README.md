@@ -390,3 +390,11 @@ For licensing, attribution, or trademark questions, contact the maintainer:
     <img src="https://img.shields.io/badge/Telegram-%40LyapinAlexey-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" height="32" alt="Telegram" />
   </a>
 </p>
+
+---
+
+<p align="center">
+  &copy; 2026 Weatherender Foundation · Created and maintained by Alexey Lyapin.<br>
+  Licensed under the <a href="./LICENSE">GNU AGPL v3.0</a>.<br>
+  Project name and branding are covered by <a href="./TRADEMARKS.md">separate terms</a>.
+</p>
