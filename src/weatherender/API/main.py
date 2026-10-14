@@ -18,6 +18,7 @@ from weatherender.API.async_services import AsyncWeatherService
 from weatherender.API.pydantic_schemas import WeatherQueryParams, WeatherResponseV2
 from weatherender.logging_config import setup_logging
 from weatherender.models import WeatherRequest
+from weatherender.project_metadata import PROJECT_ATTRIBUTION
 from weatherender.snow import get_snow_state
 from weatherender.WEB.app import app as flask_app
 
@@ -146,6 +147,7 @@ async def get_weather_v2(
         )
 
     weather_data["snow_forecast"] = snow_forecast
+    weather_data["attribution"] = PROJECT_ATTRIBUTION.copy()
     return WeatherResponseV2.model_validate(weather_data)
 
 

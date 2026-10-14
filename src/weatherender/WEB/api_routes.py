@@ -2,6 +2,7 @@ from flask import Blueprint, g, request
 from marshmallow import ValidationError
 
 from weatherender.models import SessionLocal, WeatherRequest
+from weatherender.project_metadata import PROJECT_ATTRIBUTION
 from weatherender.schemas import CityRequestSchema
 from weatherender.services import WeatherService
 from weatherender.snow import get_snow_state
@@ -21,7 +22,7 @@ get:
           required: true
     responses:
         200:
-            description: Weather data and snow conditions
+            description: Weather data, snow conditions, and project attribution
         400:
             description: Invalid or missing city
         404:
@@ -138,6 +139,7 @@ def get_weather():
         )
 
     weather_data["snow_forecast"] = snow_forecast
+    weather_data["attribution"] = PROJECT_ATTRIBUTION.copy()
     return weather_data, 200
 
 

@@ -12,6 +12,10 @@ class TestRoutes:
         response = client.get("/")
         assert response.status_code == 200
         assert b"API key is missing" in response.data
+        assert b"Weatherender Foundation" in response.data
+        assert b"Alexey Lyapin" in response.data
+        assert b"GNU AGPL v3.0" in response.data
+        assert b"TRADEMARKS.md" in response.data
 
     @patch("weatherender.WEB.app.SessionLocal")
     @patch("weatherender.WEB.app.Config")
@@ -318,6 +322,13 @@ class TestRoutes:
         assert len(data["snow_forecast"]) == 2
         assert data["snow_forecast"][0]["date"] == "2026-07-16"
         assert "status" in data["snow_forecast"][0]["snow_state"]
+        assert data["attribution"] == {
+            "copyright": "© 2026 Weatherender Foundation",
+            "author": "Alexey Lyapin",
+            "license": "GNU Affero General Public License v3.0",
+            "license_url": "https://github.com/Weatherender-foundation/Weatherender/blob/main/LICENSE",
+            "trademarks_url": "https://github.com/Weatherender-foundation/Weatherender/blob/main/TRADEMARKS.md",
+        }
 
     @patch("weatherender.WEB.api_routes.SessionLocal")
     @patch("weatherender.WEB.api_routes.WeatherService.get_weather")
