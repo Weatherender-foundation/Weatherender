@@ -282,7 +282,7 @@ pytest -v
 Via Compose (same path as CI):
 
 ```bash
-docker compose run --rm -v "$PWD":/app cli pytest tests/ --cov=. --cov-report=xml --asyncio-mode=auto
+docker compose run --rm --user "$(id -u):$(id -g)" -v "$PWD":/app cli pytest tests/ --cov=. --cov-report=xml --asyncio-mode=auto
 ```
 
 Note: `test_cache.py` mocks the Redis client directly and does not require a running Redis instance.

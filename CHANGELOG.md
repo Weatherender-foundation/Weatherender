@@ -4,6 +4,11 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-10-15 — Test warning and cache permission fixes
+
+- Filtered SlowAPI 0.1.10's targeted Python 3.14 deprecation warning until upstream replaces its deprecated asyncio API.
+- Run Docker-based tests as the invoking host user to prevent root-owned pytest cache files in the mounted workspace.
+
 ## 2026-10-14 — Website copyright and licensing footer
 
 - Added a responsive footer to the weather dashboard with project attribution, maintainer credit, and links to the license and trademark terms.

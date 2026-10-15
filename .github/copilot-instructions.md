@@ -68,7 +68,7 @@ consistent with the existing codebase.
   documented test setup and the CI-equivalent command:
 
   ```bash
-  docker compose run --rm -v "\$PWD":/app cli pytest tests/ --cov=. --cov-report=xml --asyncio-mode=auto
+  docker compose run --rm --user "$(id -u):$(id -g)" -v "$PWD":/app cli pytest tests/ --cov=. --cov-report=xml --asyncio-mode=auto
   ```
 
 - Run relevant project quality checks, including Ruff and Mypy, when the

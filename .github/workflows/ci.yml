@@ -82,7 +82,7 @@ jobs:
           pip install ruff
           ruff check .
       - name: Run dynamic analysis
-        run: docker compose run --rm -v ${{ github.workspace }}:/app cli pytest tests/ --cov=. --cov-report=xml --asyncio-mode=auto
+        run: docker compose run --rm --user "$(id -u):$(id -g)" -v ${{ github.workspace }}:/app cli pytest tests/ --cov=. --cov-report=xml --asyncio-mode=auto
         env:
           WEATHER_API_KEY: ${{ secrets.API_KEY }}
           DATABASE_URL: postgresql://test_user:test_password@weather_test_db:5432/test_weather_db
