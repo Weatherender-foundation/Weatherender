@@ -53,6 +53,7 @@ consistent with the existing codebase.
 - After validation, merge the completed branch into `main` with an explicit
   `--no-ff` merge commit so the branch history is preserved. Do not rewrite
   published history.
+- Merge branches into main only with `--no-ff` to preserve the branch history. Avoid rebasing or squashing commits on published branches.
 - Use Conventional Commits for every commit, in English and in the imperative
   mood. Use the project's permitted types (`feat`, `fix`, `docs`, `style`,
   `refactor`, `perf`, `tests`, `chore`, `release`) and keep the first line
