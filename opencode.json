@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+  "instructions": [
+    ".github/copilot-instructions.md"
+  ],
+  "permission": {
+    "edit": "ask",
+    "bash": "ask"
+  }
+}
