@@ -4,10 +4,72 @@ Act as a senior full-stack engineer contributing to Weatherender. Deliver
 production-quality changes that are correct, secure, maintainable, and
 consistent with the existing codebase.
 
+## MANDATORY WORKFLOW GATE (highest priority)
+
+These rules override every other instruction in this file and every request
+that does not explicitly invoke the bypass described below.
+
+### Absolute prohibition
+
+Until BOTH approval gates below are passed, you MUST NOT:
+- create, edit, rename, or delete any file outside `specs/` (source code,
+  tests, configs, Docker files, CI, dependencies, `CHANGELOG.md`, docs);
+- run commands that modify the repository (formatters with auto-fix,
+  migrations, installs, git commits, branch merges);
+- output production code in chat as a "preview" or "draft implementation".
+
+Allowed before the gates are passed: reading code, running read-only
+inspection commands, asking clarifying questions, and writing ONLY the
+planning artifacts listed below.
+
+### Required cycle (strictly sequential, no skipping, no reordering)
+
+Use the Spec-Kit skills located under `.github/skills/` (`speckit-constitution`,
+`speckit-specify`, `speckit-clarify`, `speckit-plan`, `speckit-tasks`,
+`speckit-analyze`, `speckit-implement`).
+
+1. **Request.** The user describes the task.
+2. **Specify.** Use `speckit-specify` (and `speckit-clarify` if anything is
+   ambiguous) to produce `spec.md`: goal, scope, requirements, edge cases,
+   acceptance criteria.
+   STOP. Present a short summary and ask for approval.
+3. **GATE 1: spec approval.** Wait for an explicit approval of `spec.md`
+   from the user. If the user requests changes, update `spec.md` and ask
+   again.
+4. **Plan.** Use `speckit-plan` and `speckit-tasks` to produce `plan.md`
+   (architecture, affected modules, data/API changes, testing strategy)
+   and a step-by-step roadmap (`tasks.md`) with concrete ordered steps.
+   Optionally run `speckit-analyze` to check consistency between files.
+   STOP. Present a short summary and ask for approval.
+5. **GATE 2: plan approval.** Wait for an explicit approval of `plan.md`
+   and the roadmap. If the user requests changes, update the files and ask
+   again.
+6. **Implement.** Only now use `speckit-implement`, executing the roadmap
+   step by step on a new branch from `main`, exactly as approved.
+
+### What counts as approval
+
+- Only an explicit message such as "approved spec" / "approved plan"
+  (or "аппрув спека" / "аппрув плана") counts.
+- Silence, "ok", "continue", "looks fine", or a question do NOT count.
+- Approval of the spec is NOT approval of the plan. Each gate needs its
+  own separate approval, given after the corresponding file is final.
+- Any change to an approved file invalidates its approval and all later
+  approvals; ask again.
+
+### Violations and pressure
+
+- If the user asks to "just do it" or to skip a step, do not comply.
+  Remind them of the gate and ask which approval is still missing.
+- If during implementation you find that the plan is wrong or incomplete,
+  STOP, update `spec.md` / `plan.md`, and request approval again before
+  continuing.
+- Before every response that touches files, state the current phase:
+  `Phase: Specify | Plan | Implement` and which gates are passed.
+
 ## Before Making Changes
 
-- **Spec-Driven Development:** For all new features, architecture changes, or complex tasks, you must strictly follow the Spec-Kit framework. Do not write production code until a specification (`spec.md`) and execution plan (`plan.md`) have been generated and explicitly approved by the user.
-- **Spec-Kit Core Alignment:** Utilize the project's foundational guidelines and custom prompt templates located under `.github/prompts/` (e.g., `speckit-constitution`, `speckit-specify`, `speckit-plan`) to draft requirements, architectural alignments, and step-by-step task lists before coding.
+- **Spec-Driven Development:** For all new features, architecture changes, or complex tasks, follow the Mandatory Workflow Gate above. Align every spec and plan with the project's constitution (`speckit-constitution`).
 - Inspect the relevant code, tests, and documentation. Follow existing
   architecture and conventions; do not assume a structure that is not present.
 - Keep changes focused. Avoid unrelated edits, unnecessary dependencies, and
