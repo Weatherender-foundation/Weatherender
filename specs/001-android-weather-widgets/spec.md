@@ -4,7 +4,7 @@
 
 **Created**: 2026-10-18
 
-**Status**: Draft/Pending Approval
+**Status**: Approved
 
 **Input**: User description: "Android app in ./android (Kotlin only) with a full app screen in the web UI visual style AND static widgets showing current weather and forecast from the existing Flask/FastAPI endpoints. No changes to the Python code."
 
@@ -188,8 +188,8 @@ As an Android user, I want to toggle between metric and imperial units for tempe
 - **FR-016**: App screen atmospheric animations MUST pause when the app is in the background.
 - **FR-017**: App screen atmospheric animations MUST be disabled when the system "remove animations" setting (Settings.Global.ANIMATOR_DURATION_SCALE = 0) is enabled.
 - **FR-018**: App screen atmospheric animations MUST bound particle counts to maintain smooth performance on low-end devices (no visible stutter).
-- **FR-019**: App screen MUST display a 24-hour forecast table with columns: Time, Temperature, Precipitation %, UV Index, Pressure (matching `index.html` table structure). The table shows the next 24 hours starting from the city's current local time (using `location.localtime` / `tz_id` from the API). Pressure is shown in mmHg (computed from `pressure_mb × 0.750062`). Temperature follows the unit toggle; pressure does not.
-- **FR-020**: App screen MUST provide a unit toggle switching between metric (°C, km/h) and imperial (°F, mph) for temperature and wind speed ONLY (including gusts) across current weather, hourly table, and daily forecast cards (matching the web UI toggle). The toggle uses the API-provided dual-unit values (temp_c/temp_f, wind_kph/wind_mph, gust_kph/gust_mph, avgtemp_c/avgtemp_f, feelslike_c/feelslike_f); no manual conversion is performed. Pressure (mmHg) and precipitation (mm) are NOT toggled and remain in metric units in all modes.
+- **FR-019**: App screen MUST display a 24-hour forecast table with columns: Time, Temperature, Precipitation %, UV Index, Pressure (matching `index.html` table structure). The client selects 24 hourly entries from the API response using the city's local time (`location.localtime` / `tz_id`). Pressure is shown in mmHg (computed from `pressure_mb × 0.750062` — allowed display conversion). Temperature follows the unit toggle; pressure does not.
+- **FR-020**: App screen MUST provide a unit toggle switching between metric (°C, km/h) and imperial (°F, mph) for temperature and wind speed ONLY (including gusts) across current weather, hourly table, and daily forecast cards (matching the web UI toggle). The toggle uses the API-provided dual-unit values (temp_c/temp_f, wind_kph/wind_mph, gust_kph/gust_mph, avgtemp_c/avgtemp_f, feelslike_c/feelslike_f); **no manual conversion is performed** (no 9/5+32, no *0.621). Pressure (mmHg) and precipitation (mm) are NOT toggled and remain in metric units in all modes. Toggle labels: metric mode = "°C / °F | km/h / mph", imperial mode = "°F / °C | mph / km/h" (exact strings from web UI `units.js`).
 - **FR-021**: App screen MUST persist unit preference in DataStore and restore on app launch.
 - **FR-022**: App screen MUST render two soft-edged (radial-gradient) drifting colored orbs (body::before/::after) on 18s alternate drift cycle with theme-specific colors from `style.css`, a hero-card light orb on 9s cycle (orbFloat), and entrance float-in for content blocks (floatIn, 0.55s ease, staggered delays 0s / 0.08s / 0.12s).
 - **FR-023**: Widgets always use metric units (°C, km/h, mm) regardless of app unit toggle setting.
@@ -206,17 +206,14 @@ As an Android user, I want to toggle between metric and imperial units for tempe
 
 ### Measurable Outcomes
 
-- **SC-001**: Widget displays current weather data within 5 seconds of configuration on a typical 4G/WiFi connection.
 - **SC-002**: Widget refreshes automatically at least every 30 minutes (Android system managed) and on user tap, without exceeding API rate limits.
-- **SC-003**: 95% of widget configurations succeed with valid city names on first attempt.
 - **SC-004**: Visual parity achieved: side-by-side comparison shows widget and app screen match web UI color scheme, typography scale, spacing, and semi-transparent card styling for all 4 condition themes.
 - **SC-005**: Widget remains functional offline: displays last cached data for up to 24 hours with clear stale indicator.
-- **SC-006**: App screen loads and displays weather data within 5 seconds on a typical 4G/WiFi connection.
 - **SC-007**: App screen displays cached data offline for up to 24 hours with clear stale indicator.
-- **SC-008**: App screen city search succeeds for 95% of valid city names on first attempt.
-- **SC-009**: App screen atmospheric animations run without visible stutter on a mid-range device (e.g., Snapdragon 7-series equivalent) and are completely disabled when the system "remove animations" setting is enabled.
 - **SC-010**: App screen hourly table displays the next 24 hours from the city's local time with correct columns; unit toggle affects temperature only (pressure stays mmHg).
 - **SC-011**: App screen unit toggle switches temperatures (°C↔°F) and wind speeds including gusts (km/h↔mph) instantly using API-provided dual-unit values, persists across app restarts; pressure and precipitation unchanged.
+
+> **Removed**: SC-001, SC-003, SC-006, SC-008, SC-009 — not measurable for a single-user app.
 
 ## Assumptions
 
@@ -227,8 +224,9 @@ As an Android user, I want to toggle between metric and imperial units for tempe
 - User has internet connectivity for initial configuration and periodic refreshes.
 - WeatherAPI key is managed server-side; widgets/app do not need direct API key access.
 - Web UI atmospheric effects reference implementation: `src/weatherender/WEB/static/css/style.css` (gradients, keyframes, data-condition rules, orb/particle colors) and `src/weatherender/WEB/templates/index.html` (DOM structure for weather-scene, weather-hero, blocks) and any JS under `src/weatherender/WEB/static/`.
-- The API response includes ~72 hourly entries (3 days × 24 hours) and is approximately 70 KB; it is cached locally per city.
+- The API response includes ~72 hourly entries (3 days × 24 hours) and is approximately 70 KB; it is cached locally per city as a raw JSON file.
 - The city's local time zone from the API (`location.localtime`, `location.tz_id`) drives the hourly forecast window in the app screen.
+- Offline cache stores the last raw API JSON response per city; no Room database, no TTL logic on client.
 
 ## Out of Scope
 
@@ -239,3 +237,86 @@ As an Android user, I want to toggle between metric and imperial units for tempe
 - Push notifications
 - Multiple cities per widget instance or app session
 - Hover effects (desktop-only, not applicable to touch)
+
+---
+
+## Architecture & Scope
+
+This Android app is a **thin client** — the 4th consumer of the existing Weatherender backend (CLI, web UI, v1/v2 API). All business logic (weather data fetching, forecast aggregation, SSCI calculation, caching, rate limiting, database) lives on the server. The client only:
+- Requests data from the single source: **Weatherender API v2** (`/api/v2/weather`, `/api/v2/health`, `/v2/openapi.json`)
+- Displays server-provided data with loading/error/empty states
+- Handles UI concerns: Compose rendering, animations, widget glue, local preferences
+- **Offline cache**: stores a copy of the last raw API JSON response for display when offline — this is not business logic.
+
+**Allowed client-side computations (strictly limited to display/parity formatting)**:
+- Pressure: `pressure_mb × 0.750062` → mmHg
+- 24h hourly window: select 24 entries from API response using city's local time (`location.localtime` / `tz_id`)
+- Condition text → theme mapping (substring match per FR-006)
+- Daily gusts fallback: `maxwind_kph * 1.2` when `gust_kph` absent (matches web UI `app.py`)
+
+**Structure**: Flat 3-folder package (max 4 levels deep, no single-file folders):
+```
+com.weatherender.widget/
+├── ui/       # screens, components, effects, theme, widgets (current, forecast, app, theme, config)
+├── data/     # API client (OkHttp), DTOs, repository, raw file cache, preferences (DataStore), worker
+└── model/    # client models ONLY if different from DTOs AND ≥2 files (currently unused)
+```
+
+**UI**: Jetpack Compose only. No XML layouts (widget `appwidget-provider` XML and `AndroidManifest.xml` are required system configurations for widgets, not layouts; use `previewImage` for widget previews).
+
+**Approved dependencies**: Compose BOM + Material 3, `lifecycle-viewmodel-compose`, Glance, WorkManager, DataStore, OkHttp, `kotlinx-serialization-json`.
+
+**Explicitly forbidden**: Retrofit, Room, Hilt, Navigation libraries.
+
+---
+
+## Module Inventory
+
+| Module | One-Phrase Description |
+|--------|------------------------|
+| `ui/current` | Current weather widget (Glance) |
+| `ui/forecast` | 3-day forecast widget (Glance) |
+| `ui/app` | Main app screen (Compose) |
+| `ui/theme` | Shared condition themes, gradients, card styles, typography |
+| `ui/config` | Widget/app configuration screen (Compose) |
+| `data/api` | OkHttp client + typed DTOs for `/api/v2/weather` |
+| `data/cache` | Raw file cache (last API JSON per city) |
+| `data/config` | DataStore preferences (widget city, app city, unit toggle) |
+| `data/repository` | Thin wrapper: cache check → API call → cache write |
+| `data/worker` | WorkManager periodic/immediate refresh |
+
+> **Design check**: Every module explains in one phrase. If any requires "because..." the structure is wrong.
+
+---
+
+## Explicit Non-Goals
+
+The following are **explicitly out of scope** and must not be introduced:
+- ❌ **Domain/use-case layer** — no `domain/`, `usecase/`, or per-operation folders. A use case = direct call from ViewModel/repository to API client.
+- ❌ **Client-side business logic** — no SSCI calculation, no forecast aggregation/filtering beyond allowed display computations (pressure conversion, 24h window, theme mapping, gusts fallback), no business-data caching logic. Server returns exactly what the UI shows.
+- ❌ **XML layouts** — Compose only. XML allowed only for `res/xml/*` (widget provider), `res/values/*` (strings, colors, themes), and `AndroidManifest.xml`.
+- ❌ **Unapproved dependencies** — forbidden: Retrofit, Room, Hilt, Navigation libraries. Approved: Compose BOM + Material 3, lifecycle-viewmodel-compose, Glance, WorkManager, DataStore, OkHttp, kotlinx-serialization-json.
+
+---
+
+## Acceptance Criteria
+
+1. **One-Phrase Test**: Every module in Module Inventory must be explainable in one phrase (see table). If explaining requires "there's a domain layer because..." → **structure is wrong**.
+2. **≥2 Files Per Folder**: Every folder under `com.weatherender.widget` must contain ≥2 files OR represent a genuinely separate layer (ui, data, model). Single-file folders must be merged.
+3. **Max 4 Nesting Levels**: Package depth from `com.weatherender.widget` ≤ 4 (e.g., `com.weatherender.widget.data.api` = 4 levels ✓).
+4. **Thin Client Verification**: Zero business logic in client — no unit conversions beyond allowed display computations (pressure mb→mmHg, 24h window, theme mapping, gusts fallback), no SSCI, no cache TTL decisions. All data shape matches API response exactly.
+5. **Dependency Compliance**: Only approved dependencies used (Compose BOM + Material 3, lifecycle-viewmodel-compose, Glance, WorkManager, DataStore, OkHttp, kotlinx-serialization-json). Zero forbidden dependencies (Retrofit, Room, Hilt, Navigation).
+
+---
+
+## API Contract (Endpoints Consumed)
+
+From the Weatherender OpenAPI spec (`/v2/openapi.json`):
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/api/v2/weather` | `GET` | Primary: current weather + 3-day forecast + hourly (24h) + snow state. Query: `city` (1-100 chars). Returns `WeatherResponseV2`. |
+| `/api/v2/health` | `GET` | Health check for API availability (optional, for diagnostics). |
+| `/v2/openapi.json` | `GET` | Raw OpenAPI spec for client code generation / contract verification. |
+
+**Data Contract** (`WeatherResponseV2`): `location`, `current`, `forecast.forecastday[3]` (each with `day`, `hour[24]`), `snow_state`, `snow_forecast[3]`, `attribution`. All units provided by API: temperature (°C/°F), wind (km/h/mph), pressure (mb), precipitation (mm). Client performs **only allowed display conversions**: pressure mb→mmHg, 24h window selection, condition→theme mapping, gusts fallback.
