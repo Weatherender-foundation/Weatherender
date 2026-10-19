@@ -1,310 +1,184 @@
-# Tasks: Android App with Main Screen and Widgets
+# Implementation Tasks: Android Weather Widgets & App
 
-**Input**: Design documents from `/specs/001-android-weather-widgets/`
-
-**Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
-
-**Tests**: Tests are included for critical logic (repository, mappers, theme mapping). Widget/app rendering tests use Robolectric/Glance/Compose testing.
-
-**Organization**: Tasks grouped by user story to enable independent implementation and testing.
-
-## Format: `[ID] [P?] [Story] Description`
-
-- **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3, US4, US5)
-- Include exact file paths in descriptions
-
-## Path Conventions
-
-- **Mobile (Android)**: `android/app/src/main/java/com/weatherender/widget/...`
-- **Resources**: `android/app/src/main/res/...`
-- **Tests**: `android/app/src/test/...` (unit), `android/app/src/androidTest/...` (instrumented)
+**Branch**: `feature/android`
+**Spec**: `specs/001-android-weather-widgets/spec.md`
+**Plan**: `specs/001-android-weather-widgets/plan.md`
 
 ---
 
-## Phase 1: Setup (Shared Infrastructure)
-
-**Purpose**: Project initialization and basic Android module structure
-
-- [ ] T001 Create Android module structure at `android/` with Gradle Kotlin DSL
-- [ ] T002 Configure `settings.gradle.kts` to include `:app` module
-- [ ] T003 [P] Setup version catalog (`gradle/libs.versions.toml`) with all dependencies
-- [ ] T004 Configure `build.gradle.kts` (root) with plugins: `com.android.application`, `org.jetbrains.kotlin.android`, `kotlinx-serialization`
-- [ ] T005 Configure `app/build.gradle.kts`: minSdk 26, targetSdk 35, compileSdk 35, Java 17, buildConfigField for API_BASE_URL from local.properties
-- [ ] T006 [P] Create `local.properties.template` with `api.base.url=https://YOUR_API_HOST`
-- [ ] T007 [P] Setup `AndroidManifest.xml` with widget providers, main activity, configuration activity, internet permission, WorkManager
-- [ ] T008 [P] Configure linting (ktlint) and formatting (spotless) in root `build.gradle.kts`
+## Task Format
+- `[ ] T### [P] Description` — `P` = parallelizable (no dependency on other tasks in same phase)
+- Tasks ordered by phase; dependencies flow top-to-bottom
+- Phase headers mark logical groupings
 
 ---
 
-## Phase 2: Foundational (Blocking Prerequisites)
+## Phase 1: Setup
 
-**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
-
-⚠️ **CRITICAL**: No user story work can begin until this phase is complete
-
-### Data Layer - API & Models
-
-- [ ] T009 [P] Create typed API DTOs in `android/app/src/main/java/com/weatherender/widget/data/api/WeatherApiDto.kt` matching `WeatherResponseV2` structure: `LocationDto`, `CurrentDto`, `ConditionDto`, `ForecastDto`, `ForecastDayDto`, `DayDto`, `SnowStateDto`, `SnowForecastDto`, `AttributionDto`, `WeatherResponseDto` (all `@Serializable` data classes)
-- [ ] T010 [P] Create domain models in `android/app/src/main/java/com/weatherender/widget/data/model/WeatherModels.kt` (CurrentWeather, ForecastDay, SnowState, ConditionTheme) with only fields needed by widgets/app
-- [ ] T011 Create Retrofit service in `android/app/src/main/java/com/weatherender/widget/data/api/WeatherApiService.kt` with `@GET("/api/v2/weather") suspend fun getWeather(@Query("city") city: String): WeatherResponseDto`
-- [ ] T012 Create OkHttp client with logging interceptor + 10s timeout in `android/app/src/main/java/com/weatherender/widget/data/api/ApiClient.kt`
-
-### Data Layer - Caching (Room)
-
-- [ ] T013 [P] Create Room entity `CachedWeatherEntity` in `android/app/src/main/java/com/weatherender/widget/data/cache/CachedWeatherEntity.kt` (id, city, jsonResponse, timestamp, etag?)
-- [ ] T014 [P] Create DAO `WeatherCacheDao` in `android/app/src/main/java/com/weatherender/widget/data/cache/WeatherCacheDao.kt` with insert, getByCity, deleteOlderThan(24h)
-- [ ] T015 Create Room database `WeatherDatabase` in `android/app/src/main/java/com/weatherender/widget/data/cache/WeatherDatabase.kt` (abstract class, singleton via `Room.databaseBuilder`)
-
-### Data Layer - Repository
-
-- [ ] T016 Create `WeatherRepository` in `android/app/src/main/java/com/weatherender/widget/data/repository/WeatherRepository.kt` with `suspend fun getWeather(city: String): Result<WeatherDomain>` implementing: check cache → if fresh (<30 min) return cached → else fetch API → on success save to cache → return; on error return cached if exists with stale flag
-
-### Configuration Persistence (DataStore)
-
-- [ ] T017 [P] Create DataStore preferences `WidgetPreferences` in `android/app/src/main/java/com/weatherender/widget/data/config/WidgetPreferences.kt` with keys: cityName, widgetIds (Set<Long>), lastUpdateTimestamp
-- [ ] T018 [P] Create DataStore preferences `AppPreferences` in `android/app/src/main/java/com/weatherender/widget/data/config/AppPreferences.kt` with keys: cityName, lastUpdateTimestamp
-
-### Theme & Color System (from Web UI CSS)
-
-- [ ] T019 [P] Create `ConditionTheme` enum/object in `android/app/src/main/java/com/weatherender/widget/ui/theme/ConditionTheme.kt` with 4 themes mapping condition text → gradients:
-  - SUNNY: `#4facfe` → `#00f2fe` (web: `linear-gradient(135deg, #4facfe, #00f2fe)`)
-  - RAINY: `#0f2027` → `#2c5364` (web: `linear-gradient(135deg, #0f2027, #203a43 35%, #2c5364)`)
-  - CLOUDY: `#4b5d7d` → `#edf2ff` (web: `linear-gradient(135deg, #4b5d7d, #b5c7db 52%, #edf2ff)`)
-  - THUNDER: `#0a1220` → `#2c3e50` (web: `linear-gradient(135deg, #0a1220, #1e2a39 32%, #2c3e50)`)
-- [ ] T020 [P] Create card style constants in `android/app/src/main/java/com/weatherender/widget/ui/theme/WidgetCardStyle.kt`: mainCardBg = `Color(0x56121B26)` (rgba(18,27,38,0.34)), mainCardBorder = `Color(0x2EFFFFFF)` (rgba(255,255,255,0.18)), mainCardRadius = 30.dp; innerCardBg = `Color(0x0FFFFFFF)` (rgba(255,255,255,0.06)), innerCardBorder = `Color(0x1FFFFFFF)` (rgba(255,255,255,0.12)), innerCardRadius = 22.dp; statPillBg = `Color(0x2607111C)` (rgba(7,17,28,0.15)), statPillBorder = `Color(0x14FFFFFF)` (rgba(255,255,255,0.08)), statPillRadius = 14.dp
-- [ ] T021 [P] Create typography scale in `android/app/src/main/java/com/weatherender/widget/ui/theme/WidgetTypography.kt` matching web UI: heroTemp = 48sp/700, cityName = 18sp/700, conditionText = 13sp/600, statLabel = 11sp/uppercase, statValue = 16sp, dayDate = 16sp/700, dayTemp = 22sp/700, dayDetail = 13sp
-
-### Utility & Mapping
-
-- [ ] T022 Create `WeatherMapper` in `android/app/src/main/java/com/weatherender/widget/util/WeatherMapper.kt` mapping `WeatherResponseDto` → domain models (extract temp_c, condition.text, uv, humidity, pressure_mb→mmHg, snow_state, forecastday[0..2] with date, avgtemp_c, totalprecip_mm, daily_chance_of_rain, uv, maxwind_kph, totalsnow_cm, daily_will_it_snow)
-- [ ] T023 [P] Create condition text → `ConditionTheme` mapper in `android/app/src/main/java/com/weatherender/widget/util/ConditionThemeMapper.kt` (sunny/clear→SUNNY, rain/drizzle/shower→RAINY, cloud/overcast/fog/mist/haze/snow→CLOUDY, storm/thunder/lightning→THUNDER)
-- [ ] T024 [P] Create date formatter `DateFormatter` in `android/app/src/main/java/com/weatherender/widget/util/DateFormatter.kt` for DD.MM.YYYY from YYYY-MM-DD
-
-### Background Refresh (WorkManager)
-
-- [ ] T025 Create `WeatherRefreshWorker` in `android/app/src/main/java/com/weatherender/widget/worker/WeatherRefreshWorker.kt` extending `CoroutineWorker`: fetch for all configured cities via repository, update Glance widgets via `GlanceAppWidget.updateAll(context, widgetClass)`, update app via callback/broadcast
-- [ ] T026 [P] Create `WidgetRefreshScheduler` in `android/app/src/main/java/com/weatherender/widget/worker/WidgetRefreshScheduler.kt` to enqueue periodic work (30 min, `ExistingPeriodicWorkPolicy.KEEP`) and immediate work on manual refresh
-
-### Configuration Activity
-
-- [ ] T027 Create configuration activity layout `res/layout/activity_widget_config.xml` with EditText (city name, 1-100 chars), Save button, error TextView
-- [ ] T028 Create `WidgetConfigActivity` in `android/app/src/main/java/com/weatherender/widget/config/WidgetConfigActivity.kt`: validate input (non-blank, 1-100 chars), save to DataStore, return `RESULT_OK` with widget ID, update widget via `GlanceAppWidget.update`
+- [ ] T001 Create `android/` module directory structure: `app/src/main/java/com/weatherender/widget/{ui,data}` + subpackages
+- [ ] T002 Create `android/build.gradle.kts` with Compose BOM, plugins, dependency versions
+- [ ] T003 Create `android/app/build.gradle.kts` with approved dependencies only (NO Retrofit, NO Room, NO Hilt, NO Navigation)
+- [ ] T004 Create `android/app/src/main/AndroidManifest.xml` with INTERNET permission, two widget providers, main activity, config activity
+- [ ] T005 Create `android/app/src/main/res/xml/current_widget_info.xml` (Glance metadata, previewImage, minResize 2x2)
+- [ ] T006 Create `android/app/src/main/res/xml/forecast_widget_info.xml` (Glance metadata, previewImage, minResize 4x2)
+- [ ] T007 Create `android/app/src/main/res/values/strings.xml` (app name, widget labels, errors)
+- [ ] T008 Create `android/app/src/main/res/values/colors.xml` (gradient colors from web CSS)
+- [ ] T009 Create `android/app/src/main/res/values/themes.xml` (Material 3 theme)
+- [ ] T010 Create `android/local.properties.template` (document `API_BASE_URL` for `buildConfigField`)
 
 ---
 
-## Phase 3: User Story 1 - Current Weather Widget (Priority: P1) 🎯 MVP
+## Phase 2: Foundational Data Layer
 
-**Goal**: Home screen widget displaying current weather (temperature, condition, UV, humidity, pressure, snow status) with condition-based theming
-
-**Independent Test**: Add widget to home screen → configure city → verify current weather data displays from API within 5s; test offline shows cached data with stale indicator
-
-### Tests for User Story 1
-
-- [ ] T029 [P] [US1] Unit test `WeatherRepository` cache-fresh/expired/error paths in `android/app/src/test/.../data/repository/WeatherRepositoryTest.kt`
-- [ ] T030 [P] [US1] Unit test `WeatherMapper` extracts correct fields in `android/app/src/test/.../util/WeatherMapperTest.kt`
-- [ ] T031 [P] [US1] Unit test `ConditionThemeMapper` all condition variations in `android/app/src/test/.../util/ConditionThemeMapperTest.kt`
-
-### Implementation for User Story 1
-
-- [ ] T032 [P] [US1] Create Glance widget `CurrentWeatherWidget` in `android/app/src/main/java/com/weatherender/widget/ui/current/CurrentWeatherWidget.kt` extending `GlanceAppWidget`: `provideGlance` builds layout with condition gradient background, main card (hero temp, city, condition pill), 3 stat pills (UV, Humidity, Pressure), snow status row, last updated timestamp + stale indicator
-- [ ] T033 [US1] Register `CurrentWeatherWidget` in `AndroidManifest.xml` with `<receiver android:name=".ui.current.CurrentWeatherWidget" android:exported="true">` + `<intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE"/></intent-filter>` + `<meta-data android:name="android.appwidget.provider" android:resource="@xml/current_widget_info"/>`
-- [ ] T034 [P] [US1] Create widget info XML `res/xml/current_widget_info.xml` with `minWidth="250dp"`, `minHeight="200dp"`, `updatePeriodMillis="1800000"`, `configure="com.weatherender.widget.config.WidgetConfigActivity"`, `previewLayout="@layout/current_widget_preview"`
-- [ ] T035 [P] [US1] Create preview layout `res/layout/current_widget_preview.xml` (static preview for widget picker)
-- [ ] T036 [US1] Implement tap-to-refresh: `actionRunCallback` → `WidgetRefreshScheduler.scheduleImmediateRefresh(city)` → `GlanceAppWidget.update`
-- [ ] T037 [US1] Implement error state: show "Failed to load" + retry button (triggers refresh) + last cached data if available
+- [ ] T011 [P] Create `data/api/WeatherApiDto.kt` — all `@Serializable` DTOs matching `WeatherResponseV2` (LocationDto, ConditionDto, CurrentDto, DayDto, HourDto, ForecastDayDto, ForecastDto, SnowStateDto, SnowForecastDto, AttributionDto, WeatherResponseDto)
+- [ ] T012 [P] Create `data/api/ApiClient.kt` — OkHttpClient singleton, `fetchWeather(city: String): Result<WeatherResponseDto>`, base URL from `BuildConfig.API_BASE_URL`, kotlinx-serialization parsing
+- [ ] T013 [P] Create `data/config/Preferences.kt` — DataStore Preferences: `WidgetPreferences` (city_<appWidgetId>), `AppPreferences` (app_city, app_unit_metric, timestamps)
+- [ ] T014 [P] Create `data/cache/JsonFileCache.kt` — `saveRawResponse(city, json)`, `loadRawResponse(city)`, `getLastModified(city)` using `context.cacheDir`
+- [ ] T015 Create `data/repository/WeatherRepository.kt` — `getWeather(city, forceRefresh)`: cache check → API call → cache write → parse; returns `Result<WeatherResponseDto>`
+- [ ] T016 Create `data/worker/WeatherRefreshWorker.kt` — CoroutineWorker, input (city, appWidgetId?, isManual), calls repository, updates Glance widgets on success
+- [ ] T017 [P] Create `data/worker/WorkScheduler.kt` — `schedulePeriodicRefresh(city)`, `enqueueImmediateRefresh(city, appWidgetId?)`, 30-min PeriodicWorkRequest
 
 ---
 
-## Phase 4: User Story 2 - 3-Day Forecast Widget (Priority: P1)
+## Phase 3: US1 — Current Weather Widget (Glance)
 
-**Goal**: Separate home screen widget showing 3-day forecast with daily average temp, precipitation, UV, wind, snow state
-
-**Independent Test**: Add forecast widget → configure city → verify 3 days display with correct date format (DD.MM.YYYY), units (Celsius, km/h, mm), condition theming
-
-### Tests for User Story 2
-
-- [ ] T038 [P] [US2] Unit test `WeatherMapper` forecast day mapping (3 days) in `android/app/src/test/.../util/WeatherMapperForecastTest.kt`
-- [ ] T039 [P] [US2] Unit test forecast date formatting in `android/app/src/test/.../util/DateFormatterTest.kt`
-
-### Implementation for User Story 2
-
-- [ ] T040 [P] [US2] Create Glance widget `ForecastWidget` in `android/app/src/main/java/com/weatherender/widget/ui/forecast/ForecastWidget.kt` extending `GlanceAppWidget`: layout with condition gradient background, horizontal scroll or column of 3 day cards (date, avg temp, precip mm, precip chance %, UV, wind km/h, gusts km/h, snow state)
-- [ ] T041 [US2] Register `ForecastWidget` in `AndroidManifest.xml` with separate receiver, intent-filter, meta-data pointing to `forecast_widget_info.xml`
-- [ ] T042 [P] [US2] Create widget info XML `res/xml/forecast_widget_info.xml` with `minWidth="400dp"`, `minHeight="200dp"`, `updatePeriodMillis="1800000"`, `configure="com.weatherender.widget.config.WidgetConfigActivity"`
-- [ ] T043 [P] [US2] Create preview layout `res/layout/forecast_widget_preview.xml`
-- [ ] T044 [US2] Share configuration activity logic (T028) - both widgets use same city config per widget instance
-- [ ] T045 [US2] Implement tap-to-refresh (`actionRunCallback`) and error state same as Current widget
+- [ ] T018 [P] Create `ui/theme/ConditionTheme.kt` — `ConditionTheme` data class, `ConditionThemeMapper.map(conditionText)` with FR-006 precedence
+- [ ] T019 [P] Create `ui/theme/Gradients.kt` — 4 gradient definitions matching `style.css` exactly
+- [ ] T020 [P] Create `ui/theme/CardStyles.kt` — `weatherCardModifier`, `blockModifier`, `dayCardModifier`
+- [ ] T021 Create `ui/current/CurrentWidget.kt` — `CurrentWidgetReceiver : GlanceAppWidget()`, `provideGlance()` → `CurrentWidgetContent`
+- [ ] T022 Create `ui/current/CurrentWidgetContent.kt` — Glance composable: gradient bg, hero temp (°C), condition, UV, humidity, pressure mmHg, snow status, loading/error/stale states
+- [ ] T023 [P] Create `ui/current/CurrentWidgetState.kt` — data class for widget state (data, error, lastUpdated)
+- [ ] T024 [P] Write unit tests: `ConditionThemeMapperTest` (thunder→cloudy→rainy→sunny precedence), `CurrentWidgetContentTest` (Glance rendering)
 
 ---
 
-## Phase 5: User Story 3 - Main App Screen (Priority: P1)
+## Phase 4: US2 — 3-Day Forecast Widget (Glance)
 
-**Goal**: Full-screen Compose app screen with city search, current weather, 3-day forecast, condition-based theming, matching web UI visual style
-
-**Independent Test**: Launch app → enter city → verify current weather and 3-day forecast display with web UI visual parity; test invalid city shows error; test offline shows cached data with stale indicator
-
-### Tests for User Story 3
-
-- [ ] T046 [P] [US3] Unit test `MainViewModel` city search, loading, error, offline states in `android/app/src/test/.../ui/app/MainViewModelTest.kt`
-- [ ] T047 [P] [US3] Unit test app screen Compose rendering with mocked data in `android/app/src/test/.../ui/app/MainAppScreenTest.kt`
-
-### Implementation for User Story 3
-
-- [ ] T048 [US3] Create `MainViewModel` in `android/app/src/main/java/com/weatherender/widget/ui/app/MainViewModel.kt`: state (city, weather, loading, error, stale), `searchCity(city)`, `refresh()`, uses `WeatherRepository`
-- [ ] T049 [US3] Create `MainAppScreen` in `android/app/src/main/java/com/weatherender/widget/ui/app/MainAppScreen.kt` (Compose, Material 3): `Scaffold` with top bar (city input + search button), body with condition gradient background (`Box` + `Modifier.background`), main card (hero temp, city, condition pill), stat pills row (UV, Humidity, Pressure), snow status, 3 day cards horizontal scroll (date, avg temp, precip, precip chance, UV, wind, gusts, snow), stale indicator + manual refresh button
-- [ ] T050 [US3] Register `MainActivity` in `AndroidManifest.xml` as launcher activity (`android:exported="true"`, intent-filter MAIN/LAUNCHER), theme `Theme.Material3.DayNight.NoActionBar`
-- [ ] T051 [US3] Implement city search: text field + search button → `MainViewModel.searchCity()` → show loading → on success update UI → on error show snackbar/error message with retry
-- [ ] T052 [US3] Implement pull-to-refresh / manual refresh button → `WidgetRefreshScheduler.scheduleImmediateRefresh(city)` → `MainViewModel.refresh()`
-- [ ] T053 [US3] Implement offline/cached state: show stale indicator with timestamp, disable search until network returns (or allow search with network check)
+- [ ] T025 Create `ui/forecast/ForecastWidget.kt` — `ForecastWidgetReceiver : GlanceAppWidget()`, `provideGlance()` → `ForecastWidgetContent`
+- [ ] T026 Create `ui/forecast/ForecastWidgetContent.kt` — 3 day cards: date DD.MM.YYYY, avg temp °C, precip mm, precip chance %, UV, wind km/h, gusts km/h (fallback maxwind*1.2), snow state
+- [ ] T027 [P] Create `ui/forecast/ForecastWidgetState.kt` — data class for widget state
+- [ ] T028 [P] Write unit tests: `ForecastWidgetContentTest`, gusts fallback logic test
 
 ---
 
-## Phase 6: User Story 4 - Visual Style Parity (Priority: P2)
+## Phase 5: US5 — Widget Configuration (Compose Activity)
 
-**Goal**: Widgets and app screen match web UI visual design (gradients, card styling, typography, semi-transparent cards with white borders)
-
-**Independent Test**: Side-by-side screenshot comparison of widget vs web UI and app screen vs web UI for all 4 conditions (sunny, rainy, cloudy, thunder) shows matching colors, spacing, card opacity, border, radius
-
-### Implementation for User Story 4
-
-- [ ] T054 [US4] Apply `ConditionTheme` gradients as background in both `CurrentWeatherWidget`, `ForecastWidget`, and `MainAppScreen` (full background = condition gradient)
-- [ ] T055 [US4] Apply `WidgetCardStyle` constants to all cards in both widgets and app screen (main card, inner blocks, stat pills, day cards)
-- [ ] T056 [US4] Apply `WidgetTypography` scale to all text elements in both widgets and app screen
-- [ ] T057 [P] [US4] Create screenshot comparison test in `android/app/src/androidTest/.../ui/VisualParityTest.kt` using `createComposeRule` + Glance testing to render widgets and app screen with mocked data for each condition and verify color values
+- [ ] T029 Create `ui/config/WidgetConfigActivity.kt` — `ComponentActivity`, `setContent { WidgetConfigScreen(...) }`, reads `appWidgetId` from intent
+- [ ] T030 Create `ui/config/WidgetConfigScreen.kt` — Compose screen: TextField (1-100 chars, non-blank), Save button, error display, onSave → DataStore `city_<appWidgetId>` → enqueue `WeatherRefreshWorker` → `setResult(RESULT_OK)` → `finish()`
+- [ ] T031 [P] Write unit test: `WidgetConfigScreenTest` (validation, save flow)
 
 ---
 
-## Phase 7: User Story 5 - Widget Configuration (Priority: P2)
+## Phase 6: US3 — Main App Screen (Compose)
 
-**Goal**: Configuration activity for city input with validation
-
-**Independent Test**: Long-press widget → configure → enter city → save → widget updates; invalid city shows error
-
-### Implementation for User Story 5
-
-- [ ] T058 [US5] Complete `WidgetConfigActivity` (T028) with full validation: non-blank, 1-100 chars, URL-encode city name for API
-- [ ] T059 [US5] Store widget ID ↔ city mapping in DataStore (per widget instance)
-- [ ] T060 [US5] On config save: trigger immediate `WeatherRefreshWorker` for that city → update widget
-- [ ] T061 [P] [US5] Unit test `WidgetConfigActivity` validation logic in `android/app/src/test/.../config/WidgetConfigActivityTest.kt`
-
----
-
-## Phase 8: Polish & Cross-Cutting Concerns
-
-**Purpose**: Improvements affecting multiple user stories
-
-- [ ] T062 [P] Add unit tests for `WidgetRefreshScheduler` periodic/immediate scheduling
-- [ ] T063 [P] Add integration test for full flow: config → API → cache → widget/app render (Robolectric)
-- [ ] T064 [P] Document build steps in `android/README.md`: copy `local.properties.template`, set API URL, `./gradlew :app:assembleDebug`
-- [ ] T065 Update root `CHANGELOG.md` with Android app + widgets feature entry
-- [ ] T066 [P] Verify ProGuard/R8 rules for Retrofit, Room, Glance, Compose, Serialization
-- [ ] T067 Run `./gradlew :app:lint` and fix warnings
-- [ ] T068 Run full test suite: `./gradlew :app:test :app:connectedAndroidTest`
+- [ ] T032 [P] Create `ui/app/MainScreenViewModel.kt` — `ViewModel`, `UiState` (data, hourly, daily, loading, error, unitMetric, city), `searchCity()`, `toggleUnits()`, `refresh()`, DataStore persistence
+- [ ] T033 Create `ui/app/MainActivity.kt` — `ComponentActivity`, `MainScreen(viewModel)`, handles search intent
+- [ ] T034 [P] Create `ui/app/components/WeatherCard.kt` — semi-transparent card with white border, rounded corners, theme-aware
+- [ ] T035 [P] Create `ui/app/components/StatPill.kt` — label + value pill
+- [ ] T036 [P] Create `ui/app/components/HeroTemp.kt` — large temperature display
+- [ ] T037 [P] Create `ui/app/components/DayCard.kt` — daily forecast card
+- [ ] T038 Create `ui/app/components/UnitToggleButton.kt` — button with exact labels: metric=`°C / °F | km/h / mph`, imperial=`°F / °C | mph / km/h`
+- [ ] T039 Create `ui/app/MainScreen.kt` — Scaffold: gradient bg, top bar (city input + unit toggle), content (current hero, hourly placeholder, daily cards), loading/error/empty states
+- [ ] T040 [P] Write unit tests: `MainScreenViewModelTest` (search, toggle, refresh, persistence)
 
 ---
 
-## Dependencies & Execution Order
+## Phase 7: US4 — Visual Style Parity (Static)
 
-### Phase Dependencies
-
-- **Setup (Phase 1)**: No dependencies - start immediately
-- **Foundational (Phase 2)**: Depends on Setup completion - **BLOCKS all user stories**
-- **User Stories (Phase 3-7)**: All depend on Foundational phase completion
-  - US1 (Current Widget) and US2 (Forecast Widget) can proceed in parallel after Foundational
-  - US3 (Main App Screen) can proceed in parallel after Foundational (shares data layer)
-  - US4 (Visual Parity) applies to both widgets and app - can start after US1/US2/US3 structures exist
-  - US5 (Configuration) needed by both widgets - can start after Foundational
-- **Polish (Phase 8)**: Depends on all desired user stories being complete
-
-### User Story Dependencies
-
-- **US1 (P1)**: Can start after Foundational - No dependencies on other stories
-- **US2 (P1)**: Can start after Foundational - Independent widget, shares data layer
-- **US3 (P1)**: Can start after Foundational - Independent app screen, shares data layer
-- **US4 (P2)**: Requires US1, US2, and US3 widget/app structures to apply theming
-- **US5 (P2)**: Required by US1 and US2 for configuration - should complete early
-
-### Within Each User Story
-
-- Tests (if included) MUST be written and FAIL before implementation
-- Models before services/widgets/app
-- Widget/app implementation before integration
-- Story complete before moving to next priority
-
-### Parallel Opportunities
-
-- All Setup tasks marked [P] can run in parallel
-- All Foundational tasks marked [P] can run in parallel (within Phase 2)
-- Once Foundational phase completes, US1, US2, and US3 can start in parallel
-- All test tasks marked [P] within a story can run in parallel
-- US4 theming tasks can parallelize across both widget files and app screen
+- [ ] T041 [P] Create `ui/theme/Typography.kt` — font sizes, weights matching web UI (clamp, letter-spacing)
+- [ ] T042 [P] Verify all 4 condition gradients render correctly in widgets and app (manual checklist)
+- [ ] T043 [P] Verify card styling parity: semi-transparent dark bg, white borders, rounded corners, typography scale
+- [ ] T044 [P] Write Compose UI tests: `MainScreenTest` (theme switching, card rendering)
 
 ---
 
-## Parallel Example: Foundational Phase
+## Phase 8: US6 — Ambient Background Orbs & Canvas Atmospheric Effects (P3, Skippable)
 
-```bash
-# Launch all [P] tasks in Phase 2 together:
-Task: T009 Create typed API DTOs
-Task: T010 Create domain models
-Task: T013 Create Room entity
-Task: T014 Create DAO
-Task: T017 Create WidgetPreferences DataStore
-Task: T018 Create AppPreferences DataStore
-Task: T019 Create ConditionTheme
-Task: T020 Create WidgetCardStyle
-Task: T021 Create WidgetTypography
-Task: T023 Create ConditionThemeMapper
-Task: T024 Create DateFormatter
-Task: T026 Create WidgetRefreshScheduler
-Task: T038 Unit test forecast mapping
-Task: T039 Unit test date formatting
-Task: T061 Unit test config validation
+- [ ] T045 [P] Create `ui/effects/AmbientOrbs.kt` — two Canvas radial-gradient orbs, 18s drift alternate, theme-specific colors from CSS
+- [ ] T046 [P] Create `ui/effects/HeroOrb.kt` — Canvas radial-gradient orb in hero card, 9s orbFloat alternate
+- [ ] T047 Create `ui/effects/AtmosphericEffects.kt` — sealed interface `AtmosphericEffect`, implementations: `SunnyEffects` (SunGlow + Particles), `RainyEffects` (Clouds + RainDrops), `CloudyEffects` (Clouds), `ThunderEffects` (Clouds + Lightning + Stars)
+- [ ] T048 [P] Create `ui/effects/SunGlow.kt` — radial gradient, 0.4s opacity fade-in
+- [ ] T049 [P] Create `ui/effects/Particles.kt` — bounded particle count (max 50), 12s linear drift, `rememberInfiniteTransition`
+- [ ] T050 [P] Create `ui/effects/Clouds.kt` — 2 clouds, 18s floatCloud alternate, theme opacity
+- [ ] T051 [P] Create `ui/effects/RainDrops.kt` — 3 streaks, 1.2s rainFall linear infinite
+- [ ] T052 [P] Create `ui/effects/Lightning.kt` — triangle shape, 6s lightningFlash (0→1→0.2→1→0)
+- [ ] T053 [P] Create `ui/effects/Stars.kt` — radial gradients, 4s twinkle alternate
+- [ ] T054 Create `ui/effects/AnimationController.kt` — `LifecycleObserver` pausing all `InfiniteTransition` on ON_PAUSE, resuming on ON_RESUME; checks `Settings.Global.ANIMATOR_DURATION_SCALE == 0f` to disable
+- [ ] T055 Create `ui/effects/FloatInAnimation.kt` — `AnimatedVisibility` with fadeIn+slideIn (0.55s ease), staggered delays (0s, 0.08s, 0.12s)
+- [ ] T056 [P] Write unit tests: `AtmosphericEffectsTest` — particle cap enforcement, animator scale=0 disables all, pause/resume lifecycle
+
+---
+
+## Phase 9: US7 — 24-Hour Forecast Table (P3, Skippable)
+
+- [ ] T057 [P] Create `ui/app/components/HourlyForecastTable.kt` — LazyColumn with sticky header, 24 rows: Time, Temp (unit-aware), Precip %, UV, Pressure mmHg
+- [ ] T058 Update `ui/app/MainScreenViewModel.kt` — add `hourlyForecast` computation: parse `location.localtime` → current hour → flatten forecast hours → filter ≥ current → take 24 → map to `HourlyRow`
+- [ ] T059 [P] Update `ui/app/MainScreen.kt` — insert `HourlyForecastTable` between current hero and daily cards
+- [ ] T060 [P] Write unit test: `HourlyForecastTest` — 24h window selection, pressure conversion, unit toggle affects temp only
+
+---
+
+## Phase 10: US8 — Unit Toggle with DataStore Persistence (P3, Skippable)
+
+- [ ] T061 [P] Update `data/config/Preferences.kt` — `APP_UNIT_METRIC_KEY`, `isMetric` getter/setter
+- [ ] T062 Update `ui/app/MainScreenViewModel.kt` — load `unitMetric` from DataStore on init, `toggleUnits()` saves to DataStore
+- [ ] T063 [P] Update `ui/app/components/UnitToggleButton.kt` — ensure exact label strings match web `units.js`
+- [ ] T064 [P] Update all display components (`HeroTemp`, `StatPill`, `DayCard`, `HourlyForecastTable`) to branch on `unitMetric`:
+  - Temp: `metric ? temp_c : temp_f`
+  - Wind/Gusts: `metric ? wind_kph : wind_mph`
+  - Pressure: always mmHg
+  - Precipitation: always mm
+- [ ] T065 [P] Write unit test: `UnitToggleTest` — toggle persists, widgets unaffected (always metric), labels match exactly
+
+---
+
+## Cross-Cutting & Verification
+
+- [ ] T066 [P] Create `quickstart.md` — build setup, `local.properties` (API_BASE_URL), manual visual parity checklist (replaces screenshot tests)
+- [ ] T067 Run `./gradlew :android:app:testDebugUnitTest` — all unit tests pass
+- [ ] T068 Run `./gradlew :android:app:assembleDebug` — build succeeds, no forbidden dependencies
+- [ ] T069 Manual verification: add both widgets, configure cities, verify current/forecast data, tap refresh
+- [ ] T070 Manual verification: launch app, search city, verify current + daily + (if P3 done) hourly + unit toggle
+- [ ] T071 Manual verification: visual parity — compare widget/app gradients, cards, typography to web UI for all 4 conditions
+- [ ] T072 Manual verification: offline mode — disable network, verify cached data + stale indicator
+- [ ] T073 Manual verification: system animations off — verify atmospheric effects disabled
+- [ ] T074 Update `CHANGELOG.md` with dated entry for this feature
+
+---
+
+## Task Dependency Graph (Critical Path)
+
 ```
-
----
-
-## Implementation Strategy
-
-### MVP First (User Story 1 Only)
-
-1. Complete Phase 1: Setup
-2. Complete Phase 2: Foundational (CRITICAL - blocks all stories)
-3. Complete Phase 3: User Story 1 (Current Weather Widget)
-4. **STOP and VALIDATE**: Test US1 independently on device/emulator
-5. Deploy/demo if ready
-
-### Incremental Delivery
-
-1. Complete Setup + Foundational → Foundation ready
-2. Add US1 (Current Widget) → Test independently → Deploy/Demo (MVP!)
-3. Add US2 (Forecast Widget) → Test independently → Deploy/Demo
-4. Add US3 (Main App Screen) → Test independently → Deploy/Demo
-5. Add US4 (Visual Parity) → Polish all three → Deploy/Demo
-6. Add US5 (Configuration) → Already needed by US1/US2, do early
-7. Each story adds value without breaking previous stories
-
-### Parallel Team Strategy
-
-With multiple developers:
-
-1. Team completes Setup + Foundational together
-2. Once Foundational is done:
-   - Developer A: US1 (Current Widget)
-   - Developer B: US2 (Forecast Widget)
-   - Developer C: US3 (Main App Screen)
-   - Developer D: US4 (Theming) + US5 (Configuration)
-3. Stories complete and integrate independently
+T001-T010 (Setup)
+    ↓
+T011-T017 (Data Layer) ← parallel within phase
+    ↓
+T018-T020 (Theme Foundation) ← parallel
+    ↓
+T021-T024 (Current Widget)     T025-T028 (Forecast Widget) ← parallel phases
+    ↓
+T029-T031 (Widget Config)
+    ↓
+T032-T040 (Main App Screen)
+    ↓
+T041-T044 (Visual Parity)
+    ↓
+T045-T056 (Ambient Effects - P3)  ← INDEPENDENT, SKIPPABLE
+    ↓
+T057-T060 (Hourly Table - P3)     ← INDEPENDENT, SKIPPABLE
+    ↓
+T061-T065 (Unit Toggle - P3)      ← INDEPENDENT, SKIPPABLE
+    ↓
+T066-T074 (Verification)
+```
 
 ---
 
 ## Notes
 
-- [P] tasks = different files, no dependencies
-- [Story] label maps task to specific user story for traceability
-- Each user story should be independently completable and testable
-- Verify tests fail before implementing
-- Commit after each task or logical group
-- Stop at any checkpoint to validate story independently
-- Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
+- **Phases 8-10 (T045-T065) are P3 and independently skippable** — they can be dropped without blocking T066-T074
+- **No Retrofit tasks** — T012 uses pure OkHttp
+- **No Room tasks** — T013-T014 use DataStore + JsonFileCache
+- **JUnit 4 only** — all test tasks specify JUnit 4 + Robolectric
+- **No XML layout for config** — T029-T030 are 100% Compose
+- **Widget preview images** — T005-T006 use `previewImage` in widget XML (no layout preview)
