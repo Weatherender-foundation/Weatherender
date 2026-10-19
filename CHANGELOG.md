@@ -4,6 +4,20 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-10-19 — Spec refinement and delivery planning
+
+- Refined the feature specification to better define scope, expected behavior, and user-facing outcomes.
+- Clarified acceptance criteria and edge-case handling to reduce ambiguity before implementation work continues.
+- Documented the implementation path and task breakdown needed to validate the feature with a clear delivery plan.
+- Aligned the spec and work plan with the project standards for maintainable, testable, and well-scoped changes.
+
+## 2026-10-18 — Specification and change framing
+
+- Reviewed the current feature direction and narrowed the core requirements to the intended outcome.
+- Added and improved specification detail to capture key behavior, constraints, and validation expectations.
+- Structured the change plan around concrete milestones and dependency-aware task tracking.
+- Prepared the project for implementation by formalizing the scope and required work items.
+
 ## 2026-10-15 — Test warning and cache permission fixes
 
 - Filtered SlowAPI 0.1.10's targeted Python 3.14 deprecation warning until upstream replaces its deprecated asyncio API.
