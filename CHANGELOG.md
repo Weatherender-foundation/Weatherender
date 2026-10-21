@@ -4,6 +4,18 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-10-21 - Initial Android Glance Widget implementation
+
+- Android Architecture: Reorganized base source structure from `src/test/` to `src/main/` under a flat package structure (`com.weatherender.widget.{ui,data}`).
+- Data Layer:
+  - Implemented DTO models (`WeatherApiDto`) for `/api/v2/weather` and OkHttp network client (`ApiClient`).
+  - Integrated raw JSON file caching (`JsonFileCache`) and DataStore preferences (`Preferences`).
+  - Added background update components using WorkManager (`WeatherRefreshWorker` and `WorkScheduler`).
+- UI Layer:
+  - Created `MainActivity`, `WidgetConfigActivity`, and foundational `WeatherTheme`.
+  - Added Glance widget receivers (`CurrentWeatherWidgetReceiver` and `ForecastWeatherWidgetReceiver`).
+- Build: Verified project build integrity; app compiles successfully (`./gradlew :app:assembleDebug`).
+
 ## 2026-10-19 — Spec refinement and delivery planning
 
 - Refined the feature specification to better define scope, expected behavior, and user-facing outcomes.

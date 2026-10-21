@@ -31,6 +31,18 @@ CLI/weather_report.txt
 .agents/
 .aider*
 .specify/
+local.properties
+
+# Gradle cache & generated files
+.gradle/
+**/build/
+build/
+**/.gradle/
+
+# IDE files
+.idea/
+*.iml
+.vs_code/
 
 # Ixclude
 !.aider.conf.yml

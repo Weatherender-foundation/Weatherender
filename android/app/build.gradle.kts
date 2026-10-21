@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
@@ -40,10 +41,14 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
+    // Material3 (View-based for theme)
+    implementation("com.google.android.material:material:1.12.0")
+
     // Compose BOM + Material 3
     val composeBom = platform("androidx.compose:compose-bom:2024.08.00")
     implementation(composeBom)

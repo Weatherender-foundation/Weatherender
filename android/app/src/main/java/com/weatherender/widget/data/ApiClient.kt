@@ -20,7 +20,7 @@ object ApiClient {
         .build()
 
     fun jsonToString(value: WeatherResponseDto): String =
-        json.encodeToString(value)
+        json.encodeToString(WeatherResponseDto.serializer(), value)
 
     fun parseWeatherResponse(rawJson: String): WeatherResponseDto =
         json.decodeFromString(rawJson)
