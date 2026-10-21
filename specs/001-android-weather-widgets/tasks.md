@@ -15,57 +15,57 @@
 
 ## Phase 1: Setup
 
-- [ ] T001 Create `android/` module directory structure: `app/src/main/java/com/weatherender/widget/{ui,data}` + subpackages
-- [ ] T002 Create `android/build.gradle.kts` with Compose BOM, plugins, dependency versions
-- [ ] T003 Create `android/app/build.gradle.kts` with approved dependencies only (NO Retrofit, NO Room, NO Hilt, NO Navigation)
-- [ ] T004 Create `android/app/src/main/AndroidManifest.xml` with INTERNET permission, two widget providers, main activity, config activity
-- [ ] T005 Create `android/app/src/main/res/xml/current_widget_info.xml` (Glance metadata, previewImage, minResize 2x2)
-- [ ] T006 Create `android/app/src/main/res/xml/forecast_widget_info.xml` (Glance metadata, previewImage, minResize 4x2)
-- [ ] T007 Create `android/app/src/main/res/values/strings.xml` (app name, widget labels, errors)
-- [ ] T008 Create `android/app/src/main/res/values/colors.xml` (gradient colors from web CSS)
-- [ ] T009 Create `android/app/src/main/res/values/themes.xml` (Material 3 theme)
-- [ ] T010 Create `android/local.properties.template` (document `API_BASE_URL` for `buildConfigField`)
+- [x] T001 Create `android/` module directory structure: `app/src/main/java/com/weatherender/widget/{ui,data}` + subpackages
+- [x] T002 Create `android/build.gradle.kts` with Compose BOM, plugins, dependency versions
+- [x] T003 Create `android/app/build.gradle.kts` with approved dependencies only (NO Retrofit, NO Room, NO Hilt, NO Navigation)
+- [x] T004 Create `android/app/src/main/AndroidManifest.xml` with INTERNET permission, two widget providers, main activity, config activity
+- [x] T005 Create `android/app/src/main/res/xml/current_widget_info.xml` (Glance metadata, previewImage, minResize 2x2)
+- [x] T006 Create `android/app/src/main/res/xml/forecast_widget_info.xml` (Glance metadata, previewImage, minResize 4x2)
+- [x] T007 Create `android/app/src/main/res/values/strings.xml` (app name, widget labels, errors)
+- [x] T008 Create `android/app/src/main/res/values/colors.xml` (gradient colors from web CSS)
+- [x] T009 Create `android/app/src/main/res/values/themes.xml` (Material 3 theme)
+- [x] T010 Create `android/local.properties.template` (document `API_BASE_URL` for `buildConfigField`)
 
 ---
 
 ## Phase 2: Foundational Data Layer
 
-- [ ] T011 [P] Create `data/api/WeatherApiDto.kt` — all `@Serializable` DTOs matching `WeatherResponseV2` (LocationDto, ConditionDto, CurrentDto, DayDto, HourDto, ForecastDayDto, ForecastDto, SnowStateDto, SnowForecastDto, AttributionDto, WeatherResponseDto)
-- [ ] T012 [P] Create `data/api/ApiClient.kt` — OkHttpClient singleton, `fetchWeather(city: String): Result<WeatherResponseDto>`, base URL from `BuildConfig.API_BASE_URL`, kotlinx-serialization parsing
-- [ ] T013 [P] Create `data/config/Preferences.kt` — DataStore Preferences: `WidgetPreferences` (city_<appWidgetId>), `AppPreferences` (app_city, app_unit_metric, timestamps)
-- [ ] T014 [P] Create `data/cache/JsonFileCache.kt` — `saveRawResponse(city, json)`, `loadRawResponse(city)`, `getLastModified(city)` using `context.cacheDir`
-- [ ] T015 Create `data/repository/WeatherRepository.kt` — `getWeather(city, forceRefresh)`: cache check → API call → cache write → parse; returns `Result<WeatherResponseDto>`
-- [ ] T016 Create `data/worker/WeatherRefreshWorker.kt` — CoroutineWorker, input (city, appWidgetId?, isManual), calls repository, updates Glance widgets on success
-- [ ] T017 [P] Create `data/worker/WorkScheduler.kt` — `schedulePeriodicRefresh(city)`, `enqueueImmediateRefresh(city, appWidgetId?)`, 30-min PeriodicWorkRequest
+- [x] T011 [P] Create `data/api/WeatherApiDto.kt` — all `@Serializable` DTOs matching `WeatherResponseV2` (LocationDto, ConditionDto, CurrentDto, DayDto, HourDto, ForecastDayDto, ForecastDto, SnowStateDto, SnowForecastDto, AttributionDto, WeatherResponseDto)
+- [x] T012 [P] Create `data/api/ApiClient.kt` — OkHttpClient singleton, `fetchWeather(city: String): Result<WeatherResponseDto>`, base URL from `BuildConfig.API_BASE_URL`, kotlinx-serialization parsing
+- [x] T013 [P] Create `data/config/Preferences.kt` — DataStore Preferences: `WidgetPreferences` (city_<appWidgetId>), `AppPreferences` (app_city, app_unit_metric, timestamps)
+- [x] T014 [P] Create `data/cache/JsonFileCache.kt` — `saveRawResponse(city, json)`, `loadRawResponse(city)`, `getLastModified(city)` using `context.cacheDir`
+- [x] T015 Create `data/repository/WeatherRepository.kt` — `getWeather(city, forceRefresh)`: cache check → API call → cache write → parse; returns `Result<WeatherResponseDto>`
+- [x] T016 Create `data/worker/WeatherRefreshWorker.kt` — CoroutineWorker, input (city, appWidgetId?, isManual), calls repository, updates Glance widgets on success
+- [x] T017 [P] Create `data/worker/WorkScheduler.kt` — `schedulePeriodicRefresh(city)`, `enqueueImmediateRefresh(city, appWidgetId?)`, 30-min PeriodicWorkRequest
 
 ---
 
 ## Phase 3: US1 — Current Weather Widget (Glance)
 
-- [ ] T018 [P] Create `ui/theme/ConditionTheme.kt` — `ConditionTheme` data class, `ConditionThemeMapper.map(conditionText)` with FR-006 precedence
-- [ ] T019 [P] Create `ui/theme/Gradients.kt` — 4 gradient definitions matching `style.css` exactly
-- [ ] T020 [P] Create `ui/theme/CardStyles.kt` — `weatherCardModifier`, `blockModifier`, `dayCardModifier`
-- [ ] T021 Create `ui/current/CurrentWidget.kt` — `CurrentWidgetReceiver : GlanceAppWidget()`, `provideGlance()` → `CurrentWidgetContent`
-- [ ] T022 Create `ui/current/CurrentWidgetContent.kt` — Glance composable: gradient bg, hero temp (°C), condition, UV, humidity, pressure mmHg, snow status, loading/error/stale states
-- [ ] T023 [P] Create `ui/current/CurrentWidgetState.kt` — data class for widget state (data, error, lastUpdated)
-- [ ] T024 [P] Write unit tests: `ConditionThemeMapperTest` (thunder→cloudy→rainy→sunny precedence), `CurrentWidgetContentTest` (Glance rendering)
+- [x] T018 [P] Create `ui/theme/ConditionTheme.kt` — `ConditionTheme` data class, `ConditionThemeMapper.map(conditionText)` with FR-006 precedence
+- [x] T019 [P] Create `ui/theme/Gradients.kt` — 4 gradient definitions matching `style.css` exactly
+- [x] T020 [P] Create `ui/theme/CardStyles.kt` — `weatherCardModifier`, `blockModifier`, `dayCardModifier`
+- [x] T021 Create `ui/current/CurrentWidget.kt` — `CurrentWidgetReceiver : GlanceAppWidget()`, `provideGlance()` → `CurrentWidgetContent`
+- [x] T022 Create `ui/current/CurrentWidgetContent.kt` — Glance composable: gradient bg, hero temp (°C), condition, UV, humidity, pressure mmHg, snow status, loading/error/stale states
+- [x] T023 [P] Create `ui/current/CurrentWidgetState.kt` — data class for widget state (data, error, lastUpdated)
+- [x] T024 [P] Write unit tests: `ConditionThemeMapperTest` (thunder→cloudy→rainy→sunny precedence), `CurrentWidgetContentTest` (Glance rendering)
 
 ---
 
 ## Phase 4: US2 — 3-Day Forecast Widget (Glance)
 
-- [ ] T025 Create `ui/forecast/ForecastWidget.kt` — `ForecastWidgetReceiver : GlanceAppWidget()`, `provideGlance()` → `ForecastWidgetContent`
-- [ ] T026 Create `ui/forecast/ForecastWidgetContent.kt` — 3 day cards: date DD.MM.YYYY, avg temp °C, precip mm, precip chance %, UV, wind km/h, gusts km/h (fallback maxwind*1.2), snow state
-- [ ] T027 [P] Create `ui/forecast/ForecastWidgetState.kt` — data class for widget state
-- [ ] T028 [P] Write unit tests: `ForecastWidgetContentTest`, gusts fallback logic test
+- [x] T025 Create `ui/forecast/ForecastWidget.kt` — `ForecastWidgetReceiver : GlanceAppWidget()`, `provideGlance()` → `ForecastWidgetContent`
+- [x] T026 Create `ui/forecast/ForecastWidgetContent.kt` — 3 day cards: date DD.MM.YYYY, avg temp °C, precip mm, precip chance %, UV, wind km/h, gusts km/h (fallback maxwind*1.2), snow state
+- [x] T027 [P] Create `ui/forecast/ForecastWidgetState.kt` — data class for widget state
+- [x] T028 [P] Write unit tests: `ForecastWidgetContentTest`, gusts fallback logic test
 
 ---
 
 ## Phase 5: US5 — Widget Configuration (Compose Activity)
 
-- [ ] T029 Create `ui/config/WidgetConfigActivity.kt` — `ComponentActivity`, `setContent { WidgetConfigScreen(...) }`, reads `appWidgetId` from intent
-- [ ] T030 Create `ui/config/WidgetConfigScreen.kt` — Compose screen: TextField (1-100 chars, non-blank), Save button, error display, onSave → DataStore `city_<appWidgetId>` → enqueue `WeatherRefreshWorker` → `setResult(RESULT_OK)` → `finish()`
-- [ ] T031 [P] Write unit test: `WidgetConfigScreenTest` (validation, save flow)
+- [x] T029 Create `ui/config/WidgetConfigActivity.kt` — `ComponentActivity`, `setContent { WidgetConfigScreen(...) }`, reads `appWidgetId` from intent
+- [x] T030 Create `ui/config/WidgetConfigScreen.kt` — Compose screen: TextField (1-100 chars, non-blank), Save button, error display, onSave → DataStore `city_<appWidgetId>` → enqueue `WeatherRefreshWorker` → `setResult(RESULT_OK)` → `finish()`
+- [x] T031 [P] Write unit test: `WidgetConfigScreenTest` (validation, save flow)
 
 ---
 
