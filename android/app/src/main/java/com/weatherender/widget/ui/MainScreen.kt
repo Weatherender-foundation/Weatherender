@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -67,8 +68,8 @@ fun MainScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState)
-                    .padding(top = 16.dp, bottom = 32.dp),
-                verticalArrangement = Arrangement.spacedBy(0.dp)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 UnitToggle(
                     isMetric = isMetric,
@@ -116,13 +117,15 @@ private fun renderWeatherContent(
             current = current,
             locationName = "${location.name}, ${location.country}",
             localTime = location.localTime,
-            isMetric = isMetric
+            isMetric = isMetric,
+            modifier = Modifier.fillMaxWidth().wrapContentHeight()
         )
 
         HourlyForecastTable(
             forecastHours = forecastHours,
             location = location,
-            isMetric = isMetric
+            isMetric = isMetric,
+            modifier = Modifier.fillMaxWidth().wrapContentHeight()
         )
 
         Spacer(modifier = Modifier.padding(32.dp))

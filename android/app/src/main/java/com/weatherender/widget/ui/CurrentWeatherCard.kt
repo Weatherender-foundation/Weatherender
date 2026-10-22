@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,10 +28,11 @@ fun CurrentWeatherCard(
     val windUnit = if (isMetric) "km/h" else "mph"
     val pressureMmHg = safeRoundToInt((current.pressureMb ?: 0.0) * 0.750062)
 
-    WeatherCard(modifier = modifier.fillMaxWidth()) {
+    WeatherCard(modifier = modifier.fillMaxWidth().wrapContentHeight()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .wrapContentHeight()
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -39,26 +41,29 @@ fun CurrentWeatherCard(
 
             TimeText(text = "Data for: $localTime")
 
-            HeroCard() {
+            HeroCard(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     WeatherBadge()
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.Bottom
                     ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(1f),
+                                .wrapContentHeight(),
                             verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             CityMeta(text = locationName)
                             Row(
+                                modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
@@ -74,7 +79,7 @@ fun CurrentWeatherCard(
                     }
 
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().wrapContentHeight(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         StatPill(
@@ -93,9 +98,11 @@ fun CurrentWeatherCard(
                 }
             }
 
-            BlockCard() {
+            BlockCard(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     InfoHeading(text = "Current details")

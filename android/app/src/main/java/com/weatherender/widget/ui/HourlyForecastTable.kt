@@ -4,9 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,9 +34,11 @@ fun HourlyForecastTable(
 ) {
     val hourlyData = getNext24Hours(forecastHours, location)
 
-    BlockCard(modifier = modifier.fillMaxWidth()) {
+    BlockCard(modifier = modifier.fillMaxWidth().wrapContentHeight()) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
@@ -48,7 +51,9 @@ fun HourlyForecastTable(
 
             TableContainer() {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
                     verticalArrangement = Arrangement.spacedBy(1.dp)
                 ) {
                     HeaderRow()
