@@ -29,11 +29,11 @@ fun CurrentWeatherCard(
     theme: WeatherConditionTheme,
     modifier: Modifier = Modifier
 ) {
-    val temp = if (isMetric) current.tempC else current.tempF
+    val temp = if (isMetric) (current.tempC ?: 0.0) else (current.tempF ?: 0.0)
     val tempUnit = if (isMetric) "°C" else "°F"
-    val windSpeed = if (isMetric) current.windKph else current.windMph
+    val windSpeed = if (isMetric) (current.windKph ?: 0.0) else (current.windMph ?: 0.0)
     val windUnit = if (isMetric) "km/h" else "mph"
-    val pressureMmHg = (current.pressureMb * 0.750062).roundToInt()
+    val pressureMmHg = ((current.pressureMb ?: 0.0) * 0.750062).roundToInt()
 
     WeatherCard(modifier = modifier.fillMaxWidth()) {
         Column(
@@ -77,11 +77,11 @@ fun CurrentWeatherCard(
                     ) {
                         StatPill(
                             label = "UV",
-                            value = current.uv.toString()
+                            value = (current.uv ?: 0.0).toString()
                         )
                         StatPill(
                             label = "Humidity",
-                            value = "${current.humidity}%"
+                            value = "${current.humidity ?: 0}%"
                         )
                         StatPill(
                             label = "Pressure",
@@ -108,7 +108,7 @@ fun CurrentWeatherCard(
                     )
                     DetailRow(
                         label = "☀️ UV Index",
-                        value = current.uv.toString()
+                        value = (current.uv ?: 0.0).toString()
                     )
                     DetailRow(
                         label = "⏲ Pressure",
@@ -116,7 +116,7 @@ fun CurrentWeatherCard(
                     )
                     DetailRow(
                         label = "💧 Humidity",
-                        value = "${current.humidity}%"
+                        value = "${current.humidity ?: 0}%"
                     )
                     DetailRow(
                         label = "⛷️ Snow Condition",

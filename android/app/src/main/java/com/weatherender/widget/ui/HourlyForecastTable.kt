@@ -102,10 +102,10 @@ private fun HourRow(
     isOdd: Boolean,
     isLast: Boolean
 ) {
-    val temp = if (isMetric) hour.tempC else hour.tempF
+    val temp = if (isMetric) (hour.tempC ?: 0.0) else (hour.tempF ?: 0.0)
     val tempUnit = if (isMetric) "°C" else "°F"
-    val pressureMmHg = (hour.pressureMb * 0.750062).roundToInt()
-    val timeStr = formatHour(hour.time)
+    val pressureMmHg = ((hour.pressureMb ?: 0.0) * 0.750062).roundToInt()
+    val timeStr = formatHour(hour.time ?: "")
 
     val rowBgColor = if (isOdd) {
         Color.White.copy(alpha = 0.04f)
@@ -123,8 +123,8 @@ private fun HourRow(
     ) {
         DataCell(text = timeStr, isFirst = true)
         DataCell(text = "${temp.roundToInt()}$tempUnit")
-        DataCell(text = "${hour.chanceOfRain}%")
-        DataCell(text = hour.uv.toString())
+        DataCell(text = "${hour.chanceOfRain ?: 0}%")
+        DataCell(text = (hour.uv ?: 0.0).toString())
         DataCell(text = "$pressureMmHg mmHg", isLast = true)
     }
 }
@@ -169,7 +169,7 @@ private fun getNext24Hours(forecastHours: List<HourDto>, location: LocationDto):
 
     return forecastHours
         .filter { hour ->
-            val hourTime = parseHourTime(hour.time)
+            val hourTime = parseHourTime(hour.time ?: "")
             val hourCal = java.util.Calendar.getInstance().apply {
                 timeZone = TimeZone.getTimeZone(tzId)
                 time = hourTime

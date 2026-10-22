@@ -4,6 +4,10 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-10-22 - Android weather widget nullability
+
+- Use safe defaults for nullable current and hourly weather values so the Android debug build compiles.
+
 ## 2026-10-21 - Initial Android Glance Widget implementation
 
 - Android Architecture: Reorganized base source structure from `src/test/` to `src/main/` under a flat package structure (`com.weatherender.widget.{ui,data}`).
