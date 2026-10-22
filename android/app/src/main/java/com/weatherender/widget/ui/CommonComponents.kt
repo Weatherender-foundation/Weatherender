@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -57,10 +60,12 @@ fun UnitToggle(
 @Composable
 fun LoadingIndicator(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier.fillMaxWidth().padding(16.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 32.dp),
         contentAlignment = Alignment.Center
     ) {
-        androidx.compose.material3.CircularProgressIndicator(
+        CircularProgressIndicator(
             color = Color.White,
             strokeWidth = 3.dp
         )
@@ -68,30 +73,33 @@ fun LoadingIndicator(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorMessage(
+fun ErrorCard(
     message: String,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth().padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Text(
-            text = message,
-            color = Color.White.copy(alpha = 0.9f),
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center
-        )
-        androidx.compose.material3.Button(
-            onClick = onRetry,
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                containerColor = Color.White.copy(alpha = 0.2f),
-                contentColor = Color.White
-            )
+    WeatherCard(modifier = modifier) {
+        Column(
+            modifier = Modifier.padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(text = "Retry", fontWeight = FontWeight.Bold)
+            Text(
+                text = message,
+                color = Color.White.copy(alpha = 0.9f),
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center
+            )
+            Button(
+                onClick = onRetry,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White.copy(alpha = 0.2f),
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(text = "Retry", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            }
         }
     }
 }

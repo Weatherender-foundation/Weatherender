@@ -20,13 +20,13 @@ class MainActivity : ComponentActivity() {
 
     private val repository by lazy {
         WeatherRepository(
-            cache = JsonFileCache(this),
+            cache = JsonFileCache(applicationContext),
             apiClient = com.weatherender.widget.data.ApiClient
         )
     }
 
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory(repository, this@MainActivity)
+        MainViewModelFactory(repository, applicationContext)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                 var city by remember { mutableStateOf<String?>(null) }
                 LaunchedEffect(Unit) {
                     city = withContext(Dispatchers.IO) {
-                        AppPreferences.getCity(this@MainActivity)
+                        AppPreferences.getCity(applicationContext)
                     }
                 }
                 MainScreen(
@@ -54,6 +54,6 @@ class MainViewModelFactory(
 ) : ViewModelProvider.Factory {
     override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return MainViewModel(repository, context) as T
+        return MainViewModel(repository, context.applicationContext) as T
     }
 }

@@ -1,6 +1,8 @@
 package com.weatherender.widget.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +12,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,14 +65,14 @@ object WeatherTheme {
         content: @Composable () -> Unit
     ) {
         MaterialTheme(
-            colorScheme = lightColorScheme(
-                primary = Color(0xFF3A7BD5),
-                secondary = Color(0xFF00D2FF),
+            colorScheme = darkColorScheme(
+                primary = Color(0xFF4FACFE),
+                secondary = Color(0xFF00F2FE),
                 tertiary = Color(0xFF7A5CFA),
-                surface = Color.White,
-                background = Color.White,
-                onSurface = Color.Black,
-                onBackground = Color.Black,
+                surface = Color.Transparent,
+                background = Color.Transparent,
+                onSurface = Color.White,
+                onBackground = Color.White,
             ),
             content = content
         )
@@ -81,19 +82,35 @@ object WeatherTheme {
 @Composable
 fun WeatherCard(
     modifier: Modifier = Modifier,
-    elevation: Int = 4,
+    elevation: Int = 0,
     content: @Composable () -> Unit
 ) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xCC000000).copy(alpha = 0.8f),
-            contentColor = Color.White
-        ),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = elevation.dp)
+    Box(
+        modifier = modifier
+            .background(
+                color = Color(0x99000000),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(1.dp)
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(Color.White.copy(alpha = 0.3f), Color.White.copy(alpha = 0.1f))
+                ),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(-1.dp)
     ) {
-        content()
+        Card(
+            modifier = Modifier.fillMaxSize(),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.White
+            ),
+            shape = RoundedCornerShape(20.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        ) {
+            content()
+        }
     }
 }
 

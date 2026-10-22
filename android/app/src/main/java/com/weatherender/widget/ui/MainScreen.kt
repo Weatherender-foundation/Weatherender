@@ -58,9 +58,7 @@ fun MainScreen(
     }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
     ) {
         Box(
@@ -69,23 +67,27 @@ fun MainScreen(
                 .background(backgroundBrush)
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(top = 16.dp, bottom = 32.dp),
                 verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
                 UnitToggle(
                     isMetric = isMetric,
                     onToggle = { viewModel.toggleUnits() },
-                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 0.dp)
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                 )
 
                 when (currentState) {
                     is UiState.Loading -> {
-                        LoadingIndicator(modifier = Modifier.padding(16.dp))
+                        LoadingIndicator(modifier = Modifier.padding(16.dp).fillMaxWidth())
                     }
                     is UiState.Error -> {
-                        ErrorMessage(
+                        ErrorCard(
                             message = currentState.message,
-                            onRetry = { viewModel.refresh() }
+                            onRetry = { viewModel.refresh() },
+                            modifier = Modifier.padding(16.dp).fillMaxWidth()
                         )
                         currentState.cachedResponse?.let { cached ->
                             renderWeatherContent(cached, isMetric, theme)

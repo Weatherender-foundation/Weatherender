@@ -37,7 +37,7 @@ fun CurrentWeatherCard(
 
     WeatherCard(modifier = modifier.fillMaxWidth().padding(16.dp)) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Row(
@@ -49,7 +49,7 @@ fun CurrentWeatherCard(
                     Text(
                         text = locationName,
                         color = Color.White,
-                        fontSize = 20.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
@@ -59,7 +59,7 @@ fun CurrentWeatherCard(
                     )
                 }
                 Box(
-                    modifier = Modifier.size(60.dp),
+                    modifier = Modifier.size(70.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     androidx.compose.foundation.Image(
@@ -68,7 +68,7 @@ fun CurrentWeatherCard(
                         ),
                         contentDescription = current.condition.text,
                         contentScale = androidx.compose.ui.layout.ContentScale.Fit,
-                        modifier = Modifier.size(60.dp)
+                        modifier = Modifier.size(70.dp)
                     )
                 }
             }
@@ -81,7 +81,7 @@ fun CurrentWeatherCard(
                 Text(
                     text = "${temp.roundToInt()}$tempUnit",
                     color = Color.White,
-                    fontSize = 72.sp,
+                    fontSize = 80.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Column(
@@ -90,13 +90,13 @@ fun CurrentWeatherCard(
                     Text(
                         text = current.condition.text,
                         color = Color.White,
-                        fontSize = 20.sp,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Medium
                     )
                     Text(
                         text = "Feels like ${if (isMetric) current.tempC.roundToInt() else current.tempF.roundToInt()}$tempUnit",
                         color = Color.White.copy(alpha = 0.8f),
-                        fontSize = 14.sp
+                        fontSize = 15.sp
                     )
                 }
             }
@@ -105,7 +105,7 @@ fun CurrentWeatherCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 StatPill(
                     label = "Humidity",

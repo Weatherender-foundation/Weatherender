@@ -8,6 +8,8 @@ import com.weatherender.widget.data.WeatherResponseDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.net.SocketTimeoutException
 
 class MainViewModel(
     private val repository: WeatherRepository,
@@ -29,8 +31,12 @@ class MainViewModel(
 
     private fun loadUnitPreference() {
         viewModelScope.launch {
-            val metric = AppPreferences.isMetric(context)
-            _isMetric.value = metric
+            try {
+                val metric = AppPreferences.isMetric(context)
+                _isMetric.value = metric
+            } catch (e: Throwable) {
+                _isMetric.value = true
+            }
         }
     }
 
@@ -38,12 +44,26 @@ class MainViewModel(
         currentCity = city
         viewModelScope.launch {
             _uiState.value = UiState.Loading
-            val result = repository.getWeather(city, forceRefresh)
-            result.onSuccess { response ->
-                currentResponse = response
-                _uiState.value = UiState.Success(response)
-            }.onFailure { e ->
-                _uiState.value = UiState.Error(e.message ?: "Unknown error", currentResponse)
+            try {
+                val result = repository.getWeather(city, forceRefresh)
+                result.onSuccess { response ->
+                    currentResponse = response
+                    _uiState.value = UiState.Success(response)
+                }.onFailure { e ->
+                    val errorMessage = when (e) {
+                        is SocketTimeoutException -> "Connection timed out. The weather service may be waking up. Please try again."
+                        is IOException -> "Network error. Please check your connection and try again."
+                        else -> e.message ?: "Unknown error occurred"
+                    }
+                    _uiState.value = UiState.Error(errorMessage, currentResponse)
+                }
+            } catch (e: Throwable) {
+                val errorMessage = when (e) {
+                    is SocketTimeoutException -> "Connection timed out. The weather service may be waking up. Please try again."
+                    is IOException -> "Network error. Please check your connection and try again."
+                    else -> e.message ?: "Unknown error occurred"
+                }
+                _uiState.value = UiState.Error(errorMessage, currentResponse)
             }
         }
     }
@@ -56,7 +76,11 @@ class MainViewModel(
         val newValue = !_isMetric.value
         _isMetric.value = newValue
         viewModelScope.launch {
-            AppPreferences.saveUnitMetric(context, newValue)
+            try {
+                AppPreferences.saveUnitMetric(context, newValue)
+            } catch (e: Throwable) {
+                _isMetric.value = !newValue
+            }
         }
     }
 }
