@@ -34,7 +34,7 @@ import androidx.compose.foundation.layout.Spacer
 @Composable
 fun MainScreen(
     viewModel: MainViewModel = viewModel(),
-    initialCity: String = "London"
+    initialCity: String = "Moscow"
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isMetric by viewModel.isMetric.collectAsStateWithLifecycle()
