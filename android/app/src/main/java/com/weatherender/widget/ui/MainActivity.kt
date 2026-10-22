@@ -44,10 +44,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
-            Log.e("GlobalCrash", "Uncaught exception on thread ${thread.name}", throwable)
-        }
-
         try {
             val factory = MainViewModelFactory(repository, applicationContext)
             viewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)

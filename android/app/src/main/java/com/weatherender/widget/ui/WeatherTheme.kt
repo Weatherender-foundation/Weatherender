@@ -87,15 +87,15 @@ object WeatherTheme {
         return Brush.linearGradient(
             colorStops = colorStops,
             start = Offset(0f, 0f),
-            end = Offset(Float.MAX_VALUE, Float.MAX_VALUE),
+            end = Offset.Infinite,
             tileMode = TileMode.Clamp
         )
     }
 
     val darkBackgroundBrush: Brush = Brush.linearGradient(
         colors = listOf(Color(0xFF0F172A), Color(0xFF1E293B)),
-        start = Offset(0f, 0f),
-        end = Offset(0f, Float.MAX_VALUE),
+        start = Offset.Zero,
+        end = Offset.Infinite,
         tileMode = TileMode.Clamp
     )
 
@@ -153,7 +153,6 @@ object WeatherTheme {
 @Composable
 fun WeatherCard(
     modifier: Modifier = Modifier,
-    elevation: Int = 0,
     content: @Composable () -> Unit
 ) {
     Box(

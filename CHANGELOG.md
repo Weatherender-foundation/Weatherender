@@ -7,28 +7,14 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 ## 2026-10-22 - Android weather icon URL utility
 
 - Expose weather UI formatting and URL-normalization helpers as public top-level functions.
-
-## 2026-10-22 - Android gradient drawing safety
-
-- Ensure weather background gradients always contain at least two color stops, including for empty or single-color palettes.
-
-## 2026-10-22 - Android weather UI cleanup
-
+- Ensure weather background gradients always contain at least two color stops and use canvas-relative endpoints to avoid native shader crashes.
+- Remove the uncaught-exception handler that suppressed fatal crashes and left the activity unresponsive.
 - Show current wind speed with the selected unit and remove unused UI parameters.
 - Use non-null current temperature values directly.
-
-## 2026-10-22 - Android weather fetch error handling
-
 - Trigger the initial weather fetch from the main screen and report fetch failures in a clear error state with diagnostic logging.
 - Include exception details in fetch errors and execute synchronous OkHttp requests on the IO dispatcher.
-
-## 2026-10-22 - Android UI rendering safeguards
-
 - Normalize protocol-relative weather icon URLs and show a fallback icon when image loading fails.
 - Guard weather temperature, pressure, and UV display values against non-finite floats.
-
-## 2026-10-22 - Android weather widget nullability
-
 - Use safe defaults for nullable current and hourly weather values so the Android debug build compiles.
 
 ## 2026-10-21 - Initial Android Glance Widget implementation
