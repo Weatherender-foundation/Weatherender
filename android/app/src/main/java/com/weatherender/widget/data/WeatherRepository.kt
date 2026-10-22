@@ -1,5 +1,6 @@
 package com.weatherender.widget.data
 
+import android.util.Log
 import kotlin.runCatching
 
 class WeatherRepository(
@@ -13,6 +14,8 @@ class WeatherRepository(
             if (!cachedJson.isNullOrBlank()) {
                 return runCatching {
                     apiClient.parseWeatherResponse(cachedJson)
+                }.onFailure { e ->
+                    Log.e("WeatherApi", "Failed to parse cached JSON", e)
                 }
             }
         }
@@ -21,6 +24,8 @@ class WeatherRepository(
             apiClient.fetchWeather(safeCity).getOrThrow()
         }.onSuccess { response ->
             cache.saveRawResponse(safeCity, apiClient.jsonToString(response))
+        }.onFailure { e ->
+            Log.e("WeatherApi", "Failed to fetch or parse weather", e)
         }
     }
 }

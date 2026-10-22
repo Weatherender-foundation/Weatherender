@@ -1,5 +1,6 @@
 package com.weatherender.widget.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weatherender.widget.data.AppPreferences
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.net.SocketTimeoutException
+import kotlinx.serialization.SerializationException
 
 class MainViewModel(
     private val repository: WeatherRepository,
@@ -50,17 +52,21 @@ class MainViewModel(
                     currentResponse = response
                     _uiState.value = UiState.Success(response)
                 }.onFailure { e ->
+                    Log.e("WeatherApi", "Failed to load weather", e)
                     val errorMessage = when (e) {
                         is SocketTimeoutException -> "Connection timed out. The weather service may be waking up. Please try again."
                         is IOException -> "Network error. Please check your connection and try again."
+                        is SerializationException -> "Failed to parse weather data: ${e.message ?: "Parse Error"}"
                         else -> e.message ?: "Unknown error occurred"
                     }
                     _uiState.value = UiState.Error(errorMessage, currentResponse)
                 }
             } catch (e: Throwable) {
+                Log.e("WeatherApi", "Unexpected error loading weather", e)
                 val errorMessage = when (e) {
                     is SocketTimeoutException -> "Connection timed out. The weather service may be waking up. Please try again."
                     is IOException -> "Network error. Please check your connection and try again."
+                    is SerializationException -> "Failed to parse weather data: ${e.message ?: "Parse Error"}"
                     else -> e.message ?: "Unknown error occurred"
                 }
                 _uiState.value = UiState.Error(errorMessage, currentResponse)
