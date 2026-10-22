@@ -5,6 +5,9 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 
@@ -30,24 +33,33 @@ object ApiClient {
     fun parseWeatherResponse(rawJson: String): WeatherResponseDto =
         json.decodeFromString(rawJson)
 
-    suspend fun fetchWeather(city: String): Result<WeatherResponseDto> = runCatching {
-        val safeCity = city.trim()
-        require(safeCity.isNotBlank()) { "City must not be blank." }
+    suspend fun fetchWeather(city: String): Result<WeatherResponseDto> {
+        return try {
+            val safeCity = city.trim()
+            require(safeCity.isNotBlank()) { "City must not be blank." }
 
-        val encodedCity = URLEncoder.encode(safeCity, Charsets.UTF_8.name())
-        val url = "${BuildConfig.API_BASE_URL.trimEnd('/')}/api/v2/weather?city=$encodedCity"
-        val request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
+            val encodedCity = URLEncoder.encode(safeCity, Charsets.UTF_8.name())
+            val url = "${BuildConfig.API_BASE_URL.trimEnd('/')}/api/v2/weather?city=$encodedCity"
+            val request = Request.Builder()
+                .url(url)
+                .get()
+                .build()
 
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) {
-                throw IllegalStateException("Weather request failed with HTTP ${response.code}")
+            val rawJson = withContext(Dispatchers.IO) {
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        throw IllegalStateException("Weather request failed with HTTP ${response.code}")
+                    }
+                    response.body?.string()
+                        ?: throw IllegalStateException("Weather response body was empty.")
+                }
             }
-            val rawBody = response.body?.string()
-                ?: throw IllegalStateException("Weather response body was empty.")
-            parseWeatherResponse(rawBody)
+
+            Result.success(parseWeatherResponse(rawJson))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

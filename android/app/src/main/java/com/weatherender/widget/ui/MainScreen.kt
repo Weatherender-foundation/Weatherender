@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,10 @@ fun MainScreen(
     viewModel: MainViewModel = viewModel(),
     initialCity: String = "Moscow"
 ) {
+    LaunchedEffect(initialCity) {
+        viewModel.loadWeather(initialCity)
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isMetric by viewModel.isMetric.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
