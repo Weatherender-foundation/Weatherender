@@ -1,5 +1,7 @@
 package com.weatherender.widget.data
 
+import kotlin.runCatching
+
 class WeatherRepository(
     private val cache: JsonFileCache,
     private val apiClient: ApiClient = ApiClient,
@@ -15,10 +17,10 @@ class WeatherRepository(
             }
         }
 
-        val fetched = apiClient.fetchWeather(safeCity)
-        fetched.onSuccess { response ->
+        return runCatching {
+            apiClient.fetchWeather(safeCity).getOrThrow()
+        }.onSuccess { response ->
             cache.saveRawResponse(safeCity, apiClient.jsonToString(response))
         }
-        return fetched
     }
 }

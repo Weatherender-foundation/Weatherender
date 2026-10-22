@@ -35,20 +35,28 @@ fun HourlyForecastTable(
 ) {
     val hourlyData = getNext24Hours(forecastHours, location)
 
-    WeatherCard(modifier = modifier.fillMaxWidth().padding(16.dp)) {
+    BlockCard(modifier = modifier.fillMaxWidth()) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            SectionTitle(text = "24-Hour Forecast")
+            Text(
+                text = "⏰ 24-Hour Forecast",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(start = 4.dp)
+            )
 
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(1.dp)
-            ) {
-                HeaderRow()
-                hourlyData.forEach { hour ->
-                    HourRow(hour = hour, isMetric = isMetric)
+            TableContainer() {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(1.dp)
+                ) {
+                    HeaderRow()
+                    hourlyData.forEachIndexed { index, hour ->
+                        HourRow(hour = hour, isMetric = isMetric, isOdd = index % 2 == 1, isLast = index == hourlyData.lastIndex)
+                    }
                 }
             }
         }
@@ -60,15 +68,15 @@ private fun HeaderRow() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 4.dp)
-            .background(Color.White.copy(alpha = 0.15f), RoundedCornerShape(8.dp)),
+            .padding(start = 14.dp, top = 12.dp, end = 14.dp, bottom = 12.dp)
+            .background(Color(0xFFE4F0FF).copy(alpha = 0.1f), RoundedCornerShape(8.dp)),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         HeaderCell(text = "Time")
-        HeaderCell(text = "Temp")
-        HeaderCell(text = "Precip")
-        HeaderCell(text = "UV")
+        HeaderCell(text = "Temperature")
+        HeaderCell(text = "Precipitation %")
+        HeaderCell(text = "UV Index")
         HeaderCell(text = "Pressure")
     }
 }
@@ -77,8 +85,8 @@ private fun HeaderRow() {
 private fun HeaderCell(text: String) {
     Text(
         text = text,
-        color = Color.White.copy(alpha = 0.6f),
-        fontSize = 11.sp,
+        color = Color(0xFFEAF6FF),
+        fontSize = 15.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier
             .padding(horizontal = 4.dp)
@@ -90,39 +98,51 @@ private fun HeaderCell(text: String) {
 @Composable
 private fun HourRow(
     hour: HourDto,
-    isMetric: Boolean
+    isMetric: Boolean,
+    isOdd: Boolean,
+    isLast: Boolean
 ) {
     val temp = if (isMetric) hour.tempC else hour.tempF
     val tempUnit = if (isMetric) "°C" else "°F"
     val pressureMmHg = (hour.pressureMb * 0.750062).roundToInt()
     val timeStr = formatHour(hour.time)
 
+    val rowBgColor = if (isOdd) {
+        Color.White.copy(alpha = 0.04f)
+    } else {
+        Color.White.copy(alpha = 0.02f)
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 10.dp, horizontal = 4.dp)
-            .background(Color.White.copy(alpha = 0.05f), RoundedCornerShape(8.dp)),
+            .padding(start = 14.dp, top = 12.dp, end = 14.dp, bottom = 12.dp)
+            .background(rowBgColor, RoundedCornerShape(8.dp)),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        DataCell(text = timeStr)
+        DataCell(text = timeStr, isFirst = true)
         DataCell(text = "${temp.roundToInt()}$tempUnit")
         DataCell(text = "${hour.chanceOfRain}%")
         DataCell(text = hour.uv.toString())
-        DataCell(text = "$pressureMmHg mmHg")
+        DataCell(text = "$pressureMmHg mmHg", isLast = true)
     }
 }
 
 @Composable
-private fun DataCell(text: String) {
+private fun DataCell(
+    text: String,
+    isFirst: Boolean = false,
+    isLast: Boolean = false
+) {
     Text(
         text = text,
-        color = Color.White,
-        fontSize = 12.sp,
+        color = Color(0xEDF5FF).copy(alpha = 0.92f),
+        fontSize = 15.sp,
         modifier = Modifier
             .padding(horizontal = 4.dp)
             .fillMaxWidth(),
-        textAlign = TextAlign.Center
+        textAlign = if (isFirst) TextAlign.Start else TextAlign.Center
     )
 }
 

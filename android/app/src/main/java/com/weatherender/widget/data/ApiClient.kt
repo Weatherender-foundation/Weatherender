@@ -4,6 +4,7 @@ import com.weatherender.widget.BuildConfig
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.logging.HttpLoggingInterceptor
 import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 
@@ -17,6 +18,9 @@ object ApiClient {
         .connectTimeout(60, TimeUnit.SECONDS)
         .readTimeout(60, TimeUnit.SECONDS)
         .writeTimeout(60, TimeUnit.SECONDS)
+        .addInterceptor(HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT).apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        })
         .build()
 
     fun jsonToString(value: WeatherResponseDto): String =

@@ -35,104 +35,96 @@ fun CurrentWeatherCard(
     val windUnit = if (isMetric) "km/h" else "mph"
     val pressureMmHg = (current.pressureMb * 0.750062).roundToInt()
 
-    WeatherCard(modifier = modifier.fillMaxWidth().padding(16.dp)) {
+    WeatherCard(modifier = modifier.fillMaxWidth()) {
         Column(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = locationName,
-                        color = Color.White,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Updated: $localTime",
-                        color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 12.sp
-                    )
-                }
-                Box(
-                    modifier = Modifier.size(70.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    androidx.compose.foundation.Image(
-                        painter = androidx.compose.ui.res.painterResource(
-                            id = getConditionIconRes(current.condition.code, theme)
-                        ),
-                        contentDescription = current.condition.text,
-                        contentScale = androidx.compose.ui.layout.ContentScale.Fit,
-                        modifier = Modifier.size(70.dp)
-                    )
-                }
-            }
+            Eyebrow(text = "Weather dashboard")
+            Title(text = "🌤 Weatherender forecast")
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "${temp.roundToInt()}$tempUnit",
-                    color = Color.White,
-                    fontSize = 80.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            TimeText(text = "Data for: $localTime")
+
+            HeroCard() {
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Text(
-                        text = current.condition.text,
-                        color = Color.White,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = "Feels like ${if (isMetric) current.tempC.roundToInt() else current.tempF.roundToInt()}$tempUnit",
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontSize = 15.sp
-                    )
+                    WeatherBadge()
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            CityMeta(text = locationName)
+                            ConditionPill(text = current.condition.text)
+                        }
+                        HeroTemp(text = "${temp.roundToInt()}$tempUnit")
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        StatPill(
+                            label = "UV",
+                            value = current.uv.toString()
+                        )
+                        StatPill(
+                            label = "Humidity",
+                            value = "${current.humidity}%"
+                        )
+                        StatPill(
+                            label = "Pressure",
+                            value = "$pressureMmHg mmHg"
+                        )
+                    }
                 }
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatPill(
-                    label = "Humidity",
-                    value = "${current.humidity}%"
-                )
-                StatPill(
-                    label = "Wind",
-                    value = "${windSpeed.roundToInt()} $windUnit ${current.windDir}"
-                )
-                StatPill(
-                    label = "Pressure",
-                    value = "$pressureMmHg mmHg"
-                )
-                StatPill(
-                    label = "UV",
-                    value = current.uv.toString()
-                )
+            BlockCard() {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    InfoHeading(text = "Current details")
+
+                    DetailRow(
+                        label = "🌡 Temperature",
+                        value = "${temp.roundToInt()}$tempUnit"
+                    )
+                    DetailRow(
+                        label = "📝 Condition",
+                        value = current.condition.text
+                    )
+                    DetailRow(
+                        label = "☀️ UV Index",
+                        value = current.uv.toString()
+                    )
+                    DetailRow(
+                        label = "⏲ Pressure",
+                        value = "$pressureMmHg mmHg"
+                    )
+                    DetailRow(
+                        label = "💧 Humidity",
+                        value = "${current.humidity}%"
+                    )
+                    DetailRow(
+                        label = "⛷️ Snow Condition",
+                        value = "N/A",
+                        isLast = true
+                    )
+                }
             }
         }
-    }
-}
-
-private fun getConditionIconRes(code: Int, theme: WeatherConditionTheme): Int {
-    return when (theme) {
-        WeatherConditionTheme.SUNNY -> android.R.drawable.ic_menu_report_image
-        WeatherConditionTheme.RAINY -> android.R.drawable.ic_menu_report_image
-        WeatherConditionTheme.CLOUDY -> android.R.drawable.ic_menu_report_image
-        WeatherConditionTheme.THUNDER -> android.R.drawable.ic_menu_report_image
     }
 }

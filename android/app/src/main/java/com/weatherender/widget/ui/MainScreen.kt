@@ -47,14 +47,11 @@ fun MainScreen(
             val b = WeatherTheme.getBackgroundBrush(t)
             t to b
         }
-        is UiState.Error -> {
-            val t = currentState.cachedResponse?.current?.condition?.text
-                ?.let { WeatherTheme.resolveTheme(it) }
-                ?: WeatherConditionTheme.SUNNY
-            val b = WeatherTheme.getBackgroundBrush(t)
+        else -> {
+            val t = WeatherConditionTheme.SUNNY
+            val b = WeatherTheme.darkBackgroundBrush
             t to b
         }
-        else -> WeatherConditionTheme.SUNNY to WeatherTheme.getBackgroundBrush(WeatherConditionTheme.SUNNY)
     }
 
     Box(
