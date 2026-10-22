@@ -7,6 +7,7 @@ import com.weatherender.widget.data.AppPreferences
 import com.weatherender.widget.data.WeatherRepository
 import com.weatherender.widget.data.WeatherResponseDto
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -23,16 +24,18 @@ class MainViewModel(
     val isMetric: StateFlow<Boolean> = _isMetric
 
     private var currentCity: String? = null
+
     init {
         loadUnitPreference()
     }
 
     private fun loadUnitPreference() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val metric = AppPreferences.isMetric(context)
                 _isMetric.value = metric
-            } catch (e: Throwable) {
+            } catch (t: Throwable) {
+                Log.e("MainViewModel", "Failed to load unit preference", t)
                 _isMetric.value = true
             }
         }
@@ -40,7 +43,7 @@ class MainViewModel(
 
     fun loadWeather(city: String, forceRefresh: Boolean = false) {
         currentCity = city
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = UiState.Loading
             try {
                 val data = repository.getWeather(city, forceRefresh).getOrThrow()
@@ -51,6 +54,10 @@ class MainViewModel(
                 }
                 Log.e("WeatherApp", "Fetch failed", e)
                 val details = "${e::class.java.simpleName}:${e.localizedMessage ?: e.message ?: "No details"}"
+                _uiState.value = UiState.Error(details)
+            } catch (t: Throwable) {
+                Log.e("WeatherApp", "Unexpected error", t)
+                val details = "${t::class.java.simpleName}:${t.localizedMessage ?: t.message ?: "Unknown error"}"
                 _uiState.value = UiState.Error(details)
             }
         }
@@ -63,10 +70,11 @@ class MainViewModel(
     fun toggleUnits() {
         val newValue = !_isMetric.value
         _isMetric.value = newValue
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 AppPreferences.saveUnitMetric(context, newValue)
-            } catch (e: Throwable) {
+            } catch (t: Throwable) {
+                Log.e("MainViewModel", "Failed to save unit preference", t)
                 _isMetric.value = !newValue
             }
         }
