@@ -27,7 +27,8 @@ __pycache__/
 .DS_Store
 Thumbs.db
 .vscode/
-*.iml
+*.iml/
+**/.idea/
 .agents/
 .aider*
 .specify/
@@ -37,6 +38,7 @@ local.properties
 **/build/
 **/.gradle/
 **/.kotlin/
+**/gradle-daemon-jvm.properties
 
 # Ixclude
 !.aider.conf.yml
