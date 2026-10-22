@@ -3,34 +3,40 @@ package com.weatherender.widget.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
+import com.weatherender.widget.data.JsonFileCache
+import com.weatherender.widget.data.WeatherRepository
 
 class MainActivity : ComponentActivity() {
+
+    private val repository by lazy {
+        WeatherRepository(
+            cache = JsonFileCache(this),
+            apiClient = com.weatherender.widget.data.ApiClient
+        )
+    }
+
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory(repository, this@MainActivity)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WeatherAppTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
-                    MainScreen()
-                }
+            WeatherTheme.WeatherAppTheme {
+                MainScreen(viewModel = viewModel)
             }
         }
     }
 }
 
-@Composable
-private fun MainScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(text = "Weatherender")
+class MainViewModelFactory(
+    private val repository: WeatherRepository,
+    private val context: android.content.Context
+) : ViewModelProvider.Factory {
+    override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return MainViewModel(repository, context) as T
     }
 }
