@@ -1,9 +1,28 @@
 package com.weatherender.widget.ui
 
+import androidx.compose.ui.graphics.Color
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class WeatherUiUtilsTest {
+    @Test
+    fun `ensures gradient colors contain at least two colors`() {
+        val color = Color(0xFF123456)
+
+        assertEquals(
+            listOf(Color.Transparent, Color.Transparent),
+            safeGradientColors(emptyList())
+        )
+        assertEquals(
+            listOf(color, color),
+            safeGradientColors(listOf(color))
+        )
+        assertEquals(
+            listOf(color, Color.White),
+            safeGradientColors(listOf(color, Color.White))
+        )
+    }
+
     @Test
     fun `normalizes protocol-relative condition icon URLs`() {
         assertEquals(

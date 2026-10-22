@@ -8,6 +8,10 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 - Expose weather UI formatting and URL-normalization helpers as public top-level functions.
 
+## 2026-10-22 - Android gradient drawing safety
+
+- Ensure weather background gradients always contain at least two color stops, including for empty or single-color palettes.
+
 ## 2026-10-22 - Android weather UI cleanup
 
 - Show current wind speed with the selected unit and remove unused UI parameters.

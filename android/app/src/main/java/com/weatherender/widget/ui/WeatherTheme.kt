@@ -33,6 +33,12 @@ enum class WeatherConditionTheme {
     THUNDER
 }
 
+internal fun safeGradientColors(colors: List<Color>): List<Color> = when (colors.size) {
+    0 -> listOf(Color.Transparent, Color.Transparent)
+    1 -> listOf(colors.first(), colors.first())
+    else -> colors
+}
+
 object WeatherTheme {
     private val SunnyGradient = listOf(Color(0xFF4FACFE), Color(0xFF00F2FE))
     private val RainyGradient = listOf(Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364))
@@ -70,8 +76,13 @@ object WeatherTheme {
     }
 
     fun getBackgroundBrush(theme: WeatherConditionTheme): Brush {
-        val colors = getGradient(theme)
-        val stops = getGradientStops(theme)
+        val colors = safeGradientColors(getGradient(theme))
+        val themeStops = getGradientStops(theme)
+        val stops = if (themeStops.size == colors.size) {
+            themeStops
+        } else {
+            List(colors.size) { index -> index.toFloat() / (colors.size - 1) }
+        }
         val colorStops = colors.zip(stops).map { (color, stop) -> stop to color }.toTypedArray()
         return Brush.linearGradient(
             colorStops = colorStops,
