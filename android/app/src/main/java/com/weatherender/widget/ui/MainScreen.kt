@@ -46,17 +46,12 @@ fun MainScreen(
     val scrollState = rememberScrollState()
 
     val currentState = uiState
-    val (theme, backgroundBrush) = when (currentState) {
-        is UiState.Success -> {
-            val t = WeatherTheme.resolveTheme(currentState.response.current.condition.text)
-            val b = WeatherTheme.getBackgroundBrush(t)
-            t to b
-        }
-        else -> {
-            val t = WeatherConditionTheme.SUNNY
-            val b = WeatherTheme.darkBackgroundBrush
-            t to b
-        }
+    val backgroundBrush = when (currentState) {
+        is UiState.Success ->
+            WeatherTheme.getBackgroundBrush(
+                WeatherTheme.resolveTheme(currentState.response.current.condition.text)
+            )
+        else -> WeatherTheme.darkBackgroundBrush
     }
 
     Box(
@@ -92,11 +87,11 @@ fun MainScreen(
                             modifier = Modifier.padding(16.dp).fillMaxWidth()
                         )
                         currentState.cachedResponse?.let { cached ->
-                            renderWeatherContent(cached, isMetric, theme)
+                            renderWeatherContent(cached, isMetric)
                         }
                     }
                     is UiState.Success -> {
-                        renderWeatherContent(currentState.response, isMetric, theme)
+                        renderWeatherContent(currentState.response, isMetric)
                     }
                 }
             }
@@ -107,8 +102,7 @@ fun MainScreen(
 @Composable
 private fun renderWeatherContent(
     response: WeatherResponseDto,
-    isMetric: Boolean,
-    theme: WeatherConditionTheme
+    isMetric: Boolean
 ) {
     val current = response.current
     val location = response.location
@@ -122,8 +116,7 @@ private fun renderWeatherContent(
             current = current,
             locationName = "${location.name}, ${location.country}",
             localTime = location.localTime,
-            isMetric = isMetric,
-            theme = theme
+            isMetric = isMetric
         )
 
         HourlyForecastTable(

@@ -4,10 +4,24 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
+## 2026-10-22 - Android weather icon URL utility
+
+- Expose weather UI formatting and URL-normalization helpers as public top-level functions.
+
+## 2026-10-22 - Android weather UI cleanup
+
+- Show current wind speed with the selected unit and remove unused UI parameters.
+- Use non-null current temperature values directly.
+
 ## 2026-10-22 - Android weather fetch error handling
 
 - Trigger the initial weather fetch from the main screen and report fetch failures in a clear error state with diagnostic logging.
 - Include exception details in fetch errors and execute synchronous OkHttp requests on the IO dispatcher.
+
+## 2026-10-22 - Android UI rendering safeguards
+
+- Normalize protocol-relative weather icon URLs and show a fallback icon when image loading fails.
+- Guard weather temperature, pressure, and UV display values against non-finite floats.
 
 ## 2026-10-22 - Android weather widget nullability
 

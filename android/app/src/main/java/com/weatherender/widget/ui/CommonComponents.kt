@@ -14,7 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -405,7 +405,7 @@ fun DayDetailRow(
             )
         }
         if (!isLast) {
-            Divider(
+            HorizontalDivider(
                 color = Color.White.copy(alpha = 0.12f),
                 thickness = 1.dp,
                 modifier = Modifier.padding(top = 5.dp).fillMaxWidth()

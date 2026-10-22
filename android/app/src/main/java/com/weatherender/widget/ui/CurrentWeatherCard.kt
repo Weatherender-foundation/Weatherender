@@ -1,24 +1,17 @@
 package com.weatherender.widget.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.weatherender.widget.data.CurrentDto
-import kotlin.math.roundToInt
 
 @Composable
 fun CurrentWeatherCard(
@@ -26,14 +19,13 @@ fun CurrentWeatherCard(
     locationName: String,
     localTime: String,
     isMetric: Boolean,
-    theme: WeatherConditionTheme,
     modifier: Modifier = Modifier
 ) {
-    val temp = if (isMetric) (current.tempC ?: 0.0) else (current.tempF ?: 0.0)
+    val temp = if (isMetric) current.tempC else current.tempF
     val tempUnit = if (isMetric) "°C" else "°F"
     val windSpeed = if (isMetric) (current.windKph ?: 0.0) else (current.windMph ?: 0.0)
     val windUnit = if (isMetric) "km/h" else "mph"
-    val pressureMmHg = ((current.pressureMb ?: 0.0) * 0.750062).roundToInt()
+    val pressureMmHg = safeRoundToInt((current.pressureMb ?: 0.0) * 0.750062)
 
     WeatherCard(modifier = modifier.fillMaxWidth()) {
         Column(
@@ -66,9 +58,19 @@ fun CurrentWeatherCard(
                             verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             CityMeta(text = locationName)
-                            ConditionPill(text = current.condition.text)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                WeatherConditionIcon(
+                                    iconUrl = current.condition.icon,
+                                    contentDescription = current.condition.text,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                                ConditionPill(text = current.condition.text)
+                            }
                         }
-                        HeroTemp(text = "${temp.roundToInt()}$tempUnit")
+                        HeroTemp(text = "${safeRoundToInt(temp)}$tempUnit")
                     }
 
                     Row(
@@ -77,7 +79,7 @@ fun CurrentWeatherCard(
                     ) {
                         StatPill(
                             label = "UV",
-                            value = (current.uv ?: 0.0).toString()
+                            value = safeDoubleString(current.uv)
                         )
                         StatPill(
                             label = "Humidity",
@@ -100,15 +102,19 @@ fun CurrentWeatherCard(
 
                     DetailRow(
                         label = "🌡 Temperature",
-                        value = "${temp.roundToInt()}$tempUnit"
+                        value = "${safeRoundToInt(temp)}$tempUnit"
                     )
                     DetailRow(
                         label = "📝 Condition",
                         value = current.condition.text
                     )
                     DetailRow(
+                        label = "💨 Wind",
+                        value = "$windSpeed $windUnit"
+                    )
+                    DetailRow(
                         label = "☀️ UV Index",
-                        value = (current.uv ?: 0.0).toString()
+                        value = safeDoubleString(current.uv)
                     )
                     DetailRow(
                         label = "⏲ Pressure",

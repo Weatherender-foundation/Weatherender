@@ -2,12 +2,11 @@ package com.weatherender.widget.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +23,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import kotlin.math.roundToInt
 
 @Composable
 fun HourlyForecastTable(
@@ -55,7 +53,7 @@ fun HourlyForecastTable(
                 ) {
                     HeaderRow()
                     hourlyData.forEachIndexed { index, hour ->
-                        HourRow(hour = hour, isMetric = isMetric, isOdd = index % 2 == 1, isLast = index == hourlyData.lastIndex)
+                        HourRow(hour = hour, isMetric = isMetric, isOdd = index % 2 == 1)
                     }
                 }
             }
@@ -99,12 +97,11 @@ private fun HeaderCell(text: String) {
 private fun HourRow(
     hour: HourDto,
     isMetric: Boolean,
-    isOdd: Boolean,
-    isLast: Boolean
+    isOdd: Boolean
 ) {
     val temp = if (isMetric) (hour.tempC ?: 0.0) else (hour.tempF ?: 0.0)
     val tempUnit = if (isMetric) "°C" else "°F"
-    val pressureMmHg = ((hour.pressureMb ?: 0.0) * 0.750062).roundToInt()
+    val pressureMmHg = safeRoundToInt((hour.pressureMb ?: 0.0) * 0.750062)
     val timeStr = formatHour(hour.time ?: "")
 
     val rowBgColor = if (isOdd) {
@@ -122,18 +119,47 @@ private fun HourRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         DataCell(text = timeStr, isFirst = true)
-        DataCell(text = "${temp.roundToInt()}$tempUnit")
+        TemperatureCell(
+            tempText = "${safeRoundToInt(temp)}$tempUnit",
+            iconUrl = hour.condition?.icon.orEmpty(),
+            conditionText = hour.condition?.text.orEmpty()
+        )
         DataCell(text = "${hour.chanceOfRain ?: 0}%")
-        DataCell(text = (hour.uv ?: 0.0).toString())
-        DataCell(text = "$pressureMmHg mmHg", isLast = true)
+        DataCell(text = safeDoubleString(hour.uv))
+        DataCell(text = "$pressureMmHg mmHg")
+    }
+}
+
+@Composable
+private fun TemperatureCell(
+    tempText: String,
+    iconUrl: String,
+    conditionText: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        WeatherConditionIcon(
+            iconUrl = iconUrl,
+            contentDescription = conditionText.ifBlank { "Weather condition" },
+            modifier = Modifier.size(24.dp)
+        )
+        Text(
+            text = tempText,
+            color = Color(0xEDF5FF).copy(alpha = 0.92f),
+            fontSize = 15.sp,
+            modifier = Modifier.padding(horizontal = 4.dp),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
 @Composable
 private fun DataCell(
     text: String,
-    isFirst: Boolean = false,
-    isLast: Boolean = false
+    isFirst: Boolean = false
 ) {
     Text(
         text = text,

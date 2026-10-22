@@ -58,6 +58,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.2")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.foundation:foundation-layout")
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
     // Glance (widgets)
     implementation("androidx.glance:glance:1.1.0")
