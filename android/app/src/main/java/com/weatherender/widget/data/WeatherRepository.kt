@@ -28,4 +28,8 @@ class WeatherRepository(
             Log.e("WeatherApi", "Failed to fetch or parse weather", e)
         }
     }
+
+    fun parseCachedResponse(json: String): WeatherResponseDto {
+        return apiClient.parseWeatherResponse(json)
+    }
 }
