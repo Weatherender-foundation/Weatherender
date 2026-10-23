@@ -126,7 +126,7 @@
 ## Cross-Cutting & Verification
 
 - [ ] T066 [P] Create `quickstart.md` — build setup, `local.properties` (API_BASE_URL), manual visual parity checklist
-- [ ] T067 Run `./gradlew :android:app:testDebugUnitTest` — all unit tests pass
+- [ ] T067 Run `./gradlew :android:app:testDebugUnitTest` — all unit tests pass (test sources not tracked in git)
 - [ ] T068 Run `./gradlew :android:app:assembleDebug` — build succeeds, no forbidden dependencies
 - [ ] T069 Manual verification: add both widgets, configure cities, verify current/forecast data, tap refresh
 - [ ] T070 Manual verification: launch app, search city, verify current + daily + hourly + unit toggle

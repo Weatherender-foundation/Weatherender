@@ -2,9 +2,17 @@
 
 All notable changes to **Weatherender** (formerly *Weather*), organized by date and grouped by theme. Reconstructed directly from `git log`.
 
+## 2026-10-22-2 - Android Weather Widgets: Current, Forecast & Configuration
+
+- **Current Weather Widget (Glance)**: Fully implemented `CurrentWeatherWidget` with gradient background, hero temperature (°C), condition text, UV index, humidity, pressure (mmHg, converted from mb × 0.750062), snow status, loading/error/stale states.
+- **3-Day Forecast Widget (Glance)**: Fully implemented `ForecastWeatherWidget` with 3 day cards showing date (DD.MM.YYYY), average temperature (°C), precipitation (mm), precipitation chance (%), UV index, wind (km/h), gusts (km/h with fallback maxwind × 1.2), and snow state.
+- **Widget Configuration Activity**: Implemented `WidgetConfigActivity` with 100% Compose UI — TextField for city input (1-100 chars, non-blank validation), Save button, error display. On save: updates DataStore `city_<appWidgetId>`, enqueues `WeatherRefreshWorker` for immediate refresh, sets `RESULT_OK`, finishes activity.
+- **Unit Tests**: Added `CurrentWeatherWidgetTest`, `ForecastWeatherWidgetTest`, and `WidgetConfigScreenTest` covering theme mapping, pressure conversion, gusts fallback logic, date formatting, city validation, and save flow.
+- **Build Verification**: Both `./gradlew :app:assembleDebug` and `./gradlew :app:testDebugUnitTest` pass cleanly.
+
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
 
-## 2026-10-22 - Android weather icon URL utility
+## 2026-10-22-1 - Android weather icon URL utility
 
 - Expose weather UI formatting and URL-normalization helpers as public top-level functions.
 - Ensure weather background gradients always contain at least two color stops and use canvas-relative endpoints to avoid native shader crashes.
