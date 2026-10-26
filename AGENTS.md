@@ -1,4 +1,4 @@
-# Copilot Instructions
+# Agent Instructions
 
 Act as a senior full-stack engineer contributing to Weatherender. Deliver
 production-quality changes that are correct, secure, maintainable, and
@@ -148,3 +148,9 @@ Use the Spec-Kit skills located under `.opencode/skills/` (`speckit-constitution
   documented test setup and the CI-equivalent command:
 
   ```bash
+  docker compose run --rm --user "$(id -u):$(id -g)" -v "$PWD":/app cli pytest tests/ --cov=. --cov-report=xml --asyncio-mode=auto
+  ```
+
+- Run relevant project quality checks, including Ruff and Mypy, when the
+  change affects code. Report any checks that could not be run and why; never
+  claim unverified results.
