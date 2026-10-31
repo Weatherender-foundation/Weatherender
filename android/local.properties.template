@@ -1,9 +1,0 @@
-# Weatherender Android App Configuration
-# Copy this file to local.properties and fill in your values
-# 
-# API_BASE_URL: The base URL for the Weatherender API v2 endpoint
-# Example: https://your-weatherender-instance.example
-# The full endpoint will be: ${API_BASE_URL}/api/v2/weather?city={city}
-#
-# This value is injected into BuildConfig.API_BASE_URL at build time
-API_BASE_URL=https://api.weatherender.example
