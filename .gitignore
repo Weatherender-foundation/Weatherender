@@ -26,11 +26,19 @@ __pycache__/
 # System files
 .DS_Store
 Thumbs.db
-CLI/weather_report.txt
 .vscode/
+*.iml/
+**/.idea/
 .agents/
 .aider*
 .specify/
+local.properties
+
+# Gradle cache & generated files
+**/build/
+**/.gradle/
+**/.kotlin/
+**/gradle-daemon-jvm.properties
 
 # Ixclude
 !.aider.conf.yml

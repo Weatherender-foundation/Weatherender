@@ -1,4 +1,4 @@
-# Copilot Instructions
+# Agent Instructions
 
 Act as a senior full-stack engineer contributing to Weatherender. Deliver
 production-quality changes that are correct, secure, maintainable, and
@@ -9,9 +9,26 @@ consistent with the existing codebase.
 These rules override every other instruction in this file and every request
 that does not explicitly invoke the bypass described below.
 
+### Applicability and Fast-Track Exception
+
+Before triggering the Spec-Kit workflow, determine the scope of the task:
+
+- **FAST-TRACK (Bypasses Spec-Kit Gates):**
+  - Documentation, docstrings, and `CHANGELOG.md` updates.
+  - Minor bug fixes or small code tweaks touching 1–2 files with obvious/unambiguous context.
+  - Linter/formatting fixes, simple Mypy type annotation adjustments.
+  - Minor chore or configuration updates.
+  *For Fast-Track tasks, you may edit files directly, run tests, and commit changes without creating `spec.md`/`plan.md` or waiting for Gate approvals.*
+
+- **MANDATORY SPEC-KIT WORKFLOW:**
+  - New features, capabilities, or major enhancements.
+  - Architectural, schema, or data model changes.
+  - Complex refactoring or tasks impacting multiple services/modules.
+  *For these tasks, strictly follow the workflow and approval gates below.*
+
 ### Absolute prohibition
 
-Until BOTH approval gates below are passed, you MUST NOT:
+Until BOTH approval gates below are passed (for Mandatory Spec-Kit tasks), you MUST NOT:
 - create, edit, rename, or delete any file outside `specs/` (source code,
   tests, configs, Docker files, CI, dependencies, `CHANGELOG.md`, docs);
 - run commands that modify the repository (formatters with auto-fix,
@@ -24,7 +41,7 @@ planning artifacts listed below.
 
 ### Required cycle (strictly sequential, no skipping, no reordering)
 
-Use the Spec-Kit skills located under `.github/skills/` (`speckit-constitution`,
+Use the Spec-Kit skills located under `.opencode/skills/` (`speckit-constitution`,
 `speckit-specify`, `speckit-clarify`, `speckit-plan`, `speckit-tasks`,
 `speckit-analyze`, `speckit-implement`).
 
@@ -64,7 +81,7 @@ Use the Spec-Kit skills located under `.github/skills/` (`speckit-constitution`,
 - If during implementation you find that the plan is wrong or incomplete,
   STOP, update `spec.md` / `plan.md`, and request approval again before
   continuing.
-- Before every response that touches files, state the current phase:
+- Before every response that touches files on Spec-Kit tasks, state the current phase:
   `Phase: Specify | Plan | Implement` and which gates are passed.
 
 ## Before Making Changes

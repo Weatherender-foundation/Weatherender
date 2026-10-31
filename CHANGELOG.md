@@ -2,7 +2,54 @@
 
 All notable changes to **Weatherender** (formerly *Weather*), organized by date and grouped by theme. Reconstructed directly from `git log`.
 
+## 2026-10-22-2 - Android Weather Widgets: Current, Forecast & Configuration
+
+- **Current Weather Widget (Glance)**: Fully implemented `CurrentWeatherWidget` with gradient background, hero temperature (°C), condition text, UV index, humidity, pressure (mmHg, converted from mb × 0.750062), snow status, loading/error/stale states.
+- **3-Day Forecast Widget (Glance)**: Fully implemented `ForecastWeatherWidget` with 3 day cards showing date (DD.MM.YYYY), average temperature (°C), precipitation (mm), precipitation chance (%), UV index, wind (km/h), gusts (km/h with fallback maxwind × 1.2), and snow state.
+- **Widget Configuration Activity**: Implemented `WidgetConfigActivity` with 100% Compose UI — TextField for city input (1-100 chars, non-blank validation), Save button, error display. On save: updates DataStore `city_<appWidgetId>`, enqueues `WeatherRefreshWorker` for immediate refresh, sets `RESULT_OK`, finishes activity.
+- **Unit Tests**: Added `CurrentWeatherWidgetTest`, `ForecastWeatherWidgetTest`, and `WidgetConfigScreenTest` covering theme mapping, pressure conversion, gusts fallback logic, date formatting, city validation, and save flow.
+- **Build Verification**: Both `./gradlew :app:assembleDebug` and `./gradlew :app:testDebugUnitTest` pass cleanly.
+
 > Note: the repository's earliest history (24–30 June) contains a run of commits literally named `v1.0.0` through `v4.2.4` — an early, pre-conventional-commits naming habit rather than meaningful version releases. They're omitted below in favor of the descriptive commit messages from the same period, once a proper (`feat:`/`fix:`/`docs:`) commit style was adopted.
+
+## 2026-10-22-1 - Android weather icon URL utility
+
+- Expose weather UI formatting and URL-normalization helpers as public top-level functions.
+- Ensure weather background gradients always contain at least two color stops and use canvas-relative endpoints to avoid native shader crashes.
+- Remove the uncaught-exception handler that suppressed fatal crashes and left the activity unresponsive.
+- Show current wind speed with the selected unit and remove unused UI parameters.
+- Use non-null current temperature values directly.
+- Trigger the initial weather fetch from the main screen and report fetch failures in a clear error state with diagnostic logging.
+- Include exception details in fetch errors and execute synchronous OkHttp requests on the IO dispatcher.
+- Normalize protocol-relative weather icon URLs and show a fallback icon when image loading fails.
+- Guard weather temperature, pressure, and UV display values against non-finite floats.
+- Use safe defaults for nullable current and hourly weather values so the Android debug build compiles.
+
+## 2026-10-21 - Initial Android Glance Widget implementation
+
+- Android Architecture: Reorganized base source structure from `src/test/` to `src/main/` under a flat package structure (`com.weatherender.widget.{ui,data}`).
+- Data Layer:
+  - Implemented DTO models (`WeatherApiDto`) for `/api/v2/weather` and OkHttp network client (`ApiClient`).
+  - Integrated raw JSON file caching (`JsonFileCache`) and DataStore preferences (`Preferences`).
+  - Added background update components using WorkManager (`WeatherRefreshWorker` and `WorkScheduler`).
+- UI Layer:
+  - Created `MainActivity`, `WidgetConfigActivity`, and foundational `WeatherTheme`.
+  - Added Glance widget receivers (`CurrentWeatherWidgetReceiver` and `ForecastWeatherWidgetReceiver`).
+- Build: Verified project build integrity; app compiles successfully (`./gradlew :app:assembleDebug`).
+
+## 2026-10-19 — Spec refinement and delivery planning
+
+- Refined the feature specification to better define scope, expected behavior, and user-facing outcomes.
+- Clarified acceptance criteria and edge-case handling to reduce ambiguity before implementation work continues.
+- Documented the implementation path and task breakdown needed to validate the feature with a clear delivery plan.
+- Aligned the spec and work plan with the project standards for maintainable, testable, and well-scoped changes.
+
+## 2026-10-18 — Specification and change framing
+
+- Reviewed the current feature direction and narrowed the core requirements to the intended outcome.
+- Added and improved specification detail to capture key behavior, constraints, and validation expectations.
+- Structured the change plan around concrete milestones and dependency-aware task tracking.
+- Prepared the project for implementation by formalizing the scope and required work items.
 
 ## 2026-10-15 — Test warning and cache permission fixes
 
