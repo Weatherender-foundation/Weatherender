@@ -1,4 +1,4 @@
-# Agent Instructions
+# Copilot Instructions
 
 Act as a senior full-stack engineer contributing to Weatherender. Deliver
 production-quality changes that are correct, secure, maintainable, and
