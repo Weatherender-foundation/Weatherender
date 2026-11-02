@@ -44,11 +44,11 @@ apscheduler==3.11.3
 
 # --- Dev tooling ---
 pytest==9.1.1
-pytest_asyncio==1.4.0
+pytest_asyncio==1.4.1
 pytest-cov==7.1.0
 pre-commit==4.7.0
-ruff==0.17.2
-mypy==2.4.0
+ruff==0.17.3
+mypy==2.4.1
 types-requests==2.33.0.20260906
 respx==0.23.1
 tenacity==9.2.1
