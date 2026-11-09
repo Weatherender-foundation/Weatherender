@@ -6,7 +6,7 @@ This document lists the current maintainers of the **Weatherender** project and 
 
 | Name | GitHub | Role | Contact |
 |------|--------|------|---------|
-| **Alexey Lyapin** | [@LyapinAlexey](https://github.com/LyapinAlexey) | Founder & Lead Maintainer | [lehacomp16@gmail.com](mailto:lehacomp16@gmail.com) · [Telegram](https://t.me/LyapinAlexey) |
+| **Alexey Lyapin** | [@LyapinAlexey](https://github.com/LyapinAlexey) | Founder & Lead Maintainer | [alexey.lyapin.inbox@gmail.com](mailto:alexey.lyapin.inbox@gmail.com) · [Telegram](https://t.me/LyapinAlexey) |
 
 **Personal site:** [lyapinalexey.github.io](https://lyapinalexey.github.io/)
 

@@ -17,7 +17,7 @@ Need help with **Weatherender**?
    - Questions → open an issue or start a Discussion
 
 3. **Direct contact**
-   - Email: [lehacomp16@gmail.com](mailto:lehacomp16@gmail.com)
+   - Email: [alexey.lyapin.inbox@gmail.com](mailto:alexey.lyapin.inbox@gmail.com)
    - Telegram: [@LyapinAlexey](https://t.me/LyapinAlexey)
 
 ## What is **not** supported

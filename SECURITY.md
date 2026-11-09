@@ -17,7 +17,7 @@ We actively issue security updates and patches for the following versions of **W
 We take the security of **Weatherender** seriously. If you discover a security vulnerability, please follow responsible disclosure practices rather than opening a public issue on GitHub.
 
 ### How to Report:
-1. **Direct Email**: Send a detailed security report directly to the project maintainer at **[lehacomp16@gmail.com](mailto:lehacomp16@gmail.com)**.
+1. **Direct Email**: Send a detailed security report directly to the project maintainer at **[alexey.lyapin.inbox@gmail.com](mailto:alexey.lyapin.inbox@gmail.com)**.
 2. **Details to Include**:
    * A brief description of the vulnerability and its potential impact.
    * Step-by-step instructions or a Proof of Concept (PoC) to reproduce the issue.

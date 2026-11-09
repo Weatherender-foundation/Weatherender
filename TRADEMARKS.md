@@ -44,7 +44,7 @@ brand, and commercial use of the software does not imply project endorsement.
 ## Requesting permission
 
 For co-branding, logo use, or other use that is not clearly factual, contact
-[Alexey Lyapin](mailto:lehacomp16@gmail.com) before publishing it. Permission
+[Alexey Lyapin](mailto:alexey.lyapin.inbox@gmail.com) before publishing it. Permission
 must be explicit and in writing.
 
 This document is informational and is not legal advice. Names may have additional rights under applicable law.

@@ -7,7 +7,7 @@ name = "weatherender"
 version = "2.0.1"
 description = "Production-grade weather intelligence for skiers"
 readme = "README.md"
-authors = [{ name = "Alexey Lyapin", email = "lehacomp16@gmail.com" }]
+authors = [{ name = "Alexey Lyapin", email = "alexey.lyapin.inbox@gmail.com" }]
 license = { file = "LICENSE" }
 requires-python = ">=3.13"
 dynamic = ["dependencies"]

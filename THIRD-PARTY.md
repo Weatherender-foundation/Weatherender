@@ -57,4 +57,4 @@ When adding or removing a direct dependency or external integration:
 3. Update this file with the exact pinned version and purpose.
 4. Run the project's normal tests and CI checks before merging.
 
-Questions about third-party licensing should be sent to [Alexey Lyapin](mailto:lehacomp16@gmail.com). This project cannot provide legal advice.
+Questions about third-party licensing should be sent to [Alexey Lyapin](mailto:alexey.lyapin.inbox@gmail.com). This project cannot provide legal advice.

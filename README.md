@@ -382,7 +382,7 @@ attribution notices. Project names and branding are covered separately by
 For licensing, attribution, or trademark questions, contact the maintainer:
 
 <p align="center">
-  <a href="mailto:lehacomp16@gmail.com" style="display: inline-block; margin-bottom: 8px;">
+  <a href="mailto:alexey.lyapin.inbox@gmail.com" style="display: inline-block; margin-bottom: 8px;">
     <img src="https://img.shields.io/badge/Email-lehacomp16%40gmail.com-blue?style=for-the-badge&logo=gmail&logoColor=white" height="32" alt="Email" />
   </a>
   <br>

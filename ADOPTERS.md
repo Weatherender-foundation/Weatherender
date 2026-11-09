@@ -25,4 +25,4 @@ Adoption does not change the terms of the [GNU Affero General Public License v3.
 Public listing on this page does not provide a warranty, support agreement,
 certification, or security guarantee.
 
-For licensing questions, contact [Alexey Lyapin](mailto:lehacomp16@gmail.com). For technical help, see [SUPPORT.md](SUPPORT.md).
+For licensing questions, contact [Alexey Lyapin](mailto:alexey.lyapin.inbox@gmail.com). For technical help, see [SUPPORT.md](SUPPORT.md).

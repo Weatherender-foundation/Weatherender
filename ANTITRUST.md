@@ -25,7 +25,7 @@ If a discussion moves toward a prohibited topic:
 
 1. Do not continue the discussion or share additional sensitive information.
 2. State that the topic is out of scope and ask that it be stopped.
-3. Notify the lead maintainer at [lehacomp16@gmail.com](mailto:lehacomp16@gmail.com).
+3. Notify the lead maintainer at [alexey.lyapin.inbox@gmail.com](mailto:alexey.lyapin.inbox@gmail.com).
 4. Report harassment or other community violations under the [Code of Conduct](CODE_OF_CONDUCT.md).
 5. Report security vulnerabilities under [SECURITY.md](SECURITY.md), rather than in a public issue.
 
