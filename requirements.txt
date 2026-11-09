@@ -4,10 +4,10 @@ gunicorn==26.2.0
 gevent==26.9.0
 psycogreen==1.0.2
 flask-limiter==4.1.1
-flask-swagger-ui==5.34.0
+flask-swagger-ui==5.34.1
 flask-talisman==1.1.0
 prometheus-flask-exporter==0.23.2
-apispec==6.10.0
+apispec==6.10.1
 apispec-webframeworks==1.2.0
 
 # --- API (FastAPI) ---
@@ -23,8 +23,8 @@ twine==7.0.0
 build==1.6.1
 
 # --- Shared: database / ORM ---
-SQLAlchemy==2.1.6
-psycopg[binary]==3.3.6
+SQLAlchemy==2.1.8
+psycopg[binary]==3.3.8
 psycopg2-binary==2.9.13
 alembic==1.20.1
 asyncpg==0.32.0
@@ -47,7 +47,7 @@ pytest==9.2.0
 pytest_asyncio==1.4.1
 pytest-cov==7.1.0
 pre-commit==4.7.0
-ruff==0.17.3
+ruff==0.17.4
 mypy==2.4.1
 types-requests==2.33.0.20260906
 respx==0.23.1
