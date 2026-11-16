@@ -11,7 +11,7 @@ apispec==6.10.1
 apispec-webframeworks==1.2.0
 
 # --- API (FastAPI) ---
-fastapi==0.162.0
+fastapi==0.162.5
 uvicorn==0.54.0
 slowapi==0.1.10
 
@@ -24,7 +24,7 @@ build==1.6.1
 
 # --- Shared: database / ORM ---
 SQLAlchemy==2.1.8
-psycopg[binary]==3.3.8
+psycopg[binary]==3.3.9
 psycopg2-binary==2.9.13
 alembic==1.20.1
 asyncpg==0.32.0
@@ -47,7 +47,7 @@ pytest==9.2.0
 pytest_asyncio==1.4.1
 pytest-cov==7.1.0
 pre-commit==4.7.0
-ruff==0.17.4
+ruff==0.17.5
 mypy==2.4.1
 types-requests==2.33.0.20260906
 respx==0.23.1
