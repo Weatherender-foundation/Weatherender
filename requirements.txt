@@ -23,7 +23,7 @@ twine==7.0.0
 build==1.6.1
 
 # --- Shared: database / ORM ---
-SQLAlchemy==2.1.8
+SQLAlchemy==2.1.9
 psycopg[binary]==3.3.9
 psycopg2-binary==2.9.13
 alembic==1.20.1
@@ -47,7 +47,7 @@ pytest==9.2.0
 pytest_asyncio==1.5.0
 pytest-cov==7.1.0
 pre-commit==4.7.0
-ruff==0.17.5
+ruff==0.17.6
 mypy==2.4.1
 types-requests==2.33.0.20260906
 respx==0.23.1
