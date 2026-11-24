@@ -19,10 +19,7 @@ Production-grade weather application with a Flask web interface, a CLI tool, and
 
 ## Live Demo
 
-> This project follows the OpenSSF Best Practices passing baseline.
-
-> The application is currently in a fully stable, containerized, and production-grade state. It will remain active and autonomously maintained in the cloud.
-
+#### This project follows the OpenSSF Best Practices passing baseline.
 
 **[weather-7icc.onrender.com](https://weather-7icc.onrender.com)**
 
@@ -34,6 +31,12 @@ Production-grade weather application with a Flask web interface, a CLI tool, and
 - **Database Pauses:** The production storage operates on a free Supabase instance. If the database receives absolutely no client traffic for 7+ consecutive days, Supabase will automatically pause the project. If this occurs, feel free to open an issue to request a manual wake-up.
 
 Stack in production: Render (app) + Supabase (PostgreSQL) + Upstash (Redis).
+
+<details>
+  <summary><b>📸 View interface preview</b></summary>
+  <br>
+  <img src="docs/Preview.png" alt="Weatherender forecast" width="600">
+</details>
 
 ## Table of Contents
 - [Live Demo](#live-demo)
