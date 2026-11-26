@@ -62,14 +62,24 @@ class WeatherReport:
         tc = (
             BLUE
             if t < -10
-            else CYAN if t < 0 else GREEN if t < 16 else YELLOW if t < 26 else RED
+            else CYAN
+            if t < 0
+            else GREEN
+            if t < 16
+            else YELLOW
+            if t < 26
+            else RED
         )
         uc = GREEN if uv <= 2 else YELLOW if uv <= 5 else ORANGE if uv <= 7 else RED
         pc = CYAN if p < 745 else GREEN if p <= 755 else YELLOW if p <= 765 else RED
         wc = (
             GREEN
             if wind < 19
-            else YELLOW if wind < 39 else ORANGE if wind < 61 else RED
+            else YELLOW
+            if wind < 39
+            else ORANGE
+            if wind < 61
+            else RED
         )
         rc = GREEN if pop < 20 else CYAN if pop < 50 else YELLOW if pop < 80 else BLUE
 
