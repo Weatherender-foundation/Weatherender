@@ -38,6 +38,8 @@ Stack in production: Render (app) + Supabase (PostgreSQL) + Upstash (Redis).
   <img src="docs/Preview.png" alt="Weatherender forecast" width="600">
 </details>
 
+#### Also see the [GitHub Wiki](https://github.com/Weatherender-foundation/Weatherender/wiki)
+
 ## Table of Contents
 
 - [Live Demo](#live-demo)
@@ -251,6 +253,7 @@ k6 run load_tests/spike.js
 | [Performance](docs/PERFORMANCE.md) | k6 load-testing methodology and results |
 | [SSCI](docs/SSCI.md) | Snow Surface Condition Index algorithm |
 | [FAQ](docs/FAQ.md) | Frequently asked questions |
+| [GitHub Wiki](https://github.com/Weatherender-foundation/Weatherender/wiki) | Additional project documentation and guides |
 | [Troubleshooting](docs/TROUBLESHOOTING.md) | Common problems and solutions |
 | [Roadmap](docs/ROADMAP.md) | Planned and completed features |
 | [Releasing](docs/RELEASING.md) | How to cut a new release |
