@@ -1,4 +1,4 @@
-<img src="https://avatars.githubusercontent.com/u/323290598?s=100&v=4" align="left" width="70" style="margin-right: 15px;">
+<img src="https://avatars.githubusercontent.com/u/323290598?s=100&v=4" align="left" width="70" style="margin-right: 15px;" alt="Weatherender Logo">
 
 # Weatherender
 
@@ -19,7 +19,7 @@ Production-grade weather application with a Flask web interface, a CLI tool, and
 
 ## Live Demo
 
-#### This project follows the OpenSSF Best Practices passing baseline.
+This project follows the OpenSSF Best Practices passing baseline
 
 **[weather-7icc.onrender.com](https://weather-7icc.onrender.com)**
 
@@ -39,6 +39,7 @@ Stack in production: Render (app) + Supabase (PostgreSQL) + Upstash (Redis).
 </details>
 
 ## Table of Contents
+
 - [Live Demo](#live-demo)
 - [Table of Contents](#table-of-contents)
 - [Install](#install)
@@ -67,6 +68,7 @@ weatherender
 ```
 
 Requires Python 3.13+ and a configured `.env`. At minimum you'll need:
+
 - `WEATHER_API_KEY` — free key from [weatherapi.com](https://www.weatherapi.com/)
 - `SECRET_KEY` — generate with `python -c "import secrets; print(secrets.token_hex(32))"`
 - `DATABASE_URL` — a reachable PostgreSQL instance; the CLI logs every request (success or failure) to it
@@ -129,13 +131,13 @@ cd Weatherender
 cp .env.example .env
 ```
 
-2. Fill in `.env` — at minimum you'll need a free API key from [weatherapi.com](https://www.weatherapi.com/) (`WEATHER_API_KEY`) and a `SECRET_KEY`:
+1. Fill in `.env` — at minimum you'll need a free API key from [weatherapi.com](https://www.weatherapi.com/) (`WEATHER_API_KEY`) and a `SECRET_KEY`:
 
 ```bash
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-3. Start the stack:
+1. Start the stack:
 
 > Make sure Docker Desktop is installed
 
@@ -144,7 +146,7 @@ docker compose up -d
 docker compose run --rm cli alembic upgrade head
 ```
 
-4. Open [http://localhost:5001](http://localhost:5001) for the Flask-only process (UI + sync API).
+1. Open [http://localhost:5001](http://localhost:5001) for the Flask-only process (UI + sync API).
 
    Open [http://localhost:8001](http://localhost:8001) for the combined process: FastAPI v2 **and** the same Flask app mounted via `WSGIMiddleware` (this is what production runs). Docs: [http://localhost:8001/v2/docs](http://localhost:8001/v2/docs).
 
@@ -157,7 +159,6 @@ Local ports (from `.env.example`):
 | PostgreSQL | `5432` | — |
 | Redis | `6379` | — |
 | Test PostgreSQL | `5433` | — |
-
 
 ## Running the CLI
 
@@ -309,7 +310,7 @@ The next major architectural evolution of **Weatherender** is fully planned:
 - [x] **Python package & GHCR image:** Installable `weatherender` on PyPI and published API image on GitHub Container Registry
 - [ ] **User Authentication & Custom Alerts:** Implement secure JWT or session-based user authentication via Supabase Auth, allowing skiers to save favorite resorts and customize automated notification limits
 
-See full roadmap [here](docs/ROADMAP.md)
+See full roadmap [ROADMAP](docs/ROADMAP.md)
 
 ## Project Structure & Architecture
 
@@ -329,7 +330,6 @@ src/weatherender/
 ```
 
 Locally, Compose runs `web` (port **5001**, Flask only) and `api` (port **8001**, FastAPI + Flask via `WSGIMiddleware`) as separate containers. Production and GHCR use only the API image, so one uvicorn process serves both stacks — the same shape as local `:8001`.
-
 
 Full breakdown, component responsibilities, and request/data flow diagrams: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 

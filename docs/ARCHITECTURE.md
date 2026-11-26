@@ -20,7 +20,6 @@ The installable Python package lives under `src/weatherender/` (`pip install wea
 - **Data Maintenance:** Deterministic periodic DB cleanup via APScheduler, guarded by a lock-file leader-election pattern to avoid duplicate execution across Gunicorn workers.
 - **Single-Image Deployment:** Render (and GHCR) use a single `uvicorn` process from `src/weatherender/API/Dockerfile` that mounts the synchronous Flask app inside the async FastAPI app via `WSGIMiddleware`. Locally Compose still runs two containers: `web` on **5001** (Flask only) and `api` on **8001** (FastAPI + the same Flask app mounted). Production matches the `api` container, not `web`.
 
-
 ---
 
 ## 2. Tech Stack & Infrastructure
@@ -264,7 +263,6 @@ Client (async API consumer)
    Locally, Compose runs two containers:
    - `web` on **5001** — Gunicorn + Flask only (UI + sync API). No `/api/v2`.
    - `api` on **8001** — Uvicorn + FastAPI with Flask mounted. Async v2 **and** the full Flask stack. This is what production looks like.
-
 
 ---
 

@@ -16,7 +16,6 @@ Local (Docker Compose):
 
 On Render there is a single `$PORT`; it behaves like `:8001`.
 
-
 ---
 
 ## Endpoints
@@ -60,7 +59,6 @@ curl "http://localhost:8001/api/v2/weather?city=Berlin"
 ```
 
 This will **not** work on `:5001`.
-
 
 **Responses**
 
@@ -140,7 +138,6 @@ Local (Flask-only container **or** the combined API process):
 curl "http://localhost:5001/api/weather?city=Berlin"
 curl "http://localhost:8001/api/weather?city=Berlin"
 ```
-
 
 **Responses**
 

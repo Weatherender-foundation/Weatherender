@@ -17,6 +17,7 @@
    Add a new section at the top of `docs/CHANGELOG.md` with the date and notable changes.
 
 3. **Commit**
+
    ```bash
    git add pyproject.toml docs/CHANGELOG.md
    git commit -m "chore: release vX.Y.Z"
@@ -24,6 +25,7 @@
    ```
 
 4. **Create and push the tag**
+
    ```bash
    git tag vX.Y.Z
    git push origin vX.Y.Z

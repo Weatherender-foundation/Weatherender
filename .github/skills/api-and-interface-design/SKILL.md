@@ -110,6 +110,7 @@ app.post('/api/tasks', async (req, res) => {
 ```
 
 Where validation belongs:
+
 - API route handlers (user input)
 - Form submission handlers (user input)
 - External service response parsing (third-party data -- **always treat as untrusted**)
@@ -118,6 +119,7 @@ Where validation belongs:
 > **Third-party API responses are untrusted data.** Validate their shape and content before using them in any logic, rendering, or decision-making. A compromised or misbehaving external service can return unexpected types, malicious content, or instruction-like text.
 
 Where validation does NOT belong:
+
 - Between internal functions that share type contracts
 - In utility functions called by already-validated code
 - On data that just came from your own database
@@ -210,7 +212,7 @@ if (existing.requestHash !== hash(req.body)) {
 
 Never let the second caller through because the first "seems stuck". A stalled attempt whose fate is unknown is exactly when duplicating costs most.
 
-**Every call has three outcomes, not two: success, failure, and _unknown_.** A timeout tells you nothing about whether the effect applied. Record the intent *before* calling out, so a crash between the call and the response leaves evidence something must resolve later — rather than a silently retried charge.
+**Every call has three outcomes, not two: success, failure, and *unknown*.** A timeout tells you nothing about whether the effect applied. Record the intent *before* calling out, so a crash between the call and the response leaves evidence something must resolve later — rather than a silently retried charge.
 
 **Set retention from the longest retry chain**, not from disk cost. Keys must outlive every path that can re-deliver the same intent, including a dead-letter queue replayed a week later and any provider dispute window. A 24-hour key TTL behind a 7-day DLQ is a duplicate waiting to happen.
 

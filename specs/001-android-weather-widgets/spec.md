@@ -243,18 +243,21 @@ As an Android user, I want to toggle between metric and imperial units for tempe
 ## Architecture & Scope
 
 This Android app is a **thin client** — the 4th consumer of the existing Weatherender backend (CLI, web UI, v1/v2 API). All business logic (weather data fetching, forecast aggregation, SSCI calculation, caching, rate limiting, database) lives on the server. The client only:
+
 - Requests data from the single source: **Weatherender API v2** (`/api/v2/weather`, `/api/v2/health`, `/v2/openapi.json`)
 - Displays server-provided data with loading/error/empty states
 - Handles UI concerns: Compose rendering, animations, widget glue, local preferences
 - **Offline cache**: stores a copy of the last raw API JSON response for display when offline — this is not business logic.
 
 **Allowed client-side computations (strictly limited to display/parity formatting)**:
+
 - Pressure: `pressure_mb × 0.750062` → mmHg
 - 24h hourly window: select 24 entries from API response using city's local time (`location.localtime` / `tz_id`)
 - Condition text → theme mapping (substring match per FR-006)
 - Daily gusts fallback: `maxwind_kph * 1.2` when `gust_kph` absent (matches web UI `app.py`)
 
 **Structure**: Flat 3-folder package (max 4 levels deep, no single-file folders):
+
 ```
 com.weatherender.widget/
 ├── ui/       # screens, components, effects, theme, widgets (current, forecast, app, theme, config)
@@ -292,6 +295,7 @@ com.weatherender.widget/
 ## Explicit Non-Goals
 
 The following are **explicitly out of scope** and must not be introduced:
+
 - ❌ **Domain/use-case layer** — no `domain/`, `usecase/`, or per-operation folders. A use case = direct call from ViewModel/repository to API client.
 - ❌ **Client-side business logic** — no SSCI calculation, no forecast aggregation/filtering beyond allowed display computations (pressure conversion, 24h window, theme mapping, gusts fallback), no business-data caching logic. Server returns exactly what the UI shows.
 - ❌ **XML layouts** — Compose only. XML allowed only for `res/xml/*` (widget provider), `res/values/*` (strings, colors, themes), and `AndroidManifest.xml`.

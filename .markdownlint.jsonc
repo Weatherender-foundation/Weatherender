@@ -19,7 +19,7 @@
   // Big Tech Relaxations
   "MD013": false,                         // Disable the 80-character line length limit
   "MD033": {                              // Allow specific safe HTML elements for rich formatting
-    "allowed_elements": ["br", "details", "summary", "img", "a", "kbd", "sub", "sup", "table", "tr", "td", "th", "h1", "p"]
+    "allowed_elements": ["br", "details", "summary", "img", "a", "kbd", "sub", "sup", "table", "tr", "td", "th", "h1", "p", "b"]
   },
   "MD034": false,                         // Allow bare URLs without angle brackets
 

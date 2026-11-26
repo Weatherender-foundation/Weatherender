@@ -1,6 +1,6 @@
 # Copilot Instructions
 
-Act as a senior full-stack engineer contributing to Weatherender. Deliver
+Act as a senior full-stack engineer contributing to Overclock. Deliver
 production-quality changes that are correct, secure, maintainable, and
 consistent with the existing codebase.
 
@@ -18,6 +18,7 @@ Before triggering the Spec-Kit workflow, determine the scope of the task:
   - Minor bug fixes or small code tweaks touching 1–2 files with obvious/unambiguous context.
   - Linter/formatting fixes, simple Mypy type annotation adjustments.
   - Minor chore or configuration updates.
+  - **My message explicitly requests a "fast-track" implementation.**
   *For Fast-Track tasks, you may edit files directly, run tests, and commit changes without creating `spec.md`/`plan.md` or waiting for Gate approvals.*
 
 - **MANDATORY SPEC-KIT WORKFLOW:**
@@ -29,6 +30,7 @@ Before triggering the Spec-Kit workflow, determine the scope of the task:
 ### Absolute prohibition
 
 Until BOTH approval gates below are passed (for Mandatory Spec-Kit tasks), you MUST NOT:
+
 - create, edit, rename, or delete any file outside `specs/` (source code,
   tests, configs, Docker files, CI, dependencies, `CHANGELOG.md`, docs);
 - run commands that modify the repository (formatters with auto-fix,
@@ -41,7 +43,7 @@ planning artifacts listed below.
 
 ### Required cycle (strictly sequential, no skipping, no reordering)
 
-Use the Spec-Kit skills located under `.opencode/skills/` (`speckit-constitution`,
+Use the Spec-Kit skills located under `.github/skills/` (`speckit-constitution`,
 `speckit-specify`, `speckit-clarify`, `speckit-plan`, `speckit-tasks`,
 `speckit-analyze`, `speckit-implement`).
 
@@ -86,7 +88,7 @@ Use the Spec-Kit skills located under `.opencode/skills/` (`speckit-constitution
 
 ## Before Making Changes
 
-- **Spec-Driven Development:** For all new features, architecture changes, or complex tasks, follow the Mandatory Workflow Gate above. Align every spec and plan with the project's constitution (`speckit-constitution`).
+- **Spec-Driven Development:** For all new features, architecture changes, or complex tasks, follow the Mandatory Workflow Gate above. Align every spec and plan with the project's constitution (`speckit-constitution`). But if it is a small, obvious, and unambiguous change, you may fast-track it without creating `spec.md` or `plan.md`.
 - Inspect the relevant code, tests, and documentation. Follow existing
   architecture and conventions; do not assume a structure that is not present.
 - Keep changes focused. Avoid unrelated edits, unnecessary dependencies, and
@@ -99,6 +101,7 @@ Use the Spec-Kit skills located under `.opencode/skills/` (`speckit-constitution
 - Write clear, readable, maintainable code with appropriate types, validation,
   and explicit error handling. Avoid silent failures and broad exception
   handling.
+- Go Code Quality & Linting: All Go code must strictly comply with the project's `.golangci.yml` (or `.golangci.yaml`) configuration. Write idiomatic Go: handle all returned errors explicitly (never ignore errors with `_` unless documented), wrap errors with context (`fmt.Errorf("...: %w", err)`), pass `context.Context` as the first parameter for I/O or blocking operations, and write clear GoDoc comments for exported symbols.
 - Keep business logic separate from transport layers. Follow the existing
   patterns for the synchronous Flask application, asynchronous FastAPI API,
   CLI, shared services, models, and schemas.
@@ -123,6 +126,13 @@ Use the Spec-Kit skills located under `.opencode/skills/` (`speckit-constitution
   repository changes.
 - Write all documentation, changelog entries, code comments, and technical
   summaries in clear, concise, natural English.
+- **Markdown Formatting:** All Markdown files (`.md`) must strictly comply with the project's `.markdownlint.jsonc` rules (or global markdownlint config):
+  - Use ATX-style headings (`#`) and do not use bold text as headings (`MD036`).
+  - Use dashes (`-`) for unordered lists (`MD004`) with 2-space indentation for nested items (`MD007`).
+  - Always specify the language identifier for fenced code blocks (`MD040`).
+  - Properly indent nested lists and fenced code blocks inside ordered lists (by 3 spaces) so they do not break sequential list numbering (`MD029`).
+  - Avoid raw inline HTML tags unless explicitly permitted in `.markdownlint.jsonc` (`MD033`).
+  - Before completing any task that modifies `.md` files, run `markdownlint-cli2 --fix "**/*.md" "#.venv" "#.git"` (or `npx markdownlint-cli2 --fix "**/*.md" "#.venv" "#.git"`), then manually resolve any remaining warnings reported by `markdownlint-cli2`.
 
 ## Branches, Merges, and Commits
 
@@ -140,6 +150,9 @@ Use the Spec-Kit skills located under `.opencode/skills/` (`speckit-constitution
 
 ## Verification
 
+- Before completing any task that modifies Go files (`.go`), run `golangci-lint run --fix ./...` (or `golangci-lint run ./...` if auto-fix is not appropriate) from the Go module root, and manually resolve all remaining linter issues.
+- When the user writes `check-go`, run `golangci-lint run ./...` from the Go module root to verify code quality across the project. Do not apply automatic fixes unless requested; report the command and its result.
+- When the user writes `fix-docs`, run `markdownlint-cli2 --fix "**/*.md" "#.venv" "#.git"` from the repository root to auto-fix Markdown formatting, then manually resolve any remaining lint warnings and report the result.
 - When the user writes `check-styles`, run `ruff check .` from the repository
   root to check Python code style across the project. Do not apply automatic
   fixes unless requested; report the command and its result.

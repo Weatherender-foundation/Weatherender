@@ -54,6 +54,7 @@ No issues — confirms the deployed `/health` endpoint is reachable and responsi
 Changed Gunicorn's worker class to `gevent` (`--worker-class gevent --worker-connections 50`), which lets each worker handle many requests concurrently instead of blocking on I/O.
 
 **Result:**
+
 - `http_req_duration`: avg **196ms** (5x better), p(95) **380ms** (2x better), max **1.83s** (12x better)
 - `checks_failed`: **3.69%** (down from 7.35%)
 - `http_req_failed`: **7.39%**
@@ -143,6 +144,7 @@ Average latency stayed low, but max latency (4.17s) was ~12x worse than v1's loc
 `API/async_db.py`'s `create_async_engine(ASYNC_DATABASE_URL)` was called with no explicit `pool_size`/`max_overflow`, unlike the sync engine in `models.py` (`pool_size=10, max_overflow=20`, raised during the v1 investigation above). SQLAlchemy's async engine defaults to `pool_size=5, max_overflow=10` — half the sync engine's configured headroom — while being tested at equal or higher concurrency (40–50 VUs for stress/spike).
 
 **Fix applied:**
+
 ```python
 engine = create_async_engine(
     ASYNC_DATABASE_URL,
@@ -200,6 +202,7 @@ After confirming both `/api/weather` (`flask-limiter`) and `/api/v2/weather` (`s
 | Spike v2 (after pool fix)      | Local       | v2 async | 3.78%          | 7.56%            | 7.33ms        | **56.89ms**   |
 
 **Key takeaways:**
+
 - Switching Gunicorn from `sync` to `gevent` workers was the single highest-impact fix for v1, cutting worst-case latency by ~12x and error rate roughly in half on the Render deployment.
 - Neither `psycogreen` nor a larger SQLAlchemy connection pool moved the needle for v1 locally under the historical methodology.
 - The async v2 stack initially showed a *higher* error rate and worse tail latency than v1 under the historical methodology — the assumption "async is automatically faster" did not hold at first.

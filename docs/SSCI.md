@@ -25,6 +25,7 @@ Implementation: [`src/weatherender/snow.py`](../src/weatherender/snow.py) → fu
 | `totalsnow_cm`         | float  | Total snow amount in the forecast period         |
 
 Derived value:
+
 ```python
 snow_density = (totalprecip_mm / (snow_24h_cm * 10)) if snow_24h_cm > 0 else 0.1
 ```
@@ -41,10 +42,10 @@ snow_density = (totalprecip_mm / (snow_24h_cm * 10)) if snow_24h_cm > 0 else 0.1
    Temperature around or above 0 °C combined with high humidity. Clear skies + positive temperature → "Spring slush".
 
 4. **Powder family** (cold conditions)
-   * `temp_c <= -5` and ≥ 15 cm of new snow:
-     * very low density → **Dry champagne powder!**
-     * high wind → **Wind-drifted powder**
-     * otherwise → **Powder**
+   - `temp_c <= -5` and ≥ 15 cm of new snow:
+     - very low density → **Dry champagne powder!**
+     - high wind → **Wind-drifted powder**
+     - otherwise → **Powder**
 
 5. **Wind slab**
    Strong wind (`> 35 km/h`) regardless of exact temperature (when snow is present).

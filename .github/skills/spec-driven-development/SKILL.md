@@ -86,6 +86,7 @@ Don't silently fill in ambiguous requirements. The spec's entire purpose is to s
 1. **Objective** — What are we building and why? Who is the user? What does success look like?
 
 2. **Commands** — Full executable commands with flags, not just tool names.
+
    ```
    Build: npm run build
    Test: npm test -- --coverage
@@ -94,6 +95,7 @@ Don't silently fill in ambiguous requirements. The spec's entire purpose is to s
    ```
 
 3. **Project Structure** — Where source code lives, where tests go, where docs belong.
+
    ```
    src/           → Application source code
    src/components → React components
@@ -202,6 +204,7 @@ Break the plan into discrete, implementable tasks:
 > Follow `planning-and-task-breakdown` for the full task-sizing and dependency-ordering mechanics; it is the canonical source. The template below is a lightweight inline form; if they ever diverge, `planning-and-task-breakdown` takes precedence.
 
 **Task template:**
+
 ```markdown
 - [ ] Task: [Description]
   - Acceptance: [What must be true when done]

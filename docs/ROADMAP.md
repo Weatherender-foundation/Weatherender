@@ -3,6 +3,7 @@
 This document tracks planned and completed major features of **Weatherender**.
 
 Status legend:
+
 - [x] Completed
 - [ ] Planned / In progress
 - [~] Partially done / Under consideration

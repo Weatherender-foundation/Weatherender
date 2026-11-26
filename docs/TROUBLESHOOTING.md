@@ -3,11 +3,13 @@
 ## Local development
 
 ### `docker compose up` fails / containers exit immediately
+
 - Check that ports 5001, 8001, 5432, 6379, 5433 are free.
 - Make sure `.env` exists and contains at least `WEATHER_API_KEY` and `SECRET_KEY`.
 - Run `docker compose logs` to see the exact error.
 
 ### Alembic / database errors
+
 ```bash
 docker compose up -d weather_db
 docker compose run --rm cli alembic upgrade head

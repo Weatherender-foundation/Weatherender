@@ -48,12 +48,14 @@ Yes, a free key from [weatherapi.com](https://www.weatherapi.com/) (`WEATHER_API
 ## API
 
 **Difference between v1 and v2?**
+
 - v1 (`/api/weather`) – synchronous Flask + Marshmallow
 - v2 (`/api/v2/weather`) – asynchronous FastAPI + Pydantic v2 + `httpx`
 
 Both return SSCI data. Production serves both from the same process.
 
 **Where are the interactive docs?**
+
 - v2: `/v2/docs` (Swagger) and `/v2/redoc`
 - v1: `/apidocs`
 

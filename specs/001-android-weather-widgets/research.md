@@ -35,6 +35,7 @@
 | thunder | `rgba(117, 130, 255, 0.28)` | `rgba(140, 168, 255, 0.2)` |
 
 ### Reduced Motion (lines 834-841)
+
 ```css
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -75,6 +76,7 @@ for hour in all_hours:
 ```
 
 **Key points:**
+
 - Uses city's local time from `location.localtime` (not UTC)
 - Flattens all forecast days' hours into single list
 - Selects hours >= current hour, takes exactly 24 entries
@@ -104,6 +106,7 @@ toggleBtn.textContent = isMetric
 ```
 
 **Exact labels:**
+
 - Metric: `°C / °F | km/h / mph`
 - Imperial: `°F / °C | mph / km/h`
 

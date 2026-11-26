@@ -68,6 +68,7 @@ When you encounter inconsistencies, conflicting requirements, or unclear specifi
 ### 3. Push Push Back When Warranted
 
 When an approach has clear problems:
+
 - Point out the issue directly
 - Explain the concrete downside
 - Propose an alternative

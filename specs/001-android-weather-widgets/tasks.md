@@ -7,6 +7,7 @@
 ---
 
 ## Task Format
+
 - `[ ] T### [P] Description` — `P` = parallelizable (no dependency on other tasks in same phase)
 - Tasks ordered by phase; dependencies flow top-to-bottom
 - Phase headers mark logical groupings
