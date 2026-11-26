@@ -2,6 +2,11 @@
 
 All notable changes to **Weatherender** (formerly *Weather*), organized by date and grouped by theme. Reconstructed directly from `git log`.
 
+## 2026-11-26 — Documentation and lint tooling
+
+- Add the GitHub Wiki to the README documentation index.
+- Configure Markdown linting, run it across the project, and update the pre-commit configuration.
+
 ## 2026-10-22-2 - Android Weather Widgets: Current, Forecast & Configuration
 
 - **Current Weather Widget (Glance)**: Fully implemented `CurrentWeatherWidget` with gradient background, hero temperature (°C), condition text, UV index, humidity, pressure (mmHg, converted from mb × 0.750062), snow status, loading/error/stale states.
