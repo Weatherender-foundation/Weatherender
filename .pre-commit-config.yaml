@@ -1,18 +1,10 @@
 repos:
-  - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 26.5.1
-    hooks:
-      - id: black
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.0
+    rev: v0.17.6
     hooks:
-      - id: ruff
-        args: [--fix, --ignore=E402]
-  - repo: https://github.com/PyCQA/isort
-    rev: 6.1.0
-    hooks:
-      - id: isort
-        args: ["--profile", "black"]
+      - id: ruff-check
+        args: [--fix, --ignore=E501, --ignore=E402]
+      - id: ruff-format
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -28,7 +20,6 @@ repos:
           - types-python-dateutil
           - alembic
           - types-redis
-          - types-requests
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.6.0
     hooks:

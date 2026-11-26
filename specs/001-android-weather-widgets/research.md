@@ -55,21 +55,27 @@ location_data = data.get("location", {})
 raw_localtime = location_data.get("localtime")  # e.g., "2026-10-19 14:30"
 current_hour_str = ""
 if raw_localtime:
-    api_localtime = datetime.strptime(raw_localtime, "%Y-%m-%d %H:%M").replace(tzinfo=UTC)
+    api_localtime = datetime.strptime(raw_localtime, "%Y-%m-%d %H:%M").replace(
+        tzinfo=UTC
+    )
     current_hour_str = api_localtime.strftime("%Y-%m-%d %H:00")  # "2026-10-19 14:00"
 
 all_hours = [hour for day in forecast_days for hour in day.get("hour", [])]
 count = 0
 for hour in all_hours:
-    if hour.get("time", "") >= current_hour_str:  # string comparison works for ISO format
+    if (
+        hour.get("time", "") >= current_hour_str
+    ):  # string comparison works for ISO format
         prob_precip = max(hour.get("chance_of_rain", 0), hour.get("chance_of_snow", 0))
-        hourly_forecast.append({
-            "time": hour["time"].split(" ")[1],      # "14:00"
-            "temp": round(hour["temp_c"], 2),
-            "precipitation": prob_precip,
-            "uv": round(hour["uv"]),
-            "pressure": round(hour["pressure_mb"] * 0.750062),  # mb → mmHg
-        })
+        hourly_forecast.append(
+            {
+                "time": hour["time"].split(" ")[1],  # "14:00"
+                "temp": round(hour["temp_c"], 2),
+                "precipitation": prob_precip,
+                "uv": round(hour["uv"]),
+                "pressure": round(hour["pressure_mb"] * 0.750062),  # mb → mmHg
+            }
+        )
         count += 1
         if count == 24:
             break
