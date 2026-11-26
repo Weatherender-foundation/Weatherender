@@ -6,6 +6,7 @@ All notable changes to **Weatherender** (formerly *Weather*), organized by date 
 
 - Add the GitHub Wiki to the README documentation index.
 - Configure Markdown linting, run it across the project, and update the pre-commit configuration.
+- Update pyproject.toml to include the new Markdown linting configuration and remove the unused `mypy` section.
 
 ## 2026-10-22-2 - Android Weather Widgets: Current, Forecast & Configuration
 
