@@ -28,13 +28,13 @@ This is a pure [12-factor](https://12factor.net/config) setup: the same codebase
    - *Direct connection* requires IPv6, which is often unavailable on the client side.
    - *Transaction pooler* is meant for stateless/serverless workloads. Render runs a persistent long-lived process, so **Session pooler** is the correct mode per Supabase's own guidance.
    - Format: `postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres`
-3. **No `postgres://` → `postgresql://` normalization exists in the codebase.** Supabase (like most providers) may emit the legacy `postgres://` scheme, which SQLAlchemy 1.4+ rejects outright — but `Config.DATABASE_URL` is passed straight into `create_engine()` in `models.py` with no string replacement anywhere. In practice this has worked because Supabase's connection strings in this project have used `postgresql://` already, but it's an unhandled edge case, not a solved one — if a future Supabase connection string (or a different provider) comes back as `postgres://`, the app will fail to start. Worth adding the normalization defensively rather than relying on the current string happening to be in the right format.
+3. The application normalizes a leading `postgres://` scheme to `postgresql://` in `Config.DATABASE_URL` before either SQLAlchemy engine uses the URL. The async engine then converts `postgresql://` to `postgresql+asyncpg://`. Supply a valid PostgreSQL connection string and keep credentials out of source control.
 4. Run migrations against the Supabase connection string once the project is created:
 
-```bash
-DATABASE_URL="postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres" \
-  alembic upgrade head
-```
+    ```bash
+    DATABASE_URL="postgresql://postgres.<project-ref>:<password>@aws-0-     <region>.pooler.supabase.com:5432/postgres" \
+      alembic upgrade head
+    ```
 
 5. `models.py` configures the SQLAlchemy engine with `pool_size=10, max_overflow=20` (raised from SQLAlchemy's defaults of 5/10 during load testing — see [`PERFORMANCE.md`](PERFORMANCE.md)). This was tested as a hypothesis for reducing errors under concurrent load; it did not meaningfully change the error rate, but is kept as a safe, low-cost headroom increase for Supabase's free-tier connection limit (~60).
 
@@ -69,8 +69,8 @@ If Redis is unreachable, the app catches the error and falls back to fetching fr
 | `FLASK_DEBUG` | `False` |
 | `LOG_LEVEL` | `INFO` |
 
-3. Render auto-deploys on every push to `main`. Deployment is gated by CI — GitHub Actions must pass (Ruff, Mypy, full Pytest suite) before the deploy webhook fires.
-4. After the first deploy, confirm both `/api/v2/health` (async) and `/health` (sync, served through the mounted Flask app) return `{"status": "ok"}`, and that a real weather request against either `/api/v2/weather` or `/api/weather` (proxied via `WSGIMiddleware`) writes a row into Supabase's `weather_requests` table. Also verify that sending more than 25 requests per minute to `/api/v2/weather` correctly triggers an HTTP `429 Too Many Requests` response enforced by `slowapi`.
+1. Render auto-deploys on every push to `main`. Deployment is gated by CI — GitHub Actions must pass (Ruff, Mypy, full Pytest suite) before the deploy webhook fires.
+2. After the first deploy, confirm both `/api/v2/health` (async) and `/health` (sync, served through the mounted Flask app) return `{"status": "ok"}`, and that a real weather request against either `/api/v2/weather` or `/api/weather` (proxied via `WSGIMiddleware`) writes a row into Supabase's `weather_requests` table. Also verify that sending more than 25 requests per minute to `/api/v2/weather` correctly triggers an HTTP `429 Too Many Requests` response enforced by `slowapi`.
 
 ### Dynamic port binding
 
@@ -92,7 +92,6 @@ CMD uvicorn weatherender.API.main:app --host 0.0.0.0 --port ${PORT} --workers 4
 
 Render's free tier only supports one active web service, so production deploys the `api` image only. `weatherender.API.main` imports the Flask app (`from weatherender.WEB.app import app as flask_app`) and mounts it under FastAPI, exposing both stacks from a single `uvicorn` process. Locally both containers still run side-by-side so you can develop Flask in isolation on `:5001`; production traffic always hits the combined process.
 
-
 This also drove two related fixes documented in the CHANGELOG: `API/schemas.py` was renamed to `API/pydantic_schemas.py` (a bare `import schemas` was resolving to the Marshmallow schema once both packages shared `sys.path`), and both Dockerfiles switched from per-file `COPY` to `COPY . /app/` with a shared root `.dockerignore`, since the API image now needs the entire `WEB/` package tree, not just its own flat file list. After the `src/` layout move, `CMD` paths became `weatherender.WEB.app:app` and `weatherender.API.main:app`.
 
 ---
@@ -100,7 +99,7 @@ This also drove two related fixes documented in the CHANGELOG: `API/schemas.py` 
 ## 5. GitHub Container Registry
 
 Image: [`ghcr.io/weatherender-foundation/weatherender-api`](https://github.com/Weatherender-foundation/Weatherender/pkgs/container/weatherender-api)
-
+[text](../../Weatherender.wiki/.markdownlint.jsonc)
 Pushed automatically by `.github/workflows/publish-github.yml` on every push to `main` (and on published releases).
 
 Tags:
@@ -152,7 +151,6 @@ Local ports (from `.env.example`):
 | PostgreSQL | `5432` | — |
 | Redis | `6379` | — |
 | Test PostgreSQL | `5433` | — |
-
 
 `docker-compose.yml` maps host ports with `${FLASK_PORT}:${FLASK_PORT}` and `${API_PORT}:${API_PORT}`. The Dockerfiles bind Gunicorn/Uvicorn to the same `PORT` value (`5001` / `8001`). These need to agree — if they mismatch, the port mapping and the actual bound port will not line up.
 

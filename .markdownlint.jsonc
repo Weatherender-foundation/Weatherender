@@ -1,0 +1,29 @@
+{
+  "default": true,
+
+  // Headings
+  "MD003": { "style": "atx" },             // Enforce ATX-style headings (# Heading)
+  "MD024": { "siblings_only": true },     // Allow duplicate headings under different parent sections
+  "MD025": { "front_matter_title": "" },    // Allow only a single top-level H1 heading per document
+  "MD041": false,                         // Do not require H1 on the first line (useful for GitHub Wiki)
+
+  // Lists & Indentation
+  "MD004": { "style": "dash" },           // Enforce dash (-) as the unordered list marker
+  "MD007": { "indent": 2 },               // Enforce 2-space indentation for nested lists
+  "MD029": { "style": "ordered" },        // Enforce sequential numbering for ordered lists (1, 2, 3)
+
+  // Code Blocks
+  "MD040": true,                          // Require language specification for fenced code blocks
+  "MD046": { "style": "fenced" },         // Enforce fenced code blocks (```) over indented blocks
+
+  // Big Tech Relaxations
+  "MD013": false,                         // Disable the 80-character line length limit
+  "MD033": {                              // Allow specific safe HTML elements for rich formatting
+    "allowed_elements": ["br", "details", "summary", "img", "a", "kbd", "sub", "sup", "table", "tr", "td", "th", "h1", "p"]
+  },
+  "MD034": false,                         // Allow bare URLs without angle brackets
+
+  // GitHub Wiki Specifics
+  "MD056": false,                         // Disable table column count check due to [[Title | Link]] wiki syntax
+  "MD060": false                          // Disable strict table column alignment checks
+}
