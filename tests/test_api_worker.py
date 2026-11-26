@@ -1,6 +1,7 @@
-import _queue
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures.thread import queue as executor_queue
+
+import _queue
 
 
 def test_gevent_does_not_replace_executor_queue():

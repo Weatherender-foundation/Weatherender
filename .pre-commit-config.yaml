@@ -36,7 +36,7 @@ repos:
         stages: [commit-msg]
         args: [feat, fix, chore, refactor, test, docs, style, build, ci, perf, revert, merge]
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.19.0 
+    rev: v0.19.0
     hooks:
       - id: markdownlint-cli2
         language_version: 22.14.0
